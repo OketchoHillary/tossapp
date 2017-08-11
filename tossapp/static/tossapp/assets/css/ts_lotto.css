@@ -1,0 +1,63 @@
+
+#ubuntu_font {
+	font-family: Ubuntu;
+}
+
+.ts_top_menu {
+	font-family: Ubuntu;
+	color: #4cbb17;
+	font-size: 15px;
+}
+
+#ts_sidebar_username {
+	font-family: Ubuntu;
+	color: #333333;
+	font-size: 15px;
+}
+
+
+.nav>li>a:focus, .nav>li>a:hover {
+
+	text-decoration: none;
+    background-color: #4cbb17;
+	color: #fff;
+}
+
+#amount_box {
+
+	padding-right: 15px;
+	font-family: Ubuntu;
+	color: #ffffff;
+
+}
+
+
+/*This ID is for the Kelly Green And the Ubuntu Font */
+#kelly_and_ubuntu {
+	font-family: Ubuntu;
+	color: #4cbb17;
+}
+
+
+/*This is the line under the Breadcrumbs */
+.page-content-white .page-content .page-bar {
+	border-bottom: 1px solid #4cbb17;
+}
+
+.btn.green:not(.btn-outline) {
+    color: #fff;
+    background-color: #4cbb17;
+    border-color: #4cbb17;
+}
+
+/* This is when the signin button is hovered over, */
+.btn.green:not(.btn-outline):hover {
+   color: #4cbb17;
+    background-color: #333333;
+    border-color: #333333;
+}
+
+
+/* PAGE LEVEL CSS */
+
+/* PAGE LEVEL CSS */

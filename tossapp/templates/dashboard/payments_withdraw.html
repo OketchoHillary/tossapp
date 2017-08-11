@@ -1,0 +1,99 @@
+{% extends 'layout1.html' %}
+
+{% block title %}Dashboard: Payments{% endblock %}
+{% load staticfiles %}
+{% block content %}
+<div class="row">
+						<div class="col-md-12">
+
+							<h3>Instructions </h3>
+
+
+							<div class="row">
+								<div class="col-md-12">
+
+									<div id="ts_all_content" >
+
+										<p>
+											KAMPALA – A team from the Microsoft-Dell offices in the USA has said the computer software and hardware manufacturers will soon open offices in Kampala to take care of their business in the region.
+
+											The team which was in the country at the end of last week said business in Uganda has been growing at 20% per annum, prompting them to have a legal presence in the country.
+
+											“We are amazed at the level of computer proficiency in this country. People are increasingly asking for high level IT solutions  which we are happy to provide, but also now, we must think of setting up offices to address any needs and queries they may have,” said Nazih Moufarrej, Dell’s regional sales director.
+										</p>
+
+
+										<div class="row">
+											<div class="col-md-12">
+
+												<div class="portlet box red"  id="ts_withdraw_div">
+
+													<div class="portlet-title">
+
+														<div class="caption">
+															<i class=""></i>Current Balance:
+														</div>
+
+														<div class="caption" style="float: right; ">
+															<div style="border: 1px solid #4cbb17; ">
+																<i class="fa fa-bank"></i>{{ user.balance }}/=
+															</div>
+														</div>
+
+													</div>
+
+
+													<div class="portlet-body">
+
+														<div>
+
+															<div class="form-group">
+																<label>Phone Number: </label>
+																<div class="input-group">
+																	<span class="input-group-addon">
+																		+256
+																	</span>
+																<input type="text" class="form-control" placeholder="Phone Number"> </div>
+															</div>
+
+															<div class="form-group">
+																<label>Amount: </label>
+																<div class="input-group">
+																	<span class="input-group-addon">
+																		<i class="fa fa-money"></i>
+																	</span>
+																<input type="text" class="form-control" placeholder="Amount"> </div>
+															</div>
+
+
+															<div class="row">
+																<div class="col-md-12">
+																	<span>
+																		<button class="btn green uppercase" id="right_bt"> Withdraw <i class="icon-plus"></i></button>
+																	</span>
+																</div>
+															</div>
+
+
+
+														</div>
+													</div>
+												</div>
+
+											</div>
+										</div>
+
+
+									</div>
+
+								</div>
+							</div>
+
+
+
+
+						</div>
+					</div>
+    <link href="{% static 'tossapp/assets/css/ts_withdraw_funds.css' %}" rel="stylesheet" type="text/css" />
+
+{% endblock %}

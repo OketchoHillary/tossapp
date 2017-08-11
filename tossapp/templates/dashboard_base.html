@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}{% endblock %}</title>
+</head>
+<body>
+    <div>
+        <span><a href="{% url 'dashboard' %}">{{ user.username|capfirst }}</a></span> |
+        <span><a href="{% url 'logout' %}?next={% url 'index' %}">Logout</a></span>
+    </div>
+    <ul>
+        <li><a href="{% url 'index' %}">Home</a></li>
+        <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
+        <li><a href="{% url 'dashboard_notifications' %}">Notifications</a></li>
+        <li><a href="{% url 'dashboard_games' %}">Games</a></li>
+        <li><a href="{% url 'dashboard_games_history' %}">Game history</a></li>
+        <li><a href="{% url 'dashboard_transactions' %}">Transactions</a></li>
+        <li>
+            Payments
+            <ul>
+                <li><a href="{% url 'dashboard_payments_withdraw' %}">Withdraw</a></li>
+                <li><a href="{% url 'dashboard_payments_deposit' %}">Deposit</a></li>
+            </ul></li>
+        <li><a href="{% url 'dashboard_referrals' %}">Referrals</a></li>
+        <li>
+            Account
+            <ul>
+                <li><a href="{% url 'dashboard_account_profile' %}">Your profile</a></li>
+                <li><a href="{% url 'dashboard_account_settings' %}">Settings</a></li>
+            </ul></li>
+    </ul>
+    {% block content %}
+    {% endblock %}
+
+</body>
+</html>

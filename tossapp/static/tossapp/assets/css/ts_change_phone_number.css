@@ -1,0 +1,64 @@
+.login {
+    background-color: #4cbb17!important;
+}
+
+#space_here {
+	
+	padding-top: 100px;
+}
+
+/*The width of the Content Box */
+#content_box {
+	width: 60%;
+}
+
+/* Malking the "Phone verification" word Kelly green */
+.font-green {
+    color: #4cbb17!important;
+}
+
+/* INPUT FIELDS */
+/*the icons in the INPUT fields*/
+.input-group-addon>i {
+    color: #333333;
+}
+
+.input-group-addon {
+    background-color: #dde3ec;
+    border: 1px solid #dde3ec;
+    border-radius: 4px;
+}
+ 
+.login .content .form-control {
+	color: #333333;
+}
+
+
+.btn.green:not(.btn-outline) {
+    color: #fff;
+    background-color: #4cbb17;
+    border-color: #4cbb17;
+}
+
+/* This is when the signin button is hovered over, */
+.btn.green:not(.btn-outline):hover {
+	color: #FFF;
+    background-color: #333333;
+    border-color: #333333;
+}
+
+/* Putting the login button to the Left of the div */
+#right_bt {
+	float: right;
+}
+
+
+/* i was hidding the small copyright in the background */
+.login .copyright {
+	color: #fff;
+}
+
+
+.page-footer {
+	background-color: #333333!important;
+}

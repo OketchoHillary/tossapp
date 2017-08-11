@@ -1,0 +1,97 @@
+{% extends 'layout1.html' %}
+{% block title %}Dashboard: Transactions{% endblock %}
+{% load staticfiles %}
+{% block content %}
+
+    <div class="row">
+						<div class="col-md-12">
+
+
+							<div class="row">
+								<div class="col-md-6">
+									<h3 >
+										<small>Transactions Details</small>
+									</h3>
+								</div>
+
+								<div class="col-md-6">
+									<div class="form-group">
+										<label></label>
+										<div class="input-group" id="ts_transactions_search_box">
+											<span class="input-group-addon input-circle-left">
+												<i class="fa fa-search"></i>
+											</span>
+										<input type="text" class="form-control input-circle-right" id="search_box_box" placeholder="Search Transactions">
+										</div>
+									</div>
+								</div>
+
+
+							</div>
+
+						</div>
+					</div>
+					<!-- Transactions Details and The Search Box -->
+
+
+
+					<!-- Transactions Table -->
+					<div class="row">
+						<div class="col-md-12">
+
+
+
+							<div class="portlet box blue">
+                                <div class="portlet-title">
+                                    <div class="caption">
+                                        <i class="icon-shuffle"></i>
+										Transactions Table
+									</div>
+
+
+                                    <div class="tools">
+                                       <!--  <a href="javascript:;" class="collapse" data-original-title="" title=""> </a>
+                                        <a href="#portlet-config" data-toggle="modal" class="config" data-original-title="" title=""> </a> -->
+
+										<a href="javascript:;" class="reload" data-original-title="" title=""></a>
+
+									</div>
+
+								</div>
+                                <div class="portlet-body">
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered">
+                                            <thead style="background-color: #333;" >
+                                                <tr style="color: #4cbb17;">
+                                                    <th> Referrals No. </th>
+                                                    <th> Transaction Type </th>
+                                                    <th> Payment method </th>
+                                                    <th> Amount </th>
+                                                    <th> Status </th>
+                                                    <th> Date </th>
+												</tr>
+											</thead>
+                                            <tbody>
+                                            {% for transaction in transaction_list %}
+                                                <tr>
+                                                    <td> {{transaction.reference_no}} </td>
+                                                    <td> {{transaction.get_transaction_type_display}} </td>
+                                                    <td> {{transaction.get_payment_method_display}} </td>
+                                                    <td id="amount_trasaction_table"> {{transaction.amount}} </td>
+                                                    <td> {{transaction.get_status_display}} </td>
+                                                    <td> {{transaction.timestamp}} </td>
+												</tr>
+                                            {% endfor %}
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+
+
+
+						</div>
+					</div>
+    <link href="{% static 'tossapp/assets/css/ts_transactions.css' %}" rel="stylesheet" type="text/css" />
+
+{% endblock %}

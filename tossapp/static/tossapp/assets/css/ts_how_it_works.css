@@ -1,0 +1,68 @@
+.login {
+    background-color: #4cbb17!important;
+}
+
+/*The width of the Content Box */
+#content_box {
+	width: 90%;
+}
+
+#ts_video_player{
+	background-color: #fff;
+	height: 400px;
+}
+
+/* PAGE LEVEL CSS */
+#ts_words_in_the_video {
+	text-align: center;
+	color: #fff;
+	margin-top: 8%;
+}
+
+#ts_video_play_bt {
+	
+	color: #4cbb17;
+	font-size: 80px;
+	margin-top: 5%;
+}
+
+#ts_follow_steps {
+	text-align: center;
+	font-family: Ubuntu;
+	font-weight: bold;
+	text-decoration: underline;
+	font-size: xx-large;
+	
+}
+
+#ts_step_title {
+	/* font-family: Ubuntu; */
+	font-weight: bold;
+	text-decoration: underline;
+	/* font-size: xx-large; */
+	
+}
+
+#ts_illa_icons  {
+    font-size: 170px;
+    text-align: center;
+    color: #4cbb17;
+    margin-top: 30%;
+}
+
+/* PAGE LEVEL CSS */
+
+
+
+
+
+
+
+/* i was hidding the small copyright in the background */
+.login .copyright {
+	color: #4cbb17;
+}
+
+.page-footer {
+	background-color: #333333!important;
+}

@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block title %}FAQ{% endblock %}
+
+{% block content %}
+    <div class="box-header with-border">
+  <h3 class="box-title">FAQ</h3>
+        <strong style="color: green">{{ faq.title }}</strong>
+        <br>
+<p style="color: green">{{ faq.detail }}</p>
+    </div>
+
+{% endblock %}

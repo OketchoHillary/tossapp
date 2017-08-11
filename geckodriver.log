@@ -1,0 +1,8 @@
+1478023271016	geckodriver	INFO	Listening on 127.0.0.1:64095
+1478023272566	mozprofile::profile	INFO	Using profile path C:\Users\Xcelsia\AppData\Local\Temp\rust_mozprofile.6S2XFbbVtV2I
+1478023272615	geckodriver::marionette	INFO	Starting browser C:\Program Files (x86)\Mozilla Firefox\firefox.exe
+1478023272980	geckodriver::marionette	INFO	Connecting to Marionette on localhost:64101
+[GFX1]: D3D11 device creation failed: 0x887a0004
+1478023292224	Marionette	INFO	Listening on port 64101
+1478021941206	addons.productaddons	WARN	Failed downloading XML, status: 0, reason: error
+e983d9bad.f48f4bedc28f.js, line 7: mutating the [[Prototype]] of an object will cause your code to run very slowly; instead create the object with the correct initial [[Prototype]] value using Object.create

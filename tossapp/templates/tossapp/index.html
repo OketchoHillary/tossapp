@@ -1,0 +1,41 @@
+{% extends 'layout1.html' %}
+
+{% block title %}Tossapp{% endblock %}
+
+{% block content %}
+   <div class="row">
+    <div class="col-md-12">
+
+							<div class="row" id="ts_tile_row">
+								<div class="col-md-12">
+
+								<div class="row">
+
+									<div class="col-md-4" >
+										<div id="ts_acc_tiles">
+											<h3 id="ts_acc_tile_title">Balance</h3>
+											<p id="ts_acc_tile_ans">Ugx {{ user.balance }} /=</p>
+										</div>
+									</div>
+
+									<div class="col-md-4">
+										<div id="ts_acc_tiles">
+											<h3>Points</h3>
+											<p># {{ request.user.points }}</p>
+										</div>
+									</div>
+
+									<div class="col-md-4">
+										<div id="ts_acc_tiles">
+											<h3>Referrals</h3>
+											<p>{{ request.user.referrals.count }} Friends</p>
+										</div>
+									</div>
+
+								</div>
+
+								</div>
+                                </div>
+        </div>
+   </div>
+{% endblock %}

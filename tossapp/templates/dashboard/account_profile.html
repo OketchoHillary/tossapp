@@ -1,0 +1,167 @@
+{% extends 'layout1.html' %}
+
+{% block title %}Dashboard: Account{% endblock %}
+{% load staticfiles %}
+{% block content %}
+<div class="row">
+						<div class="col-md-12">
+
+
+
+							<div class="row">
+
+								<div class="col-md-4">
+									<!-- profile image box -->
+									<div id="ts_profile_image_box">
+                                        {% if tuser.profile_photo %}
+										<img src="{{ tuser.profile_photo.url }}" alt="Profile photo {{ tuser.username }}" id="ts_box_profile_img" width="338" height="274"/>
+                                        {% else %}
+                                        <img src="" alt="Profile photo {{ tuser.username }}">
+                                        {% endif %}
+                                    <form method="post" enctype="multipart/form-data">
+                                        {% csrf_token %}
+                            <button id="ts_upload_pic_bt" name="upload_pic" class="btn blue btn-block"> Upload Photo </button>
+                                        </form>
+									</div>
+									<!--  profile image box -->
+
+								</div>
+
+								<div class="col-md-8" id="ts_main_info_box">
+
+
+									<div>
+
+
+
+
+
+										<table class="table" style=" margin-bottom: 10px;">
+
+                                            <tbody>
+                                                <tr id="ts_main_headers">
+                                                    <td id="ts_main_info_heading"> Your Info </td>
+                                                    <td style="float: right" id="ts_infobox_edit_bt" >
+														<i class="fa fa-edit" id="ts_main_info_edit_button"></i>
+													</td>
+                                                </tr>
+
+                                                <tr>
+                                                    <td id="ts_main_info_text"> Username: </td>
+                                                    <td id="ts_main_info_text_ans"> {{ tuser.username }} </td>
+                                                </tr>
+
+                                                <tr>
+                                                    <td id="ts_main_info_text"> Name: </td>
+                                                    <td id="ts_main_info_text_ans"> {{ tuser.get_my_full_name }} </td>
+                                                </tr>
+
+                                                <tr>
+                                                    <td id="ts_main_info_text"> Rank: </td>
+                                                    <td id="ts_main_info_text_ans"> {{ tuser.rank }} </td>
+                                                </tr>
+
+                                                <tr>
+                                                    <td id="ts_main_info_text"> Points: </td>
+                                                    <td id="ts_main_info_text_ans"> #{{ tuser.points }} points </td>
+                                                </tr>
+
+                                                <tr>
+                                                    <td id="ts_main_info_text"> Sex: </td>
+                                                    <td id="ts_main_info_text_ans"> {{tuser.get_sex_display}} </td>
+                                                </tr>
+
+                                                <tr>
+                                                    <td id="ts_main_info_text"> Country: </td>
+                                                    <td id="ts_main_info_text_ans"> {{tuser.country}} </td>
+                                                </tr>
+
+                                                <tr>
+                                                    <td id="ts_main_info_text"> Address: </td>
+                                                    <td id="ts_main_info_text_ans"> {{tuser.address}} </td>
+                                                </tr>
+
+                                                <tr>
+                                                    <td id="ts_main_info_text"> Phone Number: </td>
+                                                    <td id="ts_main_info_text_ans"> {{tuser.phone_number}}</td>
+                                                </tr>
+
+                                            </tbody>
+                                        </table>
+
+									</div>
+
+								</div>
+							</div>
+
+							<br/>
+
+
+							<div class="row">
+
+								<div class="col-md-6">
+
+
+										<table class="table" style=" margin-bottom: 10px;"  id="ts_main_info_box">
+
+                                            <tbody>
+                                                <tr id="ts_main_headers">
+                                                    <td id="ts_main_info_heading"> Game History </td>
+                                                    <td style="float: right" id="ts_infobox_edit_bt" ></td>
+                                                </tr>
+
+                                                <tr>
+                                                    <td id="ts_main_info_text"> Games Played: </td>
+                                                    <td id="ts_main_info_text_ans"> {{tuser.games_played}} </td>
+                                                </tr>
+
+                                                <tr>
+                                                    <td id="ts_main_info_text"> Games won: </td>
+                                                    <td id="ts_main_info_text_ans"> {{tuser.games_won}} </td>
+                                                </tr>
+
+                                                <tr>
+                                                    <td id="ts_main_info_text"> Games Lost: </td>
+                                                    <td id="ts_main_info_text_ans"> {{tuser.games_lost}} </td>
+                                                </tr>
+
+                                            </tbody>
+                                        </table>
+
+								</div>
+
+								<div class="col-md-6">
+
+
+										<table class="table" style=" margin-bottom: 10px;"  id="ts_main_info_box">
+
+                                            <tbody>
+                                                <tr id="ts_main_headers">
+                                                    <td id="ts_main_info_heading"> Referrals </td>
+                                                    <td style="float: right" id="ts_infobox_edit_bt" ></td>
+                                                </tr>
+
+                                                <tr>
+                                                    <td id="ts_main_info_text"> Count: </td>
+                                                    <td id="ts_main_info_text_ans"> {{tuser.referral_count}} Users </td>
+                                                </tr>
+
+                                                <tr>
+                                                    <td id="ts_main_info_text"> Earnings: </td>
+                                                    <td id="ts_main_info_text_ans"> {{tuser.referrer_prize}} Ugx </td>
+                                                </tr>
+
+                                            </tbody>
+                                        </table>
+
+
+								</div>
+
+							</div>
+
+                        </div>
+
+						</div>
+    <link href="{% static 'tossapp/assets/css/ts_user_profile.css' %}" rel="stylesheet" type="text/css" />
+
+{% endblock %}

@@ -1,0 +1,39 @@
+<div class="table-responsive">
+<table class="table table-bordered" cellpadding="8" cellspacing="8">
+<caption><strong>WINNERS</strong></caption>
+<thead>
+ <tr>
+     <th>UserName</th>
+        <th>Numbers</th>
+        <th>Hits</th>
+          <th>Prize</th>
+      </tr>
+    </thead>
+ <tbody>
+ <tr>
+  <td>
+{% for dailyLottoResult in object_list %}
+  <h4>{{ dailyLottoResult.winners }}</h4>
+    {% empty %}
+    <strong>No winners</strong>
+{% endfor %}
+</td>
+     <td>
+     {% for dailyLottoResult in object_list %}
+         <h4>{{ dailyLottoResult.daily_lotto_ticket }}</h4>
+         {% endfor %}
+
+     </td>
+ <td>
+{% for dailyLottoResult in object_list %}
+    <h4>{{ dailyLottoResult.hits_number_prize }}</h4>
+{% endfor %}
+</td>
+     <td>{% for dailyLottoResult in object_list %}
+    <h4>{{ dailyLottoResult.prize }}</h4>
+{% endfor %}
+     </td>
+ </tr>
+ </tbody>
+  </table>
+</div>
