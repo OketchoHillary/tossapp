@@ -4,7 +4,8 @@ from django.db import models
 
 # Create your models here.
 from django.template.defaultfilters import truncatechars
-from django.urls import reverse
+#from django.urls import reverse
+from django.core.urlresolvers import reverse
 from django.utils import timezone
 
 from accounts.models import Tuser
@@ -13,7 +14,8 @@ from accounts.models import Tuser
 class Game(models.Model):
     name = models.CharField(max_length=30)
     display_photo = models.ImageField(upload_to='games', default=None)
-    game_url = models.URLField()
+    slug = models.SlugField(max_length=230, unique=True)
+    times_played = models.BigIntegerField(default=0)
 
     def __unicode__(self):
         return self.name
@@ -98,6 +100,7 @@ class Transaction(models.Model):
 
 
 class Notification(models.Model):
+    id = models.BigAutoField(primary_key=True)
     SUCCESS = 0
     INFORMATION = 1
     WARNING = 2
@@ -157,3 +160,13 @@ class Faq(models.Model):
     class Meta:
         verbose_name_plural = 'Faq'
         ordering = ['title']
+
+
+class Country(models.Model):
+    name = models.CharField(max_length=90)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name_plural = 'Countries'

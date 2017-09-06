@@ -761,7 +761,7 @@
 
 
                  if (randomNumberGenerated == r_rock[0] || randomNumberGenerated == r_rock[1] || randomNumberGenerated == r_rock[2]) {
-                     console.log("it a lose");
+                     console.log("its a lose");
 
                      playerOne_choice = playerOne_scissor;
                      playerTwo_choice = playerTwo_rock;

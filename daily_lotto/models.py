@@ -1,14 +1,35 @@
 import datetime
 from django.db import models
+from django.db.models import BigIntegerField
 from django.dispatch import receiver
 from django.db.models.signals import post_save
 from accounts.models import Tuser
 from django.utils import timezone
 
-
 def now_plus_1():
 
     return datetime.timedelta(hours=23, minutes=55, seconds=0)
+
+"""
+class BigForeignKey(models.ForeignKey):
+    def db_type(self, connection):
+        rel_field = self.rel.get_related_field()
+        if (isinstance(rel_field, BigAutoField) or
+                (not connection.features.related_fields_match_type and
+                 isinstance(rel_field, (BigIntegerField, )))):
+            return BigIntegerField().db_type(connection=connection)
+        return super(BigForeignKey, self).db_type(connection)
+
+
+class BigAutoField(models.fields.AutoField):
+    def db_type(self, connection):
+        if 'mysql' in connection.__class__.__module__:
+            return 'bigint AUTO_INCREMENT'
+        elif 'postgresql' in connection.__class__.__module__:
+            return 'bigserial'
+        return super(BigAutoField, self).db_type(connection)
+add_introspection_rules([], [r"^a\.b\.c\.BigAutoField"])
+"""
 
 
 class DailyLotto(models.Model):
@@ -127,14 +148,15 @@ class DailyLottoResult(models.Model):
 
 
 class CommissionSum(models.Model):
-    date = models.DateTimeField(null=False)
+    dates = models.DateTimeField(null=False, auto_now_add=True)
     commission_total = models.IntegerField()
 
     def __str__(self):
-        return '{:%Y-%m-%d %H:%M}'.format(self.date)
+        return '{:%Y-%m-%d %H:%M}'.format(self.dates)
 
     def save(self, *args, **kwargs):
         if not self.id:
             self.date = timezone.localtime(timezone.now())
             return super(CommissionSum, self).save(*args, **kwargs)
+
 

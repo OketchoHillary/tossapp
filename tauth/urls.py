@@ -18,15 +18,16 @@ from django.conf.urls import url, include
 from django.conf.urls.static import static
 from django.contrib import admin
 
+from accounts.views import user_logout
 
-admin.site.site_header = 'TossApp. Administration'
+admin.site.site_header = 'Administration'
 admin.site.site_title = 'TossApp. Administration'
 
 urlpatterns = [
+    url(r'^admin/logout/$', user_logout, name='logout'),
     url(r'^',include('accounts.urls')),
     url(r'^',include('tossapp.urls')),
     url(r'^',include('daily_lotto.urls')),
-    url(r'^accounts/', include('allaccess.urls')),
     url(r'^admin/', admin.site.urls),
 ] \
               + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)\
