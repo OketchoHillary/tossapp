@@ -66,10 +66,13 @@ class RegisterView(AnonymousRequiredMixin,CreateView):
 
     def get_success_url(self):
         tuser = self.object
+        print "In register view"
+        pprint(tuser)
         code = generate_verification_code()
         tuser.verification_code = code
         tuser.save()
-        # print(tuser.username)
+        print("Username: "+tuser.username)
+        print("Verification Code: "+tuser.verification_code)
         # send_verification_sms(tuser.phone_number,tuser.verification_code)
         return reverse_lazy('activate', kwargs={'user': tuser.username})
 

@@ -15,22 +15,27 @@ from accounts.admin import validate_phone_number
 from accounts.models import Tuser
 from accounts.sendSms import send_verification_sms
 from accounts.utils import generate_verification_code
+from accounts.admin import UserCreationForm
 
 
 class ActivationPageTest(TestCase):
     def test_register_can_save_a_user(self):
         c = Client()
-        response = c.post('/register', {'username': 'testuser', 'phone_number': '0771234567','password1':'testuser','password2':'testuser'}, follow=True)
+        response = c.post('/register', {'username': 'testuser', 'phone_number': '0771234567','password1':'testuser','password2':'testuser'}, follow=False)
+        pprint(response.content)
+        # print response.status_code
+        # print response.redirect_chain
+        # pprint(response.context['form'])
         self.assertEqual(response.context['user'].username,'testuser')
-    #
+
     # def test_can_register_and_activate_user(self):
     #     c = Client()
     #     response = c.post('/register', {'username': 'testuser', 'phone_number': '0771234567','password1':'testuser','password2':'testuser'}, follow=True)
     #     self.assertEqual(response.context['user'].username,'testuser')
     #
     #     time.sleep(5)
-    #     # pprint(vars(response))
-    #     # print response.request['PATH_INFO']
+    #     pprint(vars(response))
+    #     print response.request['PATH_INFO']
     #     # print 1,Tuser.objects.get(username='testuser').is_active
     #     # print 2,authenticate(username='testuser',password='testuser')
     #     response2 = c.post(response.request['PATH_INFO'],{'verification_code':Tuser.objects.get(username='testuser').verification_code}, follow=True)

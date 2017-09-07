@@ -3,7 +3,6 @@ from __future__ import print_function
 import random
 
 from django.contrib.auth.decorators import login_required
-""
 from django.db.models import Sum
 from django.contrib import messages
 from django.core.urlresolvers import reverse_lazy
@@ -21,8 +20,11 @@ import datetime
 
 ends = str(now_plus_1())
 
-my_lotto = DailyLotto.objects.all().values_list('lotto_id').order_by('-start_date')[0]
-loto_id = int(my_lotto[0])
+my_lotto = DailyLotto.objects.all().values_list('lotto_id').order_by('-start_date').first()
+if my_lotto is None:
+    loto_id = 0
+else:
+    loto_id = int(my_lotto[0])
 endDate = DailyLotto.objects.filter(lotto_id=loto_id).values_list('end_date', flat=True)
 
 # Six share

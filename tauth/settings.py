@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'daily_lotto',
     'allaccess',
     'django_tables2',
+    'testapp'
     # 'djcelery',
 ]
 

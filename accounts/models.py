@@ -94,6 +94,8 @@ class Tuser(AbstractBaseUser):
         if not self.id:
             self.timestamp = timezone.localtime(timezone.now())
             return super(Tuser, self).save(*args, **kwargs)
+        else:
+            return super(Tuser, self).save(*args, **kwargs)
 
     def has_perm(self, perm, obj=None):
         "Does the user have a specific permission?"
