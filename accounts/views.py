@@ -116,9 +116,10 @@ def tlogin(request, template_name='registration/login.html',
             auth_login(request, form.get_user())
 
             return HttpResponseRedirect('dashboard')
-        else:
+        elif '__all__' in form.errors.as_data():
             for error in form.errors.as_data()['__all__']:
-                pprint(vars(error))
+                print("error",error.code)
+                pprint(repr(error))
                 if error.code == 'inactive':
                     messages.warning(request, 'Account is inactive')
                     tuser = form.user_cache
