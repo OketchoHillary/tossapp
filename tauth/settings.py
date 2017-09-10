@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'accounts',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -39,12 +40,14 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.humanize',
     'django_countries',
-    'accounts',
     'tossapp',
     'daily_lotto',
-    'allaccess',
     'django_tables2',
+<<<<<<< HEAD
     'testapp'
+=======
+    'django_ajax',
+>>>>>>> 7eaf616a621a59346c2c47dd488af33658f47b73
     # 'djcelery',
 ]
 
@@ -116,7 +119,6 @@ AUTH_PASSWORD_VALIDATORS = [
 
 AUTHENTICATION_BACKENDS = (
     'accounts.backends.TauthBackend',
-    'allaccess.backends.AuthorizedServiceBackend',
 )
 
 # Internationalization

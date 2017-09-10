@@ -4,7 +4,7 @@ from django.contrib import messages
 from django.contrib.auth import (
     REDIRECT_FIELD_NAME, get_user_model, login as auth_login,
     logout as auth_logout, update_session_auth_hash,
-    login)
+    login, logout)
 from pprint import pprint
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
@@ -41,11 +41,10 @@ def activate(request,user):
         if form.is_valid():
             tuser.is_active = True
             tuser.save()
-
             #Login user
             # user = authenticate(username=tuser.username, password=tuser.password)
             user = Tuser.objects.get(username=tuser.username)
-            user.backend='accounts.backends.TauthBackend'
+            user.backend = 'accounts.backends.TauthBackend'
             # print settings.AUTHENTICATION_BACKENDS[0]
             if user is not None:
                 login(request, user)
@@ -54,6 +53,7 @@ def activate(request,user):
         form = ActivationForm()
 
     return render(request, "registration/activate.html",{'form':form,'user':tuser})
+
 
 class RegisterView(AnonymousRequiredMixin,CreateView):
     template_name='registration/register.html'
@@ -146,3 +146,9 @@ def tlogin(request, template_name='registration/login.html',
         context.update(extra_context)
 
     return TemplateResponse(request, template_name, context)
+
+
+@login_required
+def user_logout(request):
+    logout(request)
+    return HttpResponseRedirect('/')

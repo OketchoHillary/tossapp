@@ -3,7 +3,11 @@ from __future__ import print_function
 import random
 
 from django.contrib.auth.decorators import login_required
+<<<<<<< HEAD
 from django.db.models import Sum
+=======
+from django.db.models import Sum, F
+>>>>>>> 7eaf616a621a59346c2c47dd488af33658f47b73
 from django.contrib import messages
 from django.core.urlresolvers import reverse_lazy
 from django.shortcuts import render
@@ -16,6 +20,7 @@ from daily_lotto.models import *
 from daily_lotto.tables import TicketTable
 from tossapp.models import *
 import datetime
+from django_ajax.decorators import ajax
 
 
 ends = str(now_plus_1())
@@ -42,6 +47,8 @@ three_prize = DailyLotto.TICKET_PRICE * DailyLotto.THREE_SHARE_RATE
 # ticket cost
 ticket_cost = 500
 
+l0 = DailyLotto.objects.all()[0]
+
 
 def total(single_form, multiple_tickets_form):
 
@@ -60,13 +67,14 @@ def random_tickets(tick, req):
         for random_qunatity in range(quantity):
             generated_numbers = random.sample(xrange(1, 51),6)
             t1,t2,t3,t4,t5,t6 = generated_numbers
-            DailyLottoTicket.objects.create(player_name=req.user, daily_lotto=DailyLotto.objects.filter(start_date__contains=datetime.date.today())[0], n1=t1, n2=t2, n3=t3, n4=t4, n5=t5, n6=t6)
+            DailyLottoTicket.objects.create(player_name=req.user, daily_lotto=l0, n1=t1, n2=t2, n3=t3, n4=t4, n5=t5, n6=t6)
 
 
 # Selecting numbers
 @login_required
 @csrf_protect
 def lotto(request, template_name='daily_lotto/home.html'):
+    args = {}
     context = RequestContext(request)
     page = 'The Daily Lotto'
     page_brief = 'The more tickets you Buy, the more chances of moving away with the Jackpot.'
@@ -79,9 +87,9 @@ def lotto(request, template_name='daily_lotto/home.html'):
     my_ticket_list = DailyLottoTicket.objects.filter(player_name=current_user).order_by('-purchased_time')
     table = TicketTable(DailyLottoTicket.objects.filter(player_name=current_user).order_by('-purchased_time'))
     table.paginate(page=request.GET.get('page', 1), per_page=10)
-    lotto_game = Game.objects.filter(name='The Daily Lotto')[0]
+    lotto_game = Game.objects.filter(name='Daily Lotto')[0]
+    tickets = DailyLottoTicket.objects.all()
     # quotas
-    l0 = DailyLotto.objects.all()[0]
     l1 = DailyLotto.objects.all()[1]
     # six pool and six prize winners
     pool6 = DailyQuota.objects.filter(daily_lotto=l1).values_list('six_number_prize_pool')
@@ -179,7 +187,11 @@ def lotto(request, template_name='daily_lotto/home.html'):
 
     dailyLottos = DailyLotto.objects.filter(lotto_id=lottoid)
 
+    # previous winners
     dailyLottoResult_list = DailyLottoResult.objects.filter(daily_lotto=l1)
+
+    # all time winners
+    highest_winners = DailyLottoResult.objects.all().order_by('-prize')[:15]
 
     """Ticket purchase"""
 
@@ -206,17 +218,19 @@ def lotto(request, template_name='daily_lotto/home.html'):
                         ze = quantity * ticket_cost
                         instance = selection_form.save(commit=False)
                         instance.player_name = request.user
-                        instance.daily_lotto = DailyLotto.objects.filter(start_date__contains=datetime.date.today())[0]
+                        instance.daily_lotto = l0
                         random_tickets(random_ticketform, request)
                         instance.save()
                         # calculating users balance
                         ao = balance_calculator(request.user.balance, ze + ticket_cost)
                         total_bet = ze + ticket_cost
+                        # calculating service fee
                         excess_tickets = 25 * quantity
                         service_fee = 25 + excess_tickets
                         # updating users balance
                         Tuser.objects.filter(username=request.user).update(balance=ao)
                         Game_stat.objects.create(user=request.user, game=lotto_game, bet_amount=total_bet, status=3, service_fee=service_fee)
+                        Game.objects.filter(name='Daily Lotto').update(times_played=F("times_played") + 1)
                         totals = total(ticket_cost, quantity * ticket_cost)
                         messages.success(request, "successfully submitted")
                         return HttpResponseRedirect(reverse_lazy('lotto'))
@@ -239,7 +253,8 @@ def lotto(request, template_name='daily_lotto/home.html'):
                         Tuser.objects.filter(user=request.user).update(balance=ar)
                         lotto_game = Game.objects.filter(name='Daily Lotto')[0]
                         Game_stat.objects.create(user=request.user, game=lotto_game, bet_amount=ticket_cost, status=3, service_fee=25)
-                        messages.success(request, "successfully submitted")
+                        Game.objects.filter(name='Daily Lotto').update(times_played=F("times_played") + 1)
+                        #messages.success(request, "successfully submitted")
                         return HttpResponseRedirect(reverse_lazy('lotto'))
                     else:
                         messages.info(request, "Insufficient balance")
@@ -266,6 +281,7 @@ def lotto(request, template_name='daily_lotto/home.html'):
                         qt = quantity * ticket_cost
                         Tuser.objects.filter(username=request.user).update(balance=ap)
                         Game_stat.objects.create(user=request.user, game=lotto_game, bet_amount=qt, status=3, service_fee=25)
+                        Game.objects.filter(name='Daily Lotto').update(times_played=F("times_played") + 1)
                         totals2 = total(0, quantity * ticket_cost)
                         messages.success(request, "successfully submitted")
                     else:
@@ -276,6 +292,7 @@ def lotto(request, template_name='daily_lotto/home.html'):
     else:
         selection_form = TicketForm()
         random_ticketform = RandomTicketForm()
+    args['random_ticketform'] = RandomTicketForm
     return render(request, template_name, locals(), context)
 
 

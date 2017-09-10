@@ -13,8 +13,8 @@ from django.views.decorators.csrf import csrf_protect
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.views.generic import TemplateView, ListView, DetailView
 from accounts.models import Tuser
-from tossapp.forms import ChangePasswordForm, ChangeUsernameForm
-from tossapp.models import Notification, Game, Game_stat, Transaction, Contact_us, Faq
+from tossapp.forms import ChangePasswordForm, ChangeUsernameForm, ContactForm, ChangeProfileForm
+from tossapp.models import Notification, Game, Game_stat, Transaction, Faq, Country
 
 
 def index(request):
@@ -28,6 +28,7 @@ def index(request):
     else:
         return render(request, 'dashboard/index.html')
 
+
 @login_required
 def dashboard(request):
     context = RequestContext(request)
@@ -40,14 +41,12 @@ def contact(request, template_name='tossapp/contact_us.html'):
     context = RequestContext(request)
     page_title = 'ContactUs'
     if request.method == "POST":
-        contact_name = request.POST['your_name']
-        contact_email = request.POST['your_email']
-        contact_subject = request.POST['your_subject']
-        contact_message = request.POST['your_message']
-        myqn = Contact_us.objects.create(your_name=contact_name, your_email=contact_email, your_subject=contact_subject, your_message=contact_message)
-        myqn.save()
+        myqn_form = ContactForm(request.POST)
+        myqn_form.save()
         messages.success(request, 'Successfully submitted your Message ')
-        return HttpResponseRedirect('contact')
+        return HttpResponseRedirect('contact_us')
+    else:
+        myqn_form = ContactForm()
     return render(request, template_name, locals(), context)
 
 
@@ -69,9 +68,20 @@ def faq_detail(request, slug):
     return render(request, 'tossapp/faq_detail.html', {'faq': faq})
 
 """
+def edit_profile(request):
+    context = RequestContext(request)
+    page = 'Edit Your Profile'
+    page_brief = 'edit your profile by filling the form below.'
+    ug = Country.objects.filter(name='Uganda')[0]
+    my_country = Country.objects.all().exclude(name=ug)
+    uganda = Country.objects.all().order_by('id')[0]
+    return render(request, 'dashboard/edit_user_settings.html', locals(), context)
+"""
+
+"""
 class dashboard(LoginRequiredMixin, TemplateView):
     template_name = 'dashboard/index.html'
-    """
+"""
 
 class dashboard_notifications(LoginRequiredMixin, ListView):
     page = 'Notifications'
@@ -87,6 +97,7 @@ class dashboard_notifications(LoginRequiredMixin, ListView):
         context.update({'page': self.page, 'page_brief': self.page_brief})
         return context
 
+
 class dashboard_games(LoginRequiredMixin, ListView):
     page = 'All Games'
     page_brief = 'Choose a game you want to play'
@@ -98,6 +109,7 @@ class dashboard_games(LoginRequiredMixin, ListView):
         context = super(dashboard_games, self).get_context_data(**kwargs)
         context.update({'page': self.page, 'page_brief': self.page_brief})
         return context
+
 
 class rock_paper_scissor(LoginRequiredMixin, TemplateView):
     page = 'Rock Paper Scissor'
@@ -181,7 +193,7 @@ class dashboard_referrals(LoginRequiredMixin, ListView):
     page = 'Referrals'
     page_brief = 'Tell some of your friends and earn more Money'
     template_name = 'dashboard/referrals.html'
-    players = Tuser.objects.all().order_by('-rank')
+    players = Tuser.objects.all().order_by('-rank')[:10]
     context_object_name = 'referral_list'
 
     def get_queryset(self):
@@ -189,7 +201,7 @@ class dashboard_referrals(LoginRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super(dashboard_referrals, self).get_context_data(**kwargs)
-        context.update({'page': self.page, 'page_brief': self.page_brief})
+        context.update({'page': self.page, 'page_brief': self.page_brief, 'players':self.players})
         return context
 
 
@@ -224,6 +236,7 @@ class dashboard_account_settings(LoginRequiredMixin, MultiFormView):
         context.update({'page': self.page, 'page_brief': self.page_brief})
         return context
 
+
     # def get_success_url(self):
     #     pprint(self)
     # def get_changepasswordform_instance(self):
@@ -249,7 +262,7 @@ class dashboard_account_settings(LoginRequiredMixin, MultiFormView):
         if form_name not in self._forms_dict:
             return HttpResponseForbidden()
 
-        form = self._forms_dict[form_name](request.POST, request.FILES,user=self.request.user)
+        form = self._forms_dict[form_name](request.POST, request.FILES, user=self.request.user)
         if form.is_valid():
             return self._form_valid(form_name, form)
         else:
@@ -257,6 +270,33 @@ class dashboard_account_settings(LoginRequiredMixin, MultiFormView):
                 form_name: form,
             }
             return self.render_to_response(self.get_context_data(**kwargs))
+
+
+class dashboard_edit_profile(LoginRequiredMixin, TemplateView):
+    page = 'Edit Your Profile'
+    page_brief = 'edit your profile by filling the form below.'
+    template_name = 'dashboard/edit_user_settings.html'
+    ug = Country.objects.filter(name='Uganda')[0]
+    my_country = Country.objects.all().exclude(name=ug)
+    uganda = Country.objects.filter(name='Uganda')[0]
+    success_url = reverse_lazy('dashboard_account_profile')
+    forms = ChangeProfileForm
+
+    def get_context_data(self, **kwargs):
+        context = super(dashboard_edit_profile, self).get_context_data(**kwargs)
+        context.update({'page': self.page, 'page_brief': self.page_brief, 'my_country':self.my_country, 'uganda':self.uganda})
+        return context
+
+    def edit_profileform_valid(self, form):
+        my_user = Tuser.objects.get(pk=self.request.user.id)
+        my_user.first_name = form.cleaned_data['first_name']
+        my_user.last_name = form.cleaned_data['last_name']
+        my_user.phone_number = form.cleaned_data['phone_number']
+        my_user.sex = form.cleaned_data['sex']
+        my_user.country = form.cleaned_data['country']
+        my_user.address = form.cleaned_data['address']
+        my_user.save()
+        return
 
 
 

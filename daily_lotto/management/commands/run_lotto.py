@@ -1,14 +1,21 @@
 from django.core.management.base import BaseCommand
 from daily_lotto.lotto_components import *
 
+import sched, time
+
+s = sched.scheduler(time.time, time.sleep)
+
 
 class Command(BaseCommand):
 
     help = 'daily lotto'
 
     def handle(self, *args, **options):
-
-        create_lotto()
-        countdown(60)
-        print 'draw_starts'
-        draw()
+        def do_something(sc):
+            create_lotto()
+            countdown(10)
+            print 'draw_starts'
+            draw()
+            s.enter(60, 1, do_something, (sc,))
+        s.enter(60, 1, do_something, (s,))
+        s.run()

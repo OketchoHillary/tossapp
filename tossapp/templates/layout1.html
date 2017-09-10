@@ -183,7 +183,7 @@
                         <ul class="sub-menu">
                             {% for game in games %}
                                     <li {% if request.path == url3 %} class="nav-item open" {% endif %}>
-                                <a href="{{ game.game_url }}" class="nav-link active open">
+                                <a href="{{ game.slug }}" class="nav-link active open">
                                     <!-- <i class="icon-plus"></i> -->
                                     <img src="{{ game.display_photo.url }}" id="ts_sidebar_game_icons" />
                                     <span class="title"> {{ game.name }} </span>
