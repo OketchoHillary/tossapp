@@ -4,11 +4,7 @@ from django.db import models
 
 # Create your models here.
 from django.template.defaultfilters import truncatechars
-<<<<<<< HEAD
 # from django.urls import reverse
-=======
-#from django.urls import reverse
->>>>>>> 7eaf616a621a59346c2c47dd488af33658f47b73
 from django.core.urlresolvers import reverse
 from django.utils import timezone
 

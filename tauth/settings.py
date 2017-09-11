@@ -43,11 +43,8 @@ INSTALLED_APPS = [
     'tossapp',
     'daily_lotto',
     'django_tables2',
-<<<<<<< HEAD
-    'testapp'
-=======
+    'testapp',
     'django_ajax',
->>>>>>> 7eaf616a621a59346c2c47dd488af33658f47b73
     # 'djcelery',
 ]
 
