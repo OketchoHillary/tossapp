@@ -3,11 +3,7 @@ from __future__ import print_function
 import random
 
 from django.contrib.auth.decorators import login_required
-<<<<<<< HEAD
-from django.db.models import Sum
-=======
 from django.db.models import Sum, F
->>>>>>> 7eaf616a621a59346c2c47dd488af33658f47b73
 from django.contrib import messages
 from django.core.urlresolvers import reverse_lazy
 from django.shortcuts import render
