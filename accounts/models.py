@@ -90,6 +90,16 @@ class Tuser(AbstractBaseUser):
     def __str__(self):             # __unicode__ on Python 2
         return self.username
 
+<<<<<<< HEAD
+=======
+    def save(self, *args, **kwargs):
+        if not self.id:
+            self.timestamp = timezone.localtime(timezone.now())
+            return super(Tuser, self).save(*args, **kwargs)
+        else:
+            return super(Tuser, self).save(*args, **kwargs)
+
+>>>>>>> f8d26f5c58b3641ce9530c0e5896f62a7d396e9c
     def has_perm(self, perm, obj=None):
         """Does the user have a specific permission?"""
         # Simplest possible answer: Yes, always

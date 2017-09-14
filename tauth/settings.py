@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'tossapp',
     'daily_lotto',
     'django_tables2',
+    'testapp',
     'django_ajax',
     # 'djcelery',
 ]
@@ -89,7 +90,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'toss_app_db',
         'USER': 'root',
-        'PASSWORD': '',
+        'PASSWORD': 'root',
         'HOST': '127.0.0.1',   # Or an IP Address that your DB is hosted on
         'PORT': '3306',
     }

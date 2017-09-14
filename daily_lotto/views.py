@@ -21,6 +21,15 @@ import datetime
 def todays_lotto():
     return DailyLotto.objects.all().order_by('-start_date')[0]
 
+<<<<<<< HEAD
+=======
+my_lotto = DailyLotto.objects.all().values_list('lotto_id').order_by('-start_date').first()
+if my_lotto is None:
+    loto_id = 0
+else:
+    loto_id = int(my_lotto[0])
+endDate = DailyLotto.objects.filter(lotto_id=loto_id).values_list('end_date', flat=True)
+>>>>>>> f8d26f5c58b3641ce9530c0e5896f62a7d396e9c
 
 def previous_lotto():
     return DailyLotto.objects.all().order_by('-start_date')[1]

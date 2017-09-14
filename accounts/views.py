@@ -66,10 +66,13 @@ class RegisterView(AnonymousRequiredMixin,CreateView):
 
     def get_success_url(self):
         tuser = self.object
+        print "In register view"
+        pprint(tuser)
         code = generate_verification_code()
         tuser.verification_code = code
         tuser.save()
-        # print(tuser.username)
+        print("Username: "+tuser.username)
+        print("Verification Code: "+tuser.verification_code)
         # send_verification_sms(tuser.phone_number,tuser.verification_code)
         return reverse_lazy('activate', kwargs={'user': tuser.username})
 
@@ -116,9 +119,10 @@ def tlogin(request, template_name='registration/login.html',
             auth_login(request, form.get_user())
 
             return HttpResponseRedirect('dashboard')
-        else:
+        elif '__all__' in form.errors.as_data():
             for error in form.errors.as_data()['__all__']:
-                pprint(vars(error))
+                print("error",error.code)
+                pprint(repr(error))
                 if error.code == 'inactive':
                     messages.warning(request, 'Account is inactive')
                     tuser = form.user_cache

@@ -84,17 +84,17 @@ class UserCreationForm(forms.ModelForm):
         user.set_password(self.cleaned_data["password1"])
         if self.cleaned_data["referrer_username"] != "":
             user.referrer = Tuser.objects.get(username=self.cleaned_data["referrer_username"])
-            rp = Tuser.objects.filter(username=self.cleaned_data["referrer_username"]).values_list('referrer_prize')
-            ref_p = list(rp[0])
-            referee_prize = ref_p[0]
-
-            rb = Tuser.objects.filter(username=self.cleaned_data["referrer_username"]).values_list('balance')
-            ref_b = list(rb[0])
-            referee_balance = ref_b[0]
-            sum_prize = referee_prize + Tuser.REFERRAL_PRIZE
-            sum_balance = referee_balance + Tuser.REFERRAL_PRIZE
-            Tuser.objects.filter(username=self.cleaned_data["referrer_username"]).update(referrer_prize=sum_prize, balance=sum_balance)
-            #user.referrer_prize = Tuser.REFERRAL_PRIZE
+            # rp = Tuser.objects.filter(username=self.cleaned_data["referrer_username"]).values_list('referrer_prize')
+            # ref_p = list(rp[0])
+            # referee_prize = ref_p[0]
+            #
+            # rb = Tuser.objects.filter(username=self.cleaned_data["referrer_username"]).values_list('balance')
+            # ref_b = list(rb[0])
+            # referee_balance = ref_b[0]
+            # sum_prize = referee_prize + Tuser.REFERRAL_PRIZE
+            # sum_balance = referee_balance + Tuser.REFERRAL_PRIZE
+            # Tuser.objects.filter(username=self.cleaned_data["referrer_username"]).update(referrer_prize=sum_prize, balance=sum_balance)
+            user.referrer_prize = Tuser.REFERRAL_PRIZE
         if commit:
             user.save()
         return user
