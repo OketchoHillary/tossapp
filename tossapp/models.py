@@ -147,9 +147,9 @@ class Contact_us(models.Model):
 
 
 class Faq(models.Model):
-    title = models.CharField(max_length=230)
+    question = models.CharField(max_length=230)
     slug = models.SlugField(max_length=230, unique=True)
-    detail = models.TextField(max_length=100)
+    answer = models.TextField(max_length=100)
 
     def __str__(self):
         return self.title
@@ -159,7 +159,7 @@ class Faq(models.Model):
 
     class Meta:
         verbose_name_plural = 'Faq'
-        ordering = ['title']
+        ordering = ['question']
 
 
 class Country(models.Model):

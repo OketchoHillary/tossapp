@@ -55,7 +55,9 @@
         <div class="page-header-inner ">
             <!-- BEGIN LOGO -->
             <div class="page-logo">
-                <a href="{% url 'index' %}">
+                {% if user.is_authenticated %}
+                <a href="{% url 'index' %}?next={% url 'dashboard' %}">
+                    {% endif %}
                     <img src="{% static 'tossapp/assets/img/tossapp_logo_big.png' %}" alt="tossapp_logo" class="logo-default" /> </a>
                 <div class="menu-toggler sidebar-toggler"> </div>
             </div>
@@ -80,7 +82,11 @@
             {% url 'dashboard_account_profile' as url18 %}
                 <ul class="nav navbar-nav pull-left">
                     <li {% if request.path == url1 %} class="top_nav_elements open" {% endif %}>
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'index' %}?next={% url 'dashboard' %}" class="ts_top_menu">Home</a>
+                        {% else %}
                         <a href="{% url 'index' %}" class="ts_top_menu">Home</a>
+                    {% endif %}
                     </li>
                     <li>
                         <a href="{% url 'contact' %}" class="ts_top_menu">Contact us</a>

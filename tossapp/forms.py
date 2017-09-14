@@ -138,15 +138,14 @@ class ContactForm(forms.ModelForm):
         fields = ['your_name', 'your_email', 'your_subject', 'your_message']
 
 
-
 class FaqAdminForm(forms.ModelForm):
     class Meta:
         model = Faq
-        fields = ('title', 'detail',)
+        fields = ('question', 'answer',)
 
     def save(self, commit=True):
         instance = super(FaqAdminForm, self).save(commit=False)
-        instance.slug = slugify(instance.title)
+        instance.slug = slugify(instance.question)
         instance.save()
         return instance
 

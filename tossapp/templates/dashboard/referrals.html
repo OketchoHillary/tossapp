@@ -37,29 +37,8 @@
 											<div class="col-md-12">
 
 												<div class="row">
-													<div class="col-md-12">
-														<span>
-															<button class="btn green uppercase" id="ts_social_icon" style=" background-color: #4a6d9d; border-color: #4a6d9d; "><i class="fa fa-facebook" style=" float: left; padding-top: 2.5%; "> </i> Facebook </button>
-														</span>
-														<span>
-															<button class="btn green uppercase" id="ts_social_icon" style=" background-color: #00BCD4; border-color: #00bcd4; "><i class="fa fa-twitter" style=" float: left; padding-top: 2.5%; "> </i> Twitter </button>
-														</span>
-														<span>
-															<button class="btn green uppercase" id="ts_social_icon" style=" background-color: #0177b5; border-color: #0177b5; "><i class="fa fa-linkedin-square" style=" float: left; padding-top: 2.5%; "> </i> Linkedin </button>
-														</span>
-													</div>
+                                                    <div class="sharethis-inline-share-buttons"></div>
 
-													<div class="col-md-12">
-														<span>
-															<button class="btn green uppercase" id="ts_social_icon" style=" background-color: #d34836; border-color: #d34836; "><i class="fa fa-google-plus" style=" float: left; padding-top: 2.5%; "> </i> Google Plus </button>
-														</span>
-														<span>
-															<button class="btn green uppercase" id="ts_social_icon" style=" background-color: #cc2127; border-color: #cc2127; "><i class="fa fa-pinterest" style=" float: left; padding-top: 2.5%; "> </i> Pinterest </button>
-														</span>
-														<span>
-															<button class="btn green uppercase" id="ts_social_icon" style=" background-color: #4f3a09; border-color: #4f3a09; "><i class="fa fa-reddit" style=" float: left; padding-top: 2.5%; "> </i> Reddit </button>
-														</span>
-													</div>
 												</div>
 
 
@@ -72,7 +51,7 @@
 
 										<div class="row">
 											<div class="col-md-12">
-												<input type="text" id="website" class="form-control" value="https://www.tossapp.com/ref/kamogaedmund" >
+												<input type="text" id="website" class="form-control" value="https://www.tossapp.com/ref/{{user.username }}" >
 												<div class="form-actions">
 
 													<div class="md-checkbox">
@@ -165,7 +144,7 @@
 															<tbody>
                                                             {% for tossapp_rank in players %}
 																<tr>
-																	<td> {{ tossapp_rank.rank }} </td>
+																	<td> 1 </td>
 																	<td> {{ tossapp_rank.username }} </td>
 																	<td> 189 </td>
 																</tr>
@@ -247,6 +226,7 @@
 
 						</div>
 					</div>
+    <script type='text/javascript' src='//platform-api.sharethis.com/js/sharethis.js#property=59b666afcd8c7e0012a72611&product=inline-share-buttons' async='async'></script>
     <link href="{% static 'tossapp/assets/css/ts_referrals.css' %}" rel="stylesheet" type="text/css" />
     <script src="{% static 'tossapp/assets/js/refferal_table.js' %}" type="text/javascript"></script>
     <script src="{% static 'tossapp/assets/js/clipboard.js' %}" type="text/javascript"></script>

@@ -9,7 +9,7 @@ from tossapp.models import Notification, Game_stat, Transaction, Contact_us, Faq
 
 class FaqAdmin(admin.ModelAdmin):
     form = FaqAdminForm
-    list_display = ['title', 'detail']
+    list_display = ['question', 'answer']
 
 
 class GameAdmin(admin.ModelAdmin):

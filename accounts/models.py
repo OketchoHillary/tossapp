@@ -1,5 +1,6 @@
 from __future__ import unicode_literals
 
+import datetime
 from django.db import models
 from django.contrib.auth.models import (
     BaseUserManager, AbstractBaseUser
@@ -7,7 +8,7 @@ from django.contrib.auth.models import (
 
 # Create your models here.
 from django_countries.fields import Country, CountryField
-from django.utils import timezone
+# from django.utils import timezone
 
 
 class TuserManager(BaseUserManager):
@@ -59,14 +60,13 @@ class Tuser(AbstractBaseUser):
     sex = models.CharField(max_length=1,choices=GENDER_CHOICES)
     country = CountryField()
     address = models.CharField(max_length=30)
-    referrer = models.ForeignKey('self',blank=True, related_name='referrals', null=True)
+    referrer = models.ForeignKey('self', blank=True, related_name='referrals', null=True)
     referrer_prize = models.IntegerField(editable=False, default=0)
-    timestamp = models.DateTimeField(editable=False, blank=False)
+    timestamp = models.DateTimeField(auto_now_add=True, editable=False, blank=False)
     profile_photo = models.ImageField(upload_to='users', default='default_avatar/avatar.png')
     points = models.IntegerField(default=0)
     redeemed_points = models.IntegerField(default=0)
     balance = models.IntegerField(default=0)
-    rank = models.IntegerField(default=0)
     is_active = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
     verification_code = models.CharField(default='',blank=True, max_length=6)
@@ -90,26 +90,21 @@ class Tuser(AbstractBaseUser):
     def __str__(self):             # __unicode__ on Python 2
         return self.username
 
-    def save(self, *args, **kwargs):
-        if not self.id:
-            self.timestamp = timezone.localtime(timezone.now())
-            return super(Tuser, self).save(*args, **kwargs)
-
     def has_perm(self, perm, obj=None):
-        "Does the user have a specific permission?"
+        """Does the user have a specific permission?"""
         # Simplest possible answer: Yes, always
         return True
 
     def has_module_perms(self, app_label):
-        "Does the user have permissions to view the app `app_label`?"
+        """Does the user have permissions to view the app `app_label`?"""
         # Simplest possible answer: Yes, always
         return True
 
     @property
     def is_staff(self):
-        "Is the user a member of staff?"
+        """Is the user a member of staff?"""
         # Simplest possible answer: All admins are staff
         return self.is_admin
 
     class Meta:
-        ordering = ['-rank']
+        ordering = ['points']

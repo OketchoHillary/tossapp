@@ -6,30 +6,9 @@ from django.db.models.signals import post_save
 from accounts.models import Tuser
 from django.utils import timezone
 
+
 def now_plus_1():
-
     return datetime.timedelta(hours=23, minutes=55, seconds=0)
-
-"""
-class BigForeignKey(models.ForeignKey):
-    def db_type(self, connection):
-        rel_field = self.rel.get_related_field()
-        if (isinstance(rel_field, BigAutoField) or
-                (not connection.features.related_fields_match_type and
-                 isinstance(rel_field, (BigIntegerField, )))):
-            return BigIntegerField().db_type(connection=connection)
-        return super(BigForeignKey, self).db_type(connection)
-
-
-class BigAutoField(models.fields.AutoField):
-    def db_type(self, connection):
-        if 'mysql' in connection.__class__.__module__:
-            return 'bigint AUTO_INCREMENT'
-        elif 'postgresql' in connection.__class__.__module__:
-            return 'bigserial'
-        return super(BigAutoField, self).db_type(connection)
-add_introspection_rules([], [r"^a\.b\.c\.BigAutoField"])
-"""
 
 
 class DailyLotto(models.Model):
@@ -42,7 +21,7 @@ class DailyLotto(models.Model):
     JACKPOT_SHARE_RATE = 0.45
 
     lotto_id = models.AutoField(primary_key=True)
-    start_date = models.DateTimeField(editable=False, null=False)
+    start_date = models.DateTimeField(auto_now_add=True, null=False)
     end_date = models.DateTimeField(editable=False, null=False)
     win1 = models.IntegerField(default=0)
     win2 = models.IntegerField(default=0)
@@ -58,8 +37,6 @@ class DailyLotto(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.lotto_id:
-
-            self.start_date = timezone.localtime(timezone.now())
             self.end_date = timezone.now() + now_plus_1()
             return super(DailyLotto, self).save(*args, **kwargs)
 
@@ -101,7 +78,7 @@ class DailyLottoTicket(models.Model):
     player_name = models.ForeignKey(Tuser, on_delete=models.CASCADE)
     daily_lotto = models.ForeignKey(DailyLotto, on_delete=models.CASCADE)
     cost = models.IntegerField(default=500)
-    purchased_time = models.DateTimeField(editable=False)
+    purchased_time = models.DateTimeField(auto_now_add=True, editable=False)
     NUMBER_CHOICES = tuple([(i, i,) for i in range(1, 51)])
     n1 = models.IntegerField(verbose_name='Number 1', choices=NUMBER_CHOICES, blank=False, null=False)
     n2 = models.IntegerField(verbose_name='Number 2', choices=NUMBER_CHOICES, blank=False, null=False)
@@ -111,14 +88,10 @@ class DailyLottoTicket(models.Model):
     n6 = models.IntegerField(verbose_name='Number 6', choices=NUMBER_CHOICES, blank=False, null=False)
     ticket_prize = models.IntegerField(default=0)
     hits = models.IntegerField(default=0)
+    tax = models.IntegerField(default=0)
 
     def __str__(self):
         return '{}, {}, {}, {}, {}, {}'.format(self.n1,self.n2,self.n3,self.n4,self.n5,self.n6)
-
-    def save(self, *args, **kwargs):
-        if not self.id:
-            self.purchased_time = timezone.localtime(timezone.now())
-            return super(DailyLottoTicket, self).save(*args, **kwargs)
 
     class Meta:
         verbose_name_plural = "Daily Lotto Tickets"
@@ -128,7 +101,7 @@ class DailyLottoTicket(models.Model):
 
 class DailyLottoResult(models.Model):
     daily_lotto = models.ForeignKey(DailyLotto, on_delete=models.CASCADE)
-    draw_date = models.DateTimeField(null=False)
+    draw_date = models.DateTimeField(auto_now_add=True, null=False, editable=False)
     winners = models.CharField(max_length=177)
     hits_number_prize = models.IntegerField()
     service_commission = models.IntegerField(default=25)
@@ -137,11 +110,6 @@ class DailyLottoResult(models.Model):
 
     def __str__(self):
         return '{:%Y-%m-%d %H:%M}'.format(self.draw_date)
-
-    def save(self, *args, **kwargs):
-        if not self.id:
-            self.draw_date = timezone.localtime(timezone.now())
-            return super(DailyLottoResult, self).save(*args, **kwargs)
 
     class Meta:
         db_table = 'lotto_results'
@@ -154,9 +122,5 @@ class CommissionSum(models.Model):
     def __str__(self):
         return '{:%Y-%m-%d %H:%M}'.format(self.dates)
 
-    def save(self, *args, **kwargs):
-        if not self.id:
-            self.date = timezone.localtime(timezone.now())
-            return super(CommissionSum, self).save(*args, **kwargs)
 
 

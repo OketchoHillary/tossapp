@@ -13,9 +13,10 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         def do_something(sc):
             create_lotto()
-            countdown(10)
+            countdown(120)
             print 'draw_starts'
             draw()
-            s.enter(60, 1, do_something, (sc,))
-        s.enter(60, 1, do_something, (s,))
+            print 'done'
+            s.enter(600, 1, do_something, (sc,))
+        s.enter(600, 1, do_something, (s,))
         s.run()

@@ -10,7 +10,7 @@ from django.shortcuts import render, get_object_or_404
 # Create your views here.
 from django.template import RequestContext
 from django.views.decorators.csrf import csrf_protect
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.core.paginator import Paginator, PageNotAnInteger
 from django.views.generic import TemplateView, ListView, DetailView
 from accounts.models import Tuser
 from tossapp.forms import ChangePasswordForm, ChangeUsernameForm, ContactForm, ChangeProfileForm
@@ -67,21 +67,6 @@ def faq_detail(request, slug):
     faq = get_object_or_404(Faq, slug=slug)
     return render(request, 'tossapp/faq_detail.html', {'faq': faq})
 
-"""
-def edit_profile(request):
-    context = RequestContext(request)
-    page = 'Edit Your Profile'
-    page_brief = 'edit your profile by filling the form below.'
-    ug = Country.objects.filter(name='Uganda')[0]
-    my_country = Country.objects.all().exclude(name=ug)
-    uganda = Country.objects.all().order_by('id')[0]
-    return render(request, 'dashboard/edit_user_settings.html', locals(), context)
-"""
-
-"""
-class dashboard(LoginRequiredMixin, TemplateView):
-    template_name = 'dashboard/index.html'
-"""
 
 class dashboard_notifications(LoginRequiredMixin, ListView):
     page = 'Notifications'
@@ -90,7 +75,7 @@ class dashboard_notifications(LoginRequiredMixin, ListView):
     context_object_name = 'notification_list'
 
     def get_queryset(self):
-        return Notification.objects.filter(user=self.request.user)
+        return Notification.objects.filter(user=self.request.user)[:15]
 
     def get_context_data(self, **kwargs):
         context = super(dashboard_notifications, self).get_context_data(**kwargs)
@@ -148,7 +133,7 @@ class dashboard_games_history(LoginRequiredMixin, ListView):
     context_object_name = 'game_stat_list'
 
     def get_queryset(self):
-        return Game_stat.objects.filter(user=self.request.user)
+        return Game_stat.objects.filter(user=self.request.user)[:15]
 
     def get_context_data(self, **kwargs):
         context = super(dashboard_games_history, self).get_context_data(**kwargs)
@@ -193,7 +178,7 @@ class dashboard_referrals(LoginRequiredMixin, ListView):
     page = 'Referrals'
     page_brief = 'Tell some of your friends and earn more Money'
     template_name = 'dashboard/referrals.html'
-    players = Tuser.objects.all().order_by('-rank')[:10]
+    players = Tuser.objects.all()[:10]
     context_object_name = 'referral_list'
 
     def get_queryset(self):
@@ -201,7 +186,8 @@ class dashboard_referrals(LoginRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super(dashboard_referrals, self).get_context_data(**kwargs)
-        context.update({'page': self.page, 'page_brief': self.page_brief, 'players':self.players})
+        current_user = self.request.user.username
+        context.update({'page': self.page, 'page_brief': self.page_brief, 'players':self.players, 'current_user':current_user})
         return context
 
 
@@ -246,12 +232,14 @@ class dashboard_account_settings(LoginRequiredMixin, MultiFormView):
         tuser = Tuser.objects.get(username=form.cleaned_data['current_username'])
         tuser.username = form.cleaned_data['new_username']
         tuser.save()
+        messages.success(self.request, 'successfully updated your name')
         return
 
     def changepasswordform_valid(self,form):
         tuser = Tuser.objects.get(pk=self.request.user.id)
         tuser.set_password(form.cleaned_data['new_password'])
         tuser.save()
+        messages.success(self.request, 'successfully updated your password')
         return
 
     def post(self, request, *args, **kwargs):
@@ -269,6 +257,7 @@ class dashboard_account_settings(LoginRequiredMixin, MultiFormView):
             kwargs = {
                 form_name: form,
             }
+            messages.error(self.request, 'Something went wrong during filling')
             return self.render_to_response(self.get_context_data(**kwargs))
 
 
@@ -280,7 +269,7 @@ class dashboard_edit_profile(LoginRequiredMixin, TemplateView):
     my_country = Country.objects.all().exclude(name=ug)
     uganda = Country.objects.filter(name='Uganda')[0]
     success_url = reverse_lazy('dashboard_account_profile')
-    forms = ChangeProfileForm
+    form_class = ChangeProfileForm
 
     def get_context_data(self, **kwargs):
         context = super(dashboard_edit_profile, self).get_context_data(**kwargs)
