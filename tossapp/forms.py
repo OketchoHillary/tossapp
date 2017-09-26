@@ -38,6 +38,7 @@ my_default_errors7 = {
 
 class ChangeUsernameForm(forms.Form):
     def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop('user', None)
         super(ChangeUsernameForm, self).__init__(*args, **kwargs)
 
     current_username = forms.CharField(max_length=15, widget=forms.TextInput())
@@ -65,11 +66,11 @@ class ChangePasswordForm(forms.Form):
     retype_new_password = forms.CharField(error_messages=my_default_errors3,widget=forms.PasswordInput())
 
     def clean_old_password(self):
-        old_password = self.cleaned_data.get("old_password")
+        old_password = self.cleaned_data.get("old_password", None)
         if not self.user.check_password(old_password):
             raise ValidationError('Incorrect password.')
         return old_password
-        # return user if user.check_password(password) else Non
+        # return user if user.check_password(password) else None
 
     def clean_retype_new_password(self):
         # Check that the two password entries match
@@ -80,28 +81,25 @@ class ChangePasswordForm(forms.Form):
         return password2
 
 
-class ChangeProfileForm(forms.Form):
+class ChangeProfileForm(forms.ModelForm):
     GENDER_CHOICES = (
         ('M', 'Male'),
         ('F', 'Female'),
     )
 
     Country = tuple(countries)
-    COUNTRY_CHOICES = tuple(Country)
+    COUNTRY_CHOICES = [('UG', 'Uganda')] + list(Country)
 
-    first_name = forms.CharField(widget=forms.TextInput())
-    last_name = forms.CharField(widget=forms.TextInput())
-    phone_number = forms.CharField(widget=forms.TextInput())
-    sex = forms.ChoiceField(choices=GENDER_CHOICES, widget=forms.Select())
-    country = forms.ChoiceField(choices=COUNTRY_CHOICES, widget=forms.Select())
-    address = forms.CharField(widget=forms.TextInput())
+    first_name = forms.CharField(widget=forms.TextInput(), required=False)
+    last_name = forms.CharField(widget=forms.TextInput(), required=False)
+    phone_number = forms.CharField(widget=forms.TextInput(), required=False)
+    sex = forms.ChoiceField(choices=GENDER_CHOICES, widget=forms.Select(), required=False)
+    country = forms.ChoiceField(choices=COUNTRY_CHOICES, widget=forms.Select(attrs={'class':'form-control'}), required=False)
+    address = forms.CharField(widget=forms.TextInput(), required=False)
 
     class Meta:
-        modle = Tuser
+        model = Tuser
         fields = ['first_name', 'last_name', 'phone_number', 'sex', 'country', 'address']
-
-    def __init__(self, *args, **kwargs):
-        super(ChangeProfileForm, self).__init__(*args, **kwargs)
 
     def clean_phone_number(self):
         phone_number = self.cleaned_data.get("phone_number")
@@ -119,7 +117,6 @@ class ChangeProfileForm(forms.Form):
         address = self.cleaned_data.get('address')
 
     def save(self, commit=True):
-        # Save the provided password in hashed format
         user = super(ChangeProfileForm, self).save(commit=False)
         user.phone_number = self.cleaned_data['phone_number']
         if commit:

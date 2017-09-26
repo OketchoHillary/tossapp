@@ -104,28 +104,29 @@
 
                                                     <form action="" name="form_name" method="POST">
                                                         {% csrf_token %}
-                                                        <input type="hidden" name="form_name" value=changeusernameform" />
+                                                        <input type="hidden" name="form_name" value="changeusernameform" />
 
 															<div id="form_group_div">
+
 																<div class="form-group" id="ts_form_groups">
 																	<label class="col-md-4 control-label" id="ts_contral_label">Current Username: </label>
 																	<div class="col-md-8">
-																		<input type="text" name="current_username" class="form-control" placeholder="{{ user.username }}" readonly="" />
+																		<input type="text" name="current_username" class="form-control" value="{{ user.username }}" readonly="" />
 																	</div>
 																</div>
 
 																<div class="form-group" id="ts_form_groups">
-																	<label class="col-md-4 control-label"  id="ts_contral_label">New Username</label>
+																	<label class="col-md-4 control-label"  id="ts_contral_label">New Username: </label>
 																	<div class="col-md-8">
-																			<input type="text" name="new_username" class="form-control" placeholder="New Username"  />
+																			<input type="text" name="new_username" class="form-control" placeholder="New Username"  required />
 																	</div>
 																</div>
 
 
 																<div class="form-group" id="ts_form_groups"  id="ts_contral_label">
-																	<label class="col-md-4 control-label">Password</label>
+																	<label class="col-md-4 control-label">Password: </label>
 																	<div class="col-md-8">
-																			<input type="password" name="password" class="form-control" placeholder="Password" />
+																			<input type="password" name="password" class="form-control" placeholder="Password" required />
 																	</div>
 																</div>
 
@@ -162,7 +163,7 @@
 																<div class="form-group" id="ts_form_groups">
 																	<label class="col-md-4 control-label"  id="ts_contral_label">Old Password: </label>
 																	<div class="col-md-8">
-																			<input type="password" name="old_password" class="form-control" placeholder="Old Password" />
+																			<input type="password" name="old_password" class="form-control" placeholder="Old Password" required/>
 																	</div>
 																</div>
 
@@ -170,7 +171,7 @@
 																<div class="form-group" id="ts_form_groups"  id="ts_contral_label">
 																	<label class="col-md-4 control-label">New Password</label>
 																	<div class="col-md-8">
-																			<input type="password" name="new_password" class="form-control" placeholder="New Password" />
+																			<input type="password" name="new_password" class="form-control" placeholder="New Password" required/>
 																	</div>
 																</div>
 
@@ -179,7 +180,7 @@
 																<div class="form-group" id="ts_form_groups"  id="ts_contral_label">
 																	<label class="col-md-4 control-label">Retype New Password</label>
 																	<div class="col-md-8">
-																			<input type="password" name="retype_new_password" class="form-control" placeholder="Retype New Password" />
+																			<input type="password" name="retype_new_password" class="form-control" placeholder="Retype New Password" required/>
 																	</div>
 																</div>
 

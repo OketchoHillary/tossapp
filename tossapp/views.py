@@ -11,7 +11,8 @@ from django.shortcuts import render, get_object_or_404
 from django.template import RequestContext
 from django.views.decorators.csrf import csrf_protect
 from django.core.paginator import Paginator, PageNotAnInteger
-from django.views.generic import TemplateView, ListView, DetailView
+from django.views.generic import TemplateView, ListView, DetailView, UpdateView
+
 from accounts.models import Tuser
 from tossapp.forms import ChangePasswordForm, ChangeUsernameForm, ContactForm, ChangeProfileForm
 from tossapp.models import Notification, Game, Game_stat, Transaction, Faq, Country
@@ -116,6 +117,7 @@ class flip_coin(LoginRequiredMixin, TemplateView):
         context.update({'page': self.page, 'page_brief': self.page_brief})
         return context
 
+
 class money_slot(LoginRequiredMixin, TemplateView):
     page = 'Money Slot'
     page_brief = "Cheapest Money slot of all time. Try it Out."
@@ -125,6 +127,7 @@ class money_slot(LoginRequiredMixin, TemplateView):
         context = super(money_slot, self).get_context_data(**kwargs)
         context.update({'page': self.page, 'page_brief': self.page_brief})
         return context
+
 
 class dashboard_games_history(LoginRequiredMixin, ListView):
     page = 'Games History'
@@ -140,6 +143,7 @@ class dashboard_games_history(LoginRequiredMixin, ListView):
         context.update({'page': self.page, 'page_brief': self.page_brief})
         return context
 
+
 class dashboard_transactions(LoginRequiredMixin, ListView):
     page = 'Transactions'
     template_name = 'dashboard/transactions.html'
@@ -153,6 +157,7 @@ class dashboard_transactions(LoginRequiredMixin, ListView):
         context.update({'page': self.page})
         return context
 
+
 class dashboard_payments_withdraw(LoginRequiredMixin, TemplateView):
     page = 'Withdraw Funds'
     page_brief = 'Get your Funds onto your prefered Account instantly '
@@ -162,6 +167,7 @@ class dashboard_payments_withdraw(LoginRequiredMixin, TemplateView):
         context = super(dashboard_payments_withdraw, self).get_context_data(**kwargs)
         context.update({'page': self.page, 'page_brief': self.page_brief})
         return context
+
 
 class dashboard_payments_deposit(LoginRequiredMixin, TemplateView):
     page = 'Deposit Funds'
@@ -191,13 +197,16 @@ class dashboard_referrals(LoginRequiredMixin, ListView):
         return context
 
 
-class dashboard_account_profile(LoginRequiredMixin, DetailView):
+class dashboard_account_profile(LoginRequiredMixin, UpdateView):
     page = 'Profile'
     page_brief = 'This is how your Profile Looks Like'
     template_name = 'dashboard/account_profile.html'
     context_object_name = 'tuser'
+    model = Tuser
+    fields = ['profile_photo']
+    success_url = reverse_lazy('dashboard_account_profile')
 
-    def get_object(self):
+    def get_object(self, queryset=None):
         user = get_object_or_404(Tuser, pk=self.request.user.id)
         user.games_played = Game_stat.objects.filter(user=self.request.user).count()
         user.games_won = Game_stat.objects.filter(user=self.request.user,status=Game_stat.WIN).count()
@@ -209,6 +218,7 @@ class dashboard_account_profile(LoginRequiredMixin, DetailView):
         context = super(dashboard_account_profile, self).get_context_data(**kwargs)
         context.update({'page': self.page, 'page_brief': self.page_brief})
         return context
+
 
 class dashboard_account_settings(LoginRequiredMixin, MultiFormView):
     page = 'Settings'
@@ -228,18 +238,18 @@ class dashboard_account_settings(LoginRequiredMixin, MultiFormView):
     # def get_changepasswordform_instance(self):
     #     return ChangePasswordForm(user=self.request.user)
 
-    def changeusernameform_valid(self,form):
+    def changeusernameform_valid(self, form):
         tuser = Tuser.objects.get(username=form.cleaned_data['current_username'])
         tuser.username = form.cleaned_data['new_username']
         tuser.save()
-        messages.success(self.request, 'successfully updated your name')
+        messages.success(self.request, 'successfully updated your Username')
         return
 
-    def changepasswordform_valid(self,form):
+    def changepasswordform_valid(self, form):
         tuser = Tuser.objects.get(pk=self.request.user.id)
         tuser.set_password(form.cleaned_data['new_password'])
         tuser.save()
-        messages.success(self.request, 'successfully updated your password')
+        messages.success(self.request, 'successfully updated your Password')
         return
 
     def post(self, request, *args, **kwargs):
@@ -261,31 +271,23 @@ class dashboard_account_settings(LoginRequiredMixin, MultiFormView):
             return self.render_to_response(self.get_context_data(**kwargs))
 
 
-class dashboard_edit_profile(LoginRequiredMixin, TemplateView):
+@login_required
+def edit_profile(request):
+    context = RequestContext(request)
     page = 'Edit Your Profile'
     page_brief = 'edit your profile by filling the form below.'
-    template_name = 'dashboard/edit_user_settings.html'
     ug = Country.objects.filter(name='Uganda')[0]
     my_country = Country.objects.all().exclude(name=ug)
     uganda = Country.objects.filter(name='Uganda')[0]
-    success_url = reverse_lazy('dashboard_account_profile')
-    form_class = ChangeProfileForm
+    if request.method == 'POST':
+        form = ChangeProfileForm(data=request.POST or None, instance=request.user)
+        if form.is_valid():
+            form.save()
 
-    def get_context_data(self, **kwargs):
-        context = super(dashboard_edit_profile, self).get_context_data(**kwargs)
-        context.update({'page': self.page, 'page_brief': self.page_brief, 'my_country':self.my_country, 'uganda':self.uganda})
-        return context
-
-    def edit_profileform_valid(self, form):
-        my_user = Tuser.objects.get(pk=self.request.user.id)
-        my_user.first_name = form.cleaned_data['first_name']
-        my_user.last_name = form.cleaned_data['last_name']
-        my_user.phone_number = form.cleaned_data['phone_number']
-        my_user.sex = form.cleaned_data['sex']
-        my_user.country = form.cleaned_data['country']
-        my_user.address = form.cleaned_data['address']
-        my_user.save()
-        return
+            return HttpResponseRedirect(reverse_lazy('dashboard_account_profile'))
+    else:
+        form = ChangeProfileForm()
+    return render(request, 'dashboard/edit_user_settings.html', locals(), context)
 
 
 

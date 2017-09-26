@@ -1,15 +1,23 @@
 from __future__ import unicode_literals
 
 import datetime
+import uuid
+
 from django.db import models
 from django.contrib.auth.models import (
     BaseUserManager, AbstractBaseUser
 )
 
 # Create your models here.
+from django.utils import timezone
 from django_countries.fields import Country, CountryField
 # from django.utils import timezone
 
+
+def content_file_name(instance, filename):
+    ext = filename.split('.')[-1]
+    filename = "%s.%s" % (uuid.uuid4(), ext)
+    return '/'.join(['users', instance.username, filename])
 
 class TuserManager(BaseUserManager):
     def create_user(self, username, phone_number, password=None):
@@ -63,7 +71,7 @@ class Tuser(AbstractBaseUser):
     referrer = models.ForeignKey('self', blank=True, related_name='referrals', null=True)
     referrer_prize = models.IntegerField(editable=False, default=0)
     timestamp = models.DateTimeField(auto_now_add=True, editable=False, blank=False)
-    profile_photo = models.ImageField(upload_to='users', default='default_avatar/avatar.png')
+    profile_photo = models.ImageField(upload_to=content_file_name, default='default_avatar/avatar.png')
     points = models.IntegerField(default=0)
     redeemed_points = models.IntegerField(default=0)
     balance = models.IntegerField(default=0)
@@ -90,8 +98,6 @@ class Tuser(AbstractBaseUser):
     def __str__(self):             # __unicode__ on Python 2
         return self.username
 
-<<<<<<< HEAD
-=======
     def save(self, *args, **kwargs):
         if not self.id:
             self.timestamp = timezone.localtime(timezone.now())
@@ -99,7 +105,6 @@ class Tuser(AbstractBaseUser):
         else:
             return super(Tuser, self).save(*args, **kwargs)
 
->>>>>>> f8d26f5c58b3641ce9530c0e5896f62a7d396e9c
     def has_perm(self, perm, obj=None):
         """Does the user have a specific permission?"""
         # Simplest possible answer: Yes, always

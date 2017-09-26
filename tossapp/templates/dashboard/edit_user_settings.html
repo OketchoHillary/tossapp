@@ -21,8 +21,33 @@
 									<div class="row">
 										<div class="col-md-12" >
 											<div id="ts_acc_tiles">
+                                            {% if form.errors %}
+                                            {% for field in form %}
+                                                {% for error in field.errors %}
+                                                    <div class="alert alert-danger">
+                                                        <strong>{{ error|escape }}</strong>
+                                                    </div>
+                                                {% endfor %}
+                                            {% endfor %}
+                                            {% for error in form.non_field_errors %}
+                                                <div class="alert alert-danger">
+                                                    <strong>{{ error|escape }}</strong>
+                                                </div>
+                                            {% endfor %}
+                                        {% endif %}
 
-												<form method="post" role="form" name="edit_form">
+                                            {% if messages %}
+                                            <div class="alert alert-success alert-dismissable">
+                                                {% for message in messages %}
+                                                    <ul{% if message.tags %} class="{{ message.tags }}"{% endif %}>
+                                                        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                                                        {{ message }}
+                                                    </ul>
+                                                    </div>
+                                                {% endfor %}
+                                            {% endif %}
+
+												<form method="post" role="form">
                                                 {% csrf_token %}
 													<div class="box-body">
 
@@ -30,13 +55,13 @@
 															<div class="col-md-6">
 																<div class="form-group">
 																  <label for="firstname">First Name:</label>
-																  <input type="text" name="first_name" class="form-control" id="firstname" placeholder="{{ request.user.first_name }}">
+																  <input type="text" name="first_name" class="form-control" id="firstname" value="{{ request.user.first_name }}">
 																</div>
 															</div>
 															<div class="col-md-6">
 																<div class="form-group">
 																  <label for="lastname">Last Name:</label>
-																  <input type="text" name="last_name" class="form-control" id="lastname" placeholder="{{ request.user.last_name }}">
+																  <input type="text" name="last_name" class="form-control" id="lastname" value="{{ request.user.last_name }}">
 																</div>
 															</div>
 
@@ -50,7 +75,7 @@
 															  <div class="input-group-addon">
 																<i class="fa fa-phone"></i>
 															  </div>
-															  <input type="text" name="phone_number" class="form-control" placeholder="{{ request.user.phone_number }}">
+															  <input type="text" name="phone_number" class="form-control" value="{{ request.user.phone_number }}" required>
 															</div>
 															<!-- /.input group -->
 														</div>
@@ -58,7 +83,7 @@
 														<label for="exampleInputPassword1">Sex:</label>
 														<div class="md-radio-inline">
 															<div class="md-radio">
-																<input type="radio" id="radio6" name="sex" class="md-radiobtn" checked="">
+																<input type="radio" id="radio6" name="sex" class="md-radiobtn" value="M" checked="">
 
 																<label for="radio6">
 																	<span class="inc"></span>
@@ -67,7 +92,7 @@
 															</div>
 
 															<div class="md-radio">
-																<input type="radio" id="radio7" name="sex" class="md-radiobtn">
+																<input type="radio" id="radio7" name="sex" class="md-radiobtn" value="F">
 																<label for="radio7">
 																	<span class="inc"></span>
 																	<span class="check"></span>
@@ -82,13 +107,7 @@
 																<div class="input-group-addon">
 																	<i class="fa fa-flag"></i>
 																</div>
-																<select class="form-control select2 select2-hidden-accessible" style="width: 100%;" tabindex="-1" aria-hidden="true">
-																	<option selected="selected" name="country">{{ uganda }}</option>
-                                                                    {% for countries in my_country %}
-
-																	<option name="country">{{ countries }}</option>
-                                                                    {% endfor %}
-																</select>
+                                                                {{ form.country }}
 
 															</div>
 													    </div>
@@ -101,7 +120,7 @@
 															  <div class="input-group-addon">
 																<i class="fa fa-map-marker"></i>
 															  </div>
-															   <input type="text" name="address" class="form-control" id="Address" placeholder="Address">
+															   <input type="text" name="address" class="form-control" id="Address" value="{{ request.user.address }}">
 															</div>
 															<!-- /.input group -->
 														</div>

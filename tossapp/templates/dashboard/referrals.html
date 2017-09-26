@@ -2,6 +2,7 @@
 
 {% block title %}Dashboard: Referrals{% endblock %}
 {% load staticfiles %}
+{% load humanize %}
 {% block content %}
 
     <div class="row">
@@ -51,7 +52,7 @@
 
 										<div class="row">
 											<div class="col-md-12">
-												<input type="text" id="website" class="form-control" value="https://www.tossapp.com/ref/{{user.username }}" >
+												<input type="text" id="website" class="form-control" value="https://www.tossapp.com/{{user.username }}" >
 												<div class="form-actions">
 
 													<div class="md-checkbox">
@@ -96,7 +97,7 @@
 
 														<div class="col-md-6">
 															<h4 id="your_share_links_text"> Referral Earnings  </h4>
-															<h2 id="your_share_links_text"> Ugx {{ user.referrer_prize }} </h2>
+															<h2 id="your_share_links_text"> Ugx {{ user.referrer_prize|intcomma }} </h2>
 														</div>
 
 													</div>

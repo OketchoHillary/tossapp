@@ -10,6 +10,7 @@
     <meta charset="utf-8" />
     <title>{% block title %}Tossapp | Dashboard{% endblock %}</title>
  {% load staticfiles %}
+{% load humanize %}
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta content="width=device-width, initial-scale=1" name="viewport" />
     <meta content="" name="description" />
@@ -42,7 +43,7 @@
     <link href="{% static 'tossapp/assets/css/custom.css' %}" rel="stylesheet" type="text/css" />
     <!-- END THEME LAYOUT STYLES -->
 
-    <link rel="shortcut icon" type="image/png" href="{%  static 'tossapp/assets/img/tossapp_logo.png' %}"/>
+    <link rel="shortcut icon" type="image/png" href="{%  static 'tossapp/assets/img/download.jpg' %}"/>
 </head>
 <!-- END HEAD -->
 
@@ -282,7 +283,7 @@
                             <div class="">
                                 <ul class="page-breadcrumb">
                                     <li>
-                                        <span style="color: 4cbb17; "> <strong> Ugx {{ account_balance }}/= </strong></span>
+                                        <span style="color: 4cbb17; "> <strong> Ugx {{ account_balance|intcomma }}/= </strong></span>
                                     </li>
                                 </ul>
                             </div>

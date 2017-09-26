@@ -21,15 +21,6 @@ import datetime
 def todays_lotto():
     return DailyLotto.objects.all().order_by('-start_date')[0]
 
-<<<<<<< HEAD
-=======
-my_lotto = DailyLotto.objects.all().values_list('lotto_id').order_by('-start_date').first()
-if my_lotto is None:
-    loto_id = 0
-else:
-    loto_id = int(my_lotto[0])
-endDate = DailyLotto.objects.filter(lotto_id=loto_id).values_list('end_date', flat=True)
->>>>>>> f8d26f5c58b3641ce9530c0e5896f62a7d396e9c
 
 def previous_lotto():
     return DailyLotto.objects.all().order_by('-start_date')[1]
@@ -63,10 +54,13 @@ def lotto(request, template_name='daily_lotto/home.html'):
     page = 'The Daily Lotto'
     page_brief = 'The more tickets you Buy, the more chances of moving away with the Jackpot.'
 
-    ends = str(now_plus_1())
+    my_lotto = DailyLotto.objects.all().values_list('lotto_id').order_by('-start_date').first()
+    if my_lotto is None:
+        loto_id = 0
+    else:
+        loto_id = int(my_lotto[0])
 
-    my_lotto = DailyLotto.objects.all().values_list('lotto_id').order_by('-start_date')[0]
-    loto_id = int(my_lotto[0])
+    ends = str(now_plus_1())
 
     endDate = DailyLotto.objects.filter(lotto_id=loto_id).values_list('end_date', flat=True)
 
@@ -215,24 +209,17 @@ def lotto(request, template_name='daily_lotto/home.html'):
     """Ticket purchase"""
 
     if request.method == 'POST':
-        selection_form = TicketForm(request.POST)
+        form = TicketForm(request.POST or None)
         random_ticketform = RandomTicketForm(request.POST)
         # submitting both selection form and randomTickets form
-        if selection_form.is_valid() and random_ticketform.is_valid():
+        if form.is_valid() and random_ticketform.is_valid():
             my_quantity = random_ticketform.cleaned_data
             quantity = my_quantity.get('quantity')
             if request.user.is_authenticated():
                 # current time date and time is less than end date
                 if datetime.datetime.now().isoformat() <= ends:
                     # players balance is greater or equal to 500
-                    if request.user.balance >= 500:
-                        data = selection_form.cleaned_data
-                        number1 = data.get('n1')
-                        number2 = data.get('n2')
-                        number3 = data.get('n3')
-                        number4 = data.get('n4')
-                        number5 = data.get('n5')
-                        number6 = data.get('n6')
+                    if request.user.balance > 499:
                         # handling none type values
 
                         if quantity is None:
@@ -242,11 +229,12 @@ def lotto(request, template_name='daily_lotto/home.html'):
 
                         # calculating number of tickets and ticket price
                         ze = quantity * ticket_cost
-                        instance = selection_form.save(commit=False)
+                        instance = form.save(commit=False)
                         instance.player_name = request.user
                         instance.daily_lotto = todays_lotto()
                         random_tickets(random_ticketform, request)
                         instance.save()
+                        form.save()
                         # calculating users balance
                         ao = balance_calculator(request.user.balance, ze + ticket_cost)
                         total_bet = ze + ticket_cost
@@ -265,49 +253,19 @@ def lotto(request, template_name='daily_lotto/home.html'):
                 else:
                     messages.info(request, "Lotto has ended, Next lotto at midnight")
 
-        # Submitting selection form only
-        elif selection_form.is_valid():
-            if request.user.is_authenticated():
-                if datetime.datetime.now().isoformat() <= ends:
-                    if request.user.balance >= 500:
-                        datae = selection_form.cleaned_data
-                        n1 = datae.get('n1')
-                        n2 = datae.get('n2')
-                        n3 = datae.get('n3')
-                        n4 = datae.get('n4')
-                        n5 = datae.get('n5')
-                        n6 = datae.get('n6')
-                        instance1 = selection_form.save(commit=False)
-                        instance1.player_name = request.user
-                        instance1.daily_lotto = todays_lotto()
-                        instance1.save()
-                        ar = balance_calculator(request.user.balance, ticket_cost)
-                        totals1 = total(ticket_cost, 0)
-                        Tuser.objects.filter(user=request.user).update(balance=ar)
-                        lotto_game = Game.objects.filter(name='Daily Lotto')[0]
-                        Game_stat.objects.create(user=request.user, game=lotto_game, bet_amount=ticket_cost, status=Game_stat.PENDING, service_fee=fee)
-                        Game.objects.filter(name='Daily Lotto').update(times_played=F("times_played") + 1)
-                        messages.success(request, "successfully submitted")
-                        return HttpResponseRedirect(reverse_lazy('lotto'))
-                    else:
-                        messages.info(request, "Insufficient balance")
-                else:
-                    messages.info(request, "Lotto has ended, Next lotto at midnight")
-            else:
-                messages.info(request, "please Login")
-
         # submitting random ticket form only
         elif random_ticketform.is_valid():
             my_quantity2 = random_ticketform.cleaned_data
             quantity = my_quantity2.get('quantity')
-            if quantity is None:
-                quantity = 0
-            else:
-                quantity = my_quantity2.get('quantity')
-            fees = fee * quantity
             if request.user.is_authenticated():
                 if datetime.datetime.now().isoformat() <= ends:
                     if request.user.balance >= 500:
+
+                        if quantity is None:
+                            quantity = 0
+                        else:
+                            quantity = my_quantity2.get('quantity')
+                        fees = fee * quantity
 
                         random_tickets(random_ticketform, request)
                         ap = balance_calculator(request.user.balance, quantity * ticket_cost)
@@ -323,11 +281,9 @@ def lotto(request, template_name='daily_lotto/home.html'):
                     messages.info(request, "Lotto has ended, Next lotto at midnight")
             return HttpResponseRedirect(reverse_lazy('lotto'))
     else:
-        selection_form = TicketForm()
+        form = TicketForm()
         random_ticketform = RandomTicketForm()
-    args['random_ticketform'] = RandomTicketForm
     return render(request, template_name, locals(), context)
-
 
 
 

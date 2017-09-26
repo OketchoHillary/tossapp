@@ -18,10 +18,13 @@
                                         {% else %}
                                         <img src="" alt="Profile photo {{ tuser.username }}">
                                         {% endif %}
-                                    <form method="post" enctype="multipart/form-data">
-                                        {% csrf_token %}
-                            <button id="ts_upload_pic_bt" name="upload_pic" class="btn blue btn-block"> Upload Photo </button>
-                                        </form>
+                            <button id="ts_upload_pic_bt" name="upload_pic" class="btn blue btn-block">Upload Photo </button>
+                                    <div id="popover-head" class="hide">
+                                        some title
+                                    </div>
+                                        <div id="popover-content" class="hide">
+                                            <!-- MyForm -->
+                                        </div>
 									</div>
 									<!--  profile image box -->
 
@@ -42,7 +45,7 @@
                                                 <tr id="ts_main_headers">
                                                     <td id="ts_main_info_heading"> Your Info </td>
                                                     <td style="float: right" id="ts_infobox_edit_bt" >
-														<a href="{% url 'dashboard_edit_profile' %}" style="color: #4cbb17;"> <i class="fa fa-edit" id="ts_main_info_edit_button"></i> </a>
+														<a href="{% url 'edit_profile' %}" style="color: #4cbb17;"> <i class="fa fa-edit" id="ts_main_info_edit_button"></i> </a>
 													</td>
                                                 </tr>
 
@@ -153,7 +156,11 @@
 
                                             </tbody>
                                         </table>
-
+                                    <form enctype="multipart/form-data" method="post">
+                                        {% csrf_token %}
+                                        {{ form }}
+                                        <input type="submit" value="sub">
+                                    </form>
 
 								</div>
 
@@ -163,5 +170,5 @@
 
 						</div>
     <link href="{% static 'tossapp/assets/css/ts_user_profile.css' %}" rel="stylesheet" type="text/css" />
-
+    <script src="{% static 'tossapp/assets/js/pop.js' %}" type="text/javascript"></script>
 {% endblock %}

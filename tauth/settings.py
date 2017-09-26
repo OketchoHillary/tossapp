@@ -90,7 +90,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'toss_app_db',
         'USER': 'root',
-        'PASSWORD': 'root',
+        'PASSWORD': '',
         'HOST': '127.0.0.1',   # Or an IP Address that your DB is hosted on
         'PORT': '3306',
     }
@@ -117,6 +117,8 @@ AUTH_PASSWORD_VALIDATORS = [
 AUTHENTICATION_BACKENDS = (
     'accounts.backends.TauthBackend',
 )
+
+COUNTRIES_FIRST_REPEAT = True
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.9/topics/i18n/
