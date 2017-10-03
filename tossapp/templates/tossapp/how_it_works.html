@@ -1,86 +1,72 @@
 <!DOCTYPE html>
-<!--
-	Template Name: Metronic - Responsive Admin Dashboard Template build with Twitter Bootstrap 3.3.6
-	Version: 4.5.4
-	Author: KeenThemes
-	Website: http://www.keenthemes.com/
-	Contact: support@keenthemes.com
-	Follow: www.twitter.com/keenthemes
-	Like: www.facebook.com/keenthemes
-	Purchase: http://themeforest.net/item/metronic-responsive-admin-dashboard-template/4021469?ref=keenthemes
-	License: You must have a valid license purchased only from themeforest(the above link) in order to legally use the theme for your project.
--->
 <!--[if IE 8]> <html lang="en" class="ie8 no-js"> <![endif]-->
 <!--[if IE 9]> <html lang="en" class="ie9 no-js"> <![endif]-->
 <!--[if !IE]><!-->
 <html lang="en">
     <!--<![endif]-->
     <!-- BEGIN HEAD -->
-
+	
     <head>
         <meta charset="utf-8" />
-        <title>{% block title %}Tossapp | Dashboard{% endblock %}</title>
+        <title>How it Works | Tossapp</title>
         {% load staticfiles %}
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta content="width=device-width, initial-scale=1" name="viewport" />
         <meta content="" name="description" />
         <meta content="" name="author" />
-
-
+		
+		
         <!-- BEGIN GLOBAL MANDATORY STYLES -->
-        <!--
-        <link href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700&subset=all" rel="stylesheet" type="text/css" />
-        -->
+        <!-- 
+        <link href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700&subset=all" rel="stylesheet" type="text/css" /> 
+        --> 
         <link href="{% static 'tossapp/assets/plugins/font-awesome/css/font-awesome.min.css'%}" rel="stylesheet" type="text/css" />
         <link href="{% static 'tossapp/assets/plugins/simple-line-icons/simple-line-icons.min.css' %}" rel="stylesheet" type="text/css" />
         <link href="{% static 'tossapp/assets/plugins/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet" type="text/css" />
         <link href="{% static 'tossapp/assets/plugins/uniform/css/uniform.default.css' %}" rel="stylesheet" type="text/css" />
         <link href="{% static 'tossapp/assets/plugins/bootstrap-switch/css/bootstrap-switch.min.css' %}" rel="stylesheet" type="text/css" />
         <!-- END GLOBAL MANDATORY STYLES -->
-
-
-        <!-- BEGIN PAGE LEVEL PLUGINS -->
-        <link href="{% static 'tossapp/assets/plugins/select2/css/select2.min.css' %}" rel="stylesheet" type="text/css" />
-        <link href="{% static 'tossapp/assets/plugins/select2/css/select2-bootstrap.min.css' %}" rel="stylesheet" type="text/css" />
-        <!-- END PAGE LEVEL PLUGINS -->
-
+		
 
         <!-- BEGIN THEME GLOBAL STYLES -->
         <link href="{% static 'tossapp/assets/css/components.min.css' %}" rel="stylesheet" id="style_components" type="text/css" />
         <link href="{% static 'tossapp/assets/css/plugins.min.css' %}" rel="stylesheet" type="text/css" />
         <!-- END THEME GLOBAL STYLES -->
-
-
+		
+		
         <!-- BEGIN PAGE LEVEL STYLES -->
-        <link href="{% static 'tossapp/assets/css/login.min.css' %}" rel="stylesheet" type="text/css" />
+         <link href="{% static 'tossapp/assets/css/login.min.css' %}" rel="stylesheet" type="text/css" />
 		<link href="{% static 'tossapp/assets/css/layout.min.css' %}" rel="stylesheet" type="text/css" />
 		<link href="{% static 'tossapp/assets/css/tossapp.css' %}" rel="stylesheet" type="text/css" id="style_color" />
         <link href="{% static 'tossapp/assets/css/custom.css' %}" rel="stylesheet" type="text/css" />
-        <link href="{% static 'tossapp/assets/css/ts_login.css' %}" rel="stylesheet" type="text/css" />
+        <link href="{% static 'tossapp/assets/css/ts_how_it_works.css' %}" rel="stylesheet" type="text/css" />
         <!-- END PAGE LEVEL STYLES -->
-
-
+		
+		
         <!-- BEGIN THEME LAYOUT STYLES -->
         <!-- END THEME LAYOUT STYLES -->
-
+		
 	<link rel="shortcut icon" type="image/png" href="{%  static 'tossapp/assets/img/download.jpg' %}"/>
-    </head>
-
     <!-- END HEAD -->
-
+	
     <body class=" login">
-
-
-    <!-- BEGIN HEADER -->
+		
+		
+		
+		
+		
+		<!-- BEGIN HEADER -->
         <div class="page-header navbar navbar-fixed-top">
-
+			
+			
 			<!-- BEGIN HEADER INNER -->
             <div class="page-header-inner ">
                 {% url 'contact' as url1 %}
                 {% url 'faq' as url2 %}
                 {% url 'login' as url3 %}
                 {% url 'register' as url4 %}
-
+                
+				
 				<!-- BEGIN LOGO -->
                 <div class="page-logo">
                     {% if user.is_authenticated %}
@@ -94,19 +80,19 @@
                     {% endif %}
 				</div>
                 <!-- END LOGO -->
-
-
+				
+				
                 <!-- BEGIN RESPONSIVE MENU TOGGLER -->
                 <a href="javascript:;" class="menu-toggler responsive-toggler" data-toggle="collapse" data-target=".navbar-collapse"> </a>
                 <!-- END RESPONSIVE MENU TOGGLER -->
-
-
+                
+				
 				<!-- BEGIN TOP NAVIGATION MENU -->
                 <div class="top-menu"  style="height: 100px;">
-
-
-
-
+					
+					
+					
+					
 					<ul class="nav navbar-nav pull-left">
 						<li class="top_nav_elements" >
 							{% if user.is_authenticated %}
@@ -123,22 +109,23 @@
 							<a href="{% url 'faq' %}" class="ts_top_menu">FAQ</a>
 						</li>
 					</ul>
-
-
+					
+					
                     <ul class="nav navbar-nav pull-right">
 						<li {% if request.path == url4 %} class="dropdown dropdown-quick-sidebar-toggler open" {% endif %}>
                         {% if user.is_anonymous %}
 							<a href="{% url 'register' %}" class="ts_top_menu">
-								Signup<i class="icon-plus"></i>
+								Signup <i class="icon-plus"></i>
 							</a>
                         {% endif %}
 						</li>
 
 
+
 						<li {% if request.path == url3 %} class="dropdown dropdown-quick-sidebar-toggler open" {% endif %}>
                         {% if user.is_anonymous %}
 							<a href="{% url 'login' %}" class="ts_top_menu">
-								Login<i class="icon-login"></i>
+								Login <i class="icon-login"></i>
 							</a>
                             {% else %}
                             <a href="{% url 'logout' %}?next={% url 'index' %}" class="ts_top_menu">
@@ -149,41 +136,112 @@
 
 					</ul>
 
+					
 				</div>
                 <!-- END TOP NAVIGATION MENU -->
-
+				
 			</div>
             <!-- END HEADER INNER -->
-
+			
 		</div>
         <!-- END HEADER -->
-
-
-
-
-
-
-
-
+		
+		
+		
+		
+		
+		
+		
+        
 		<!-- BEGIN LOGO -->
         <!-- <div class="logo">
             <a href="index.html">
 			<img src="assets/pages/img/logo-big.png" alt="" /> </a>
 		</div> -->
         <!-- END LOGO -->
-
-		<div id="space_here"></div>
-
+		
 		<!-- BEGIN LOGIN -->
-        <div class="content">
-            {% block content %}
-
-            {% endblock %}
-
-			<!-- BEGIN LOGIN FORM -->
+        <div class="content" id="content_box">
+			
+			<div class="row">
+				<div class="col-md-12" id="ts_video_player" style=" background-image: url('static/tossapp/assets/img/how_it_works_vp.png'); ">
+					<div id="ts_words_in_the_video">
+						
+						<h2 style="font-family: Ubuntu;">How it Works</h2>
+						
+						<h4 style="color: #fff; font-size: large;">Getting started with Tossapp has just got easier</h4>
+						
+						<h1><i class="fa fa-play-circle-o" id="ts_video_play_bt" ></i></h1>
+						
+					</div>
+				</div>
+			</div>
+			
+			<div class="row">
+			<h4 id="ts_follow_steps"> Step 1:</h4>
+				<div class="col-md-2">
+					
+					<h1><i class="fa fa-home" id="ts_illa_icons"></i></h1>
+					
+				</div>
+				
+				<div class="col-md-10">
+					
+					<h4 id="ts_step_title"> Deposit Funds.</h4>
+					<p>
+					A team from the Microsoft-Dell offices in the USA has said the computer software and hardware manufacturers will soon open offices in Kampala to take care of their business in the region. The team which was in the country at the end of last week said business in Uganda has been growing at 20% per annum, prompting them to have a legal presence in the country. “We are amazed at the level of computer proficiency in this country. People are increasingly asking for high level IT solutions which we are happy to provide, but also now, we must think of setting up offices to address any needs and queries they may have,” said Nazih Moufarrej, Dell’s regional sales director.
+					</p>
+					
+				</div>
+				<hr/>
+			</div>
+			
+			<div class="row">
+				<h4 id="ts_follow_steps"> Step 2:</h4>
+				<div class="col-md-10">
+					
+					
+					<h4 id="ts_step_title"> Play A Game.</h4>
+					<p>
+					A team from the Microsoft-Dell offices in the USA has said the computer software and hardware manufacturers will soon open offices in Kampala to take care of their business in the region. The team which was in the country at the end of last week said business in Uganda has been growing at 20% per annum, prompting them to have a legal presence in the country. “We are amazed at the level of computer proficiency in this country. People are increasingly asking for high level IT solutions which we are happy to provide, but also now, we must think of setting up offices to address any needs and queries they may have,” said Nazih Moufarrej, Dell’s regional sales director.
+					</p>
+					
+				</div>
+				
+				<div class="col-md-2">
+					
+					<h1><i class="fa fa-gamepad" id="ts_illa_icons"></i></h1>
+				</div>
+				<hr>
+			</div>
+			
+			
+			<div class="row">
+			<h4 id="ts_follow_steps"> Step 3:</h4>
+				<div class="col-md-2">
+					
+					<h1><i class="fa fa-money" id="ts_illa_icons"></i></h1>
+					
+				</div>
+				
+				<div class="col-md-10">
+					
+					<h4 id="ts_step_title"> Win the Money.</h4>
+					<p>
+					A team from the Microsoft-Dell offices in the USA has said the computer software and hardware manufacturers will soon open offices in Kampala to take care of their business in the region. The team which was in the country at the end of last week said business in Uganda has been growing at 20% per annum, prompting them to have a legal presence in the country. “We are amazed at the level of computer proficiency in this country. People are increasingly asking for high level IT solutions which we are happy to provide, but also now, we must think of setting up offices to address any needs and queries they may have,” said Nazih Moufarrej, Dell’s regional sales director.
+					</p>
+					
+				</div>
+				<hr/>
+			</div>
+			
+			
+			
 		</div>
-         <div class="copyright">Forgot your Password? <a href="#" style="color: white;">Click Here</a></div>
-
+		
+		<div class="copyright">Forgot your Password? Click Here</div>
+		
+		
 		<!-- BEGIN FOOTER -->
 		<div class="page-footer">
 			<div class="page-footer-inner">  &copy; Tossapp {{ year }}
@@ -194,11 +252,11 @@
 			</div>
 		</div>
 		<!-- END FOOTER -->
-
-
-        <!--[if lt IE 9]>
+		
+		
+		 <!--[if lt IE 9]>
 			<script src="../assets/global/plugins/respond.min.js"></script>
-			<script src="../assets/global/plugins/excanvas.min.js"></script>
+			<script src="../assets/global/plugins/excanvas.min.js"></script> 
 		<![endif]-->
 
 
@@ -208,15 +266,15 @@
         <!-- I Deleted some Js Links From this Position -->
         <!-- END CORE PLUGINS -->
 
-        <!-- BEGIN PAGE LEVEL PLUGINS -->
-        <!-- ALSO DELETED SOME LINKS -->
+        <!-- BEGIN PAGE LEVEL PLUGINS --> 
+        <!-- ALSO DELETED SOME LINKS --> 
         <!-- END PAGE LEVEL PLUGINS -->
 
 
         <!-- BEGIN PAGE LEVEL SCRIPTS -->
-        <script src="{% static 'tossapp/assets/js/login.min.js' %}" type="text/javascript"></script>
+       <script src="{% static 'tossapp/assets/js/login.min.js' %}" type="text/javascript"></script>
         <!-- END PAGE LEVEL SCRIPTS -->
 
 	</body>
-
-</html>
+	
+</html>	

@@ -244,7 +244,7 @@ def lotto(request, template_name='daily_lotto/home.html'):
                         # updating users balance
                         Tuser.objects.filter(username=request.user).update(balance=ao)
                         Game_stat.objects.create(user=request.user, game=lotto_game, bet_amount=total_bet, status=Game_stat.PENDING, service_fee=service_fee)
-                        Game.objects.filter(name='Daily Lotto').update(times_played=F("times_played") + 1)
+                        # Game.objects.filter(name='Daily Lotto').update(times_played=F("times_played") + 1)
                         totals = total(ticket_cost, quantity * ticket_cost)
                         messages.success(request, "successfully submitted")
                         return HttpResponseRedirect(reverse_lazy('lotto'))
@@ -272,7 +272,7 @@ def lotto(request, template_name='daily_lotto/home.html'):
                         qt = quantity * ticket_cost
                         Tuser.objects.filter(username=request.user).update(balance=ap)
                         Game_stat.objects.create(user=request.user, game=lotto_game, bet_amount=qt, status=Game_stat.PENDING, service_fee=fees)
-                        Game.objects.filter(name='Daily Lotto').update(times_played=F("times_played") + 1)
+                        # Game.objects.filter(name='Daily Lotto').update(times_played=F("times_played") + 1)
                         totals2 = total(0, quantity * ticket_cost)
                         messages.success(request, "successfully submitted")
                     else:
@@ -283,6 +283,7 @@ def lotto(request, template_name='daily_lotto/home.html'):
     else:
         form = TicketForm()
         random_ticketform = RandomTicketForm()
+    args['form'] = form
     return render(request, template_name, locals(), context)
 
 

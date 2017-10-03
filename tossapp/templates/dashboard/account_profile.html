@@ -13,18 +13,39 @@
 								<div class="col-md-4">
 									<!-- profile image box -->
 									<div id="ts_profile_image_box">
-                                        {% if tuser.profile_photo %}
-										<img src="{{ tuser.profile_photo.url }}" alt="Profile photo {{ tuser.username }}" id="ts_box_profile_img" width="338" height="274"/>
-                                        {% else %}
-                                        <img src="" alt="Profile photo {{ tuser.username }}">
-                                        {% endif %}
-                            <button id="ts_upload_pic_bt" name="upload_pic" class="btn blue btn-block">Upload Photo </button>
-                                    <div id="popover-head" class="hide">
-                                        some title
-                                    </div>
-                                        <div id="popover-content" class="hide">
-                                            <!-- MyForm -->
-                                        </div>
+
+										<img src="{{ tuser.profile_photo.url }}" alt="Profile photo {{ tuser.username }}" id="ts_box_profile_img" />
+
+                            <button id="ts_upload_pic_bt" name="upload_pic" class="btn blue btn-block" data-toggle="modal" data-target="#myModal">Upload Photo </button>
+                                    <!--Begin Modal Window-->
+
+                                        <div class="modal fade left" id="myModal">
+<div class="modal-dialog">
+<div class="modal-content">
+
+    <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title" id="myModalLabel"> Upload New Picture </h4>
+              </div>
+
+<div class="modal-body">
+    <form enctype="multipart/form-data" method="post">
+        {% csrf_token %}
+        Current Profile Picture
+        <img src="{{ tuser.profile_photo.url }}" width="50" height="50"/>
+        <input type="file" name="profile_photo" value="upload new">
+        <br>
+        <input type="submit" class="btn btn-info" value="Submit Photo">
+    </form>
+
+    <div class="modal-footer">
+    </div>
+
+    </div>
+    </div>
+    </div>
+    </div>
+
 									</div>
 									<!--  profile image box -->
 
@@ -34,9 +55,6 @@
 
 
 									<div>
-
-
-
 
 
 										<table class="table" style=" margin-bottom: 10px;">
@@ -66,7 +84,7 @@
 
                                                 <tr>
                                                     <td id="ts_main_info_text"> Points: </td>
-                                                    <td id="ts_main_info_text_ans"> #{{ tuser.points }} points </td>
+                                                    <td id="ts_main_info_text_ans"> #{{ tuser.points }} poin{{ tuser.points|pluralize:"t,ts" }} </td>
                                                 </tr>
 
                                                 <tr>
@@ -156,19 +174,17 @@
 
                                             </tbody>
                                         </table>
-                                    <form enctype="multipart/form-data" method="post">
-                                        {% csrf_token %}
-                                        {{ form }}
-                                        <input type="submit" value="sub">
-                                    </form>
 
 								</div>
 
 							</div>
 
                         </div>
-
-						</div>
+                    </div>
     <link href="{% static 'tossapp/assets/css/ts_user_profile.css' %}" rel="stylesheet" type="text/css" />
-    <script src="{% static 'tossapp/assets/js/pop.js' %}" type="text/javascript"></script>
+
+
 {% endblock %}
+    <script src="https://code.jquery.com/jquery-1.12.2.min.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>

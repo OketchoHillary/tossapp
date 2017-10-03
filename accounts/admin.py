@@ -10,7 +10,7 @@ from django.contrib.auth.models import Group
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 
-from django.contrib import messages
+from django.db.models import F
 
 from accounts.models import Tuser
 
@@ -97,6 +97,8 @@ class UserCreationForm(forms.ModelForm):
             # summing referee balance
             sum_balance = referee_balance + Tuser.REFERRAL_PRIZE
             Tuser.objects.filter(username=self.cleaned_data["referrer_username"]).update(referrer_prize=sum_prize, balance=sum_balance)
+            # incrementing points on referee
+            Tuser.objects.filter(username=self.cleaned_data["referrer_username"]).update(points=F("points") + 1)
             # user.referrer_prize = Tuser.REFERRAL_PRIZE
         if commit:
             user.save()

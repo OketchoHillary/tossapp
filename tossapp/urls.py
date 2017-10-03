@@ -3,13 +3,15 @@ from django.conf.urls import url, include
 from tossapp.views import index, dashboard, dashboard_notifications, dashboard_games, dashboard_games_history, \
     dashboard_transactions, dashboard_payments_deposit, dashboard_payments_withdraw, dashboard_referrals, \
     dashboard_account_profile, dashboard_account_settings, contact, faq, rock_paper_scissor, flip_coin, money_slot, \
-    faq_detail, edit_profile
+    faq_detail, edit_profile, how_it_works, about_us
 
 urlpatterns = [
     url(r'^$', index, name='index'),
     url(r'^contact-us', contact, name='contact'),
     url(r'^faq$', faq, name='faq'),
     url(r'^faq/(?P<slug>[\w-]+)/$', faq_detail, name='faq_detail'),
+    url(r'^how-it-works', how_it_works, name='how_it_works'),
+    url(r'^about-us', about_us, name='about_us'),
     url(r'^dashboard$', dashboard, name='dashboard'),
     #url(r'^dashboard$', dashboard.as_view(), name='dashboard'),
     url(r'^dashboard/notifications$',dashboard_notifications.as_view(), name='dashboard_notifications'),

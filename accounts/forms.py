@@ -7,6 +7,7 @@ from accounts.admin import validate_phone_number
 from accounts.models import Tuser
 from accounts.sendSms import send_verification_sms
 from accounts.utils import generate_verification_code
+from tossapp.models import Notification
 
 
 class AuthForm(AuthenticationForm):
@@ -24,6 +25,7 @@ class ActivationForm(forms.Form):
     def clean_verification_code(self):
         code = self.cleaned_data.get('verification_code')
         if self.user and self.user.verification_code == code:
+            Notification.objects.create(user=self.user, title='Welcome to Tossapp', description='You have successfully created your Tossapp account.', type=0)
             return code
         else:
             raise forms.ValidationError(u'Wrong verification code.')

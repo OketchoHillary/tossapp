@@ -12,9 +12,10 @@ from django.template import RequestContext
 from django.views.decorators.csrf import csrf_protect
 from django.core.paginator import Paginator, PageNotAnInteger
 from django.views.generic import TemplateView, ListView, DetailView, UpdateView
+from django.db.models import Count
 
 from accounts.models import Tuser
-from tossapp.forms import ChangePasswordForm, ChangeUsernameForm, ContactForm, ChangeProfileForm
+from tossapp.forms import ChangePasswordForm, ChangeUsernameForm, ContactForm, ChangeProfileForm, ChangeDpForm
 from tossapp.models import Notification, Game, Game_stat, Transaction, Faq, Country
 
 
@@ -56,7 +57,7 @@ def faq(request, template_name="tossapp/faq.html"):
     page = 'FAQ'
     faq_list = Faq.objects.all()
     paginator = Paginator(faq_list, 2)
-    page1 = request.GET.get('page')
+    page1 = request.GET.get('page1')
     try:
         faqs = paginator.page(page1)
     except PageNotAnInteger:
@@ -69,14 +70,23 @@ def faq_detail(request, slug):
     return render(request, 'tossapp/faq_detail.html', {'faq': faq})
 
 
+def how_it_works(request):
+    return render(request, 'tossapp/how_it_works.html')
+
+
+def about_us(request):
+    return render(request, 'tossapp/abouts_us.html')
+
+
 class dashboard_notifications(LoginRequiredMixin, ListView):
     page = 'Notifications'
     page_brief = 'Notification & updates'
     template_name = 'dashboard/notifications.html'
     context_object_name = 'notification_list'
+    paginate_by = 10
 
     def get_queryset(self):
-        return Notification.objects.filter(user=self.request.user)[:15]
+        return Notification.objects.filter(user=self.request.user).all()[:30]
 
     def get_context_data(self, **kwargs):
         context = super(dashboard_notifications, self).get_context_data(**kwargs)
@@ -184,8 +194,9 @@ class dashboard_referrals(LoginRequiredMixin, ListView):
     page = 'Referrals'
     page_brief = 'Tell some of your friends and earn more Money'
     template_name = 'dashboard/referrals.html'
-    players = Tuser.objects.all()[:10]
+    players = Tuser.objects.all().annotate(num_refferals=Count('referrals')).order_by('-num_refferals')[:10]
     context_object_name = 'referral_list'
+    paginate_by = 10
 
     def get_queryset(self):
         return Tuser.objects.filter(referrer=self.request.user)
@@ -202,8 +213,7 @@ class dashboard_account_profile(LoginRequiredMixin, UpdateView):
     page_brief = 'This is how your Profile Looks Like'
     template_name = 'dashboard/account_profile.html'
     context_object_name = 'tuser'
-    model = Tuser
-    fields = ['profile_photo']
+    form_class = ChangeDpForm
     success_url = reverse_lazy('dashboard_account_profile')
 
     def get_object(self, queryset=None):
@@ -243,6 +253,7 @@ class dashboard_account_settings(LoginRequiredMixin, MultiFormView):
         tuser.username = form.cleaned_data['new_username']
         tuser.save()
         messages.success(self.request, 'successfully updated your Username')
+        Notification.objects.create(user=self.request.user, title='Successfully updated Username', description='Username has been changed', type=0)
         return
 
     def changepasswordform_valid(self, form):
@@ -250,6 +261,7 @@ class dashboard_account_settings(LoginRequiredMixin, MultiFormView):
         tuser.set_password(form.cleaned_data['new_password'])
         tuser.save()
         messages.success(self.request, 'successfully updated your Password')
+        Notification.objects.create(user=self.request.user, title='Password', description='Password has been changed', type=0)
         return
 
     def post(self, request, *args, **kwargs):
@@ -276,9 +288,6 @@ def edit_profile(request):
     context = RequestContext(request)
     page = 'Edit Your Profile'
     page_brief = 'edit your profile by filling the form below.'
-    ug = Country.objects.filter(name='Uganda')[0]
-    my_country = Country.objects.all().exclude(name=ug)
-    uganda = Country.objects.filter(name='Uganda')[0]
     if request.method == 'POST':
         form = ChangeProfileForm(data=request.POST or None, instance=request.user)
         if form.is_valid():

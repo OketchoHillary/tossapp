@@ -124,6 +124,17 @@ class ChangeProfileForm(forms.ModelForm):
         return user
 
 
+class ChangeDpForm(forms.ModelForm):
+    profile_photo = forms.ImageField(required=False)
+
+    class Meta:
+        model = Tuser
+        fields = ['profile_photo']
+
+    def clean_details(self):
+        profile_photo = self.cleaned_data.get('profile_photo')
+
+
 class ContactForm(forms.ModelForm):
     your_name = forms.CharField(required=True, error_messages=my_default_errors4, widget=forms.TextInput(attrs={'class':'form-control', 'size':'10','placeholder':'Your name'}))
     your_email = forms.CharField(required=True,error_messages=my_default_errors5, widget=forms.EmailInput(attrs={'class':'form-control', 'size':'10','placeholder':'Your email'}))
