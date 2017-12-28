@@ -4,22 +4,25 @@ from cbvtoolkit.views import MultiFormView
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import reverse_lazy
-from django.http import HttpResponseForbidden, HttpResponseRedirect
+from django.http import HttpResponseForbidden, HttpResponseRedirect, Http404
 from django.shortcuts import render, get_object_or_404
 # Create your views here.
 from django.template import RequestContext
 from django.views.decorators.csrf import csrf_protect
 from django.core.paginator import Paginator, PageNotAnInteger
-from django.views.generic import TemplateView, ListView, DetailView, UpdateView
+from django.views.generic import TemplateView, ListView, DetailView, UpdateView, CreateView, FormView
 from django.db.models import Count
 
 from accounts.models import Tuser
-from tossapp.forms import ChangePasswordForm, ChangeUsernameForm, ContactForm, ChangeProfileForm, ChangeDpForm
-from tossapp.models import Notification, Game, Game_stat, Transaction, Faq, Country
+from tossapp.forms import ChangePasswordForm, ChangeUsernameForm, ContactForm, ChangeProfileForm, ChangeDpForm,\
+    WithdrawForm
+from tossapp.models import Notification, Game, Game_stat, Transaction, Faq
 
 
 def index(request):
+    context = RequestContext(request)
     if request.user.is_authenticated:
         page = 'Dashboard'
     else:
@@ -28,7 +31,7 @@ def index(request):
     if request.user.is_authenticated:
         return render(request, 'tossapp/index.html', locals(), contact)
     else:
-        return render(request, 'dashboard/index.html')
+        return render(request, 'dashboard/index.html', locals(), context)
 
 
 @login_required
@@ -38,15 +41,17 @@ def dashboard(request):
     page_brief = 'dashboard & statistics'
     return render(request,'tossapp/index.html', locals(), context)
 
+
 @csrf_protect
 def contact(request, template_name='tossapp/contact_us.html'):
     context = RequestContext(request)
-    page_title = 'ContactUs'
+    page_title = 'Contact Us | Tossapp'
+    page_intro = 'Contact Us'
     if request.method == "POST":
         myqn_form = ContactForm(request.POST)
         myqn_form.save()
         messages.success(request, 'Successfully submitted your Message ')
-        return HttpResponseRedirect('contact_us')
+        return HttpResponseRedirect(reverse_lazy('contact'))
     else:
         myqn_form = ContactForm()
     return render(request, template_name, locals(), context)
@@ -54,7 +59,8 @@ def contact(request, template_name='tossapp/contact_us.html'):
 
 def faq(request, template_name="tossapp/faq.html"):
     context = RequestContext(request)
-    page = 'FAQ'
+    page_title = 'FAQ | Tossapp'
+    page_intro = 'Frequently Asked Questions'
     faq_list = Faq.objects.all()
     paginator = Paginator(faq_list, 2)
     page1 = request.GET.get('page1')
@@ -65,17 +71,15 @@ def faq(request, template_name="tossapp/faq.html"):
     return render(request,'tossapp/faq.html', locals(), context)
 
 
-def faq_detail(request, slug):
-    faq = get_object_or_404(Faq, slug=slug)
-    return render(request, 'tossapp/faq_detail.html', {'faq': faq})
-
-
 def how_it_works(request):
     return render(request, 'tossapp/how_it_works.html')
 
 
 def about_us(request):
-    return render(request, 'tossapp/abouts_us.html')
+    context = RequestContext(request)
+    page_title = 'About Us | Tossapp'
+    page_intro = 'About Us'
+    return render(request, 'tossapp/abouts_us.html', locals(), context)
 
 
 class dashboard_notifications(LoginRequiredMixin, ListView):
@@ -89,9 +93,21 @@ class dashboard_notifications(LoginRequiredMixin, ListView):
         return Notification.objects.filter(user=self.request.user).all()[:30]
 
     def get_context_data(self, **kwargs):
+        notification_count = Notification.objects.filter(user=self.request.user, seen_status=False).count()
         context = super(dashboard_notifications, self).get_context_data(**kwargs)
-        context.update({'page': self.page, 'page_brief': self.page_brief})
+        context.update({'page': self.page, 'page_brief': self.page_brief, 'notification_count':notification_count})
         return context
+
+
+@login_required
+def notification_status(request, n_id):
+    if request.user.is_authenticated:
+        n_s = get_object_or_404(Notification, pk=n_id)
+        n_s.seen_status = True
+        n_s.save()
+        return HttpResponseRedirect(reverse_lazy('dashboard_notifications'))
+    else:
+        raise Http404
 
 
 class dashboard_games(LoginRequiredMixin, ListView):
@@ -139,6 +155,17 @@ class money_slot(LoginRequiredMixin, TemplateView):
         return context
 
 
+class compound_boxes(LoginRequiredMixin, TemplateView):
+    page = 'Compound boxes'
+    page_brief = ""
+    template_name = 'games/compound_boxes.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(compound_boxes, self).get_context_data(**kwargs)
+        context.update({'page': self.page, 'page_brief': self.page_brief})
+        return context
+
+
 class dashboard_games_history(LoginRequiredMixin, ListView):
     page = 'Games History'
     page_brief = 'Games Statistics'
@@ -168,10 +195,12 @@ class dashboard_transactions(LoginRequiredMixin, ListView):
         return context
 
 
-class dashboard_payments_withdraw(LoginRequiredMixin, TemplateView):
+class dashboard_payments_withdraw(LoginRequiredMixin, FormView):
     page = 'Withdraw Funds'
     page_brief = 'Get your Funds onto your prefered Account instantly '
     template_name = 'dashboard/payments_withdraw.html'
+    form_class = WithdrawForm
+    success_url = reverse_lazy('dashboard_transactions')
 
     def get_context_data(self, **kwargs):
         context = super(dashboard_payments_withdraw, self).get_context_data(**kwargs)

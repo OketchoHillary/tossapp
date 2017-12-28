@@ -2,7 +2,6 @@
 {% load js %}
 
     {% block title %}Daily Lotto{% endblock %}
-{% load render_table from django_tables2 %}
 {% load staticfiles %}
 {% load humanize %}
 <link rel="stylesheet" href="{% static 'django_tables2/themes/paleblue/css/screen.css' %}"
@@ -24,13 +23,16 @@
 										<li class="lotto_menu"><a data-toggle="tab" href="#rules">Rules</a></li>
 									</ul>
                             {% if messages %}
+
                                 <div class="alert alert-success alert-dismissable">
                                     {% for message in messages %}
+
                                         <ul{% if message.tags %} class="{{ message.tags }}"{% endif %}>
                                             <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
                                             {{ message }}
                                         </ul>
-            </div>
+                                </div>
+
                                     {% endfor %}
                             {% endif %}
 

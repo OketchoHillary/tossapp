@@ -118,6 +118,7 @@ class Notification(models.Model):
     description = models.TextField()
     type = models.IntegerField(choices=STATUS_CHOICES, default=INFORMATION)
     timestamp = models.DateTimeField(auto_now_add=True, editable=False, null=False, blank=False)
+    seen_status = models.BooleanField(default=False)
 
     def __unicode__(self):
         return self.title
@@ -131,15 +132,11 @@ class Notification(models.Model):
 class Contact_us(models.Model):
     your_name = models.CharField(max_length=30, blank=False, null=False)
     your_email = models.EmailField(blank=False)
-    your_subject = models.CharField(max_length=40, blank=False, null=False)
     your_message = models.TextField(max_length=1000, blank=False, null=False)
-
-    def __str__(self):
-        return self.your_subject
 
     @property
     def short_text(self):
-        return truncatechars(self.your_subject, 20)
+        return truncatechars(self.your_message, 15)
 
     class Meta:
         db_table = 'Contact Us'

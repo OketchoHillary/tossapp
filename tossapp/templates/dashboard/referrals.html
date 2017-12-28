@@ -40,12 +40,12 @@
 												<div class="row">
                                                     <div class="col-md-12">
 														<span>
-                                                            <a href="https://www.facebook.com/sharer/sharer.php?u=https://www.tossapp.com/{{user.username }}" target="_blank">
+                                                            <a href="https://www.facebook.com/sharer/sharer.php?u=https://www.tossapp.com/{{user.share_code }}" target="_blank">
 															<button class="btn green uppercase" id="ts_social_icon" style=" background-color: #4a6d9d; border-color: #4a6d9d; "><i class="fa fa-facebook" style=" float: left; padding-top: 2.5%; "> </i> Facebook </button>
                                                             </a>
 														</span>
 														<span>
-                                                            <a href="https://twitter.com/share?url=www.tossapp.com/{{user.username }}&text=www.tossapp.com/{{user.username }}" onclick="window.open(this.href); return false;">
+                                                            <a href="https://twitter.com/intent/tweet?text=www.tossapp.com/{{user.share_code }}" onclick="window.open(this.href); return false;">
 															<button class="btn green uppercase" id="ts_social_icon" style=" background-color: #00BCD4; border-color: #00bcd4; "><i class="fa fa-twitter" style=" float: left; padding-top: 2.5%; "> </i> Twitter </button>
                                                                 </a>
 														</span>
@@ -56,15 +56,17 @@
 
 													<div class="col-md-12">
 														<span>
-                                                            <a href="https://plus.google.com/share?url=www.tossapp.com/{{user.username }}" onclick="window.open(this.href); return false;">
+                                                            <a href="http://plus.google.com/share?url=www.tossapp.com/{{user.share_code }}" onclick="window.open(this.href); return false;">
 															<button class="btn green uppercase" id="ts_social_icon" style=" background-color: #d34836; border-color: #d34836; "><i class="fa fa-google-plus" style=" float: left; padding-top: 2.5%; "> </i> Google Plus </button>
                                                                 </a>
 														</span>
 														<span>
+                                                            <a href="http://pinterest.com/pin/create/button/?url=www.tossapp.com/{{user.share_code }}" onclick="window.open(this.href); return false;">
 															<button class="btn green uppercase" id="ts_social_icon" style=" background-color: #cc2127; border-color: #cc2127; "><i class="fa fa-pinterest" style=" float: left; padding-top: 2.5%; "> </i> Pinterest </button>
+                                                                </a>
 														</span>
 														<span>
-															 <a href="whatsapp://send?text=www.tossapp.com/{{user.username }}" data-action="share/whatsapp/share"><button class="btn green uppercase" id="ts_social_icon" style=" background-color: green; border-color: green; "><i class="fa fa-whatsapp" style=" float: left; padding-top: 2.5%; "> </i> Whatsapp </button></a>
+															 <a href="whatsapp://send?text=www.tossapp.com/{{user.share_code }}" data-action="share/whatsapp/share"><button class="btn green uppercase" id="ts_social_icon" style=" background-color: green; border-color: green; "><i class="fa fa-whatsapp" style=" float: left; padding-top: 2.5%; "> </i> Whatsapp </button></a>
 														</span>
 													</div>
 
@@ -77,7 +79,7 @@
 
 										<div class="row">
 											<div class="col-md-12">
-												<input type="text" id="website" class="form-control" value="https://www.tossapp.com/{{user.username }}" >
+												<input type="text" id="website" class="form-control" value="https://www.tossapp.com/{{user.share_code }}" >
 												<div class="form-actions">
 
 													<div class="md-checkbox">
@@ -105,7 +107,7 @@
 
 														<div class="col-md-6">
 															<h4 id="your_share_links_text"> Your Rank </h4>
-															<h2 id="your_share_links_text"> # {{ user.rank }} </h2>
+															<h2 id="your_share_links_text"> # {{ user.tossapp_ranking }} </h2>
 														</div>
 
 													</div>

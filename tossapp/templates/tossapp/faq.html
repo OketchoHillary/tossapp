@@ -1,34 +1,26 @@
-{% extends 'base.html' %}
-
-{% block title %}FAQ{% endblock %}
+{% extends 'layout.html' %}
 
 {% block content %}
-    <div class="box-header with-border">
-  <h3 class="box-title">FAQ</h3>
-{% for faq in faq_list %}
-    <ul>
-    <li>
-    <a href="/faq/{{ faq.slug }}">{{ faq.question }}</a>
-    </li>
-    </ul>
-{% endfor %}
 
-    <div class="pagination">
-    <span class="step-links">
-        {% if faqs.has_previous %}
-            <a href="?page={{ faqs.previous_page_number }}">previous</a>
-        {% endif %}
+    <section id="content">
+				<section class="section-padding">
+					<div class="container">
+						<div class="row showcase-section">
 
-        <span class="current">
-            Page {{ faqs.number }} of {{ faqs.paginator.num_pages }}.
-        </span>
+							<div class="col-md-12">
 
-        {% if faqs.has_next %}
-            <a href="?page={{ faqs.next_page_number }}">next</a>
-        {% endif %}
-    </span>
-</div>
+                                {% for faq in faq_list %}
+								<div class="about-text">
+									<h3>{{ forloop.counter }}. {{ faq.question }}?</h3>
+									<p>{{ faq.answer }}</p>
+                                    {% endfor %}
+								</div>
 
-    </div>
+
+							</div>
+						</div>
+					</div>
+				</section>
+			</section>
 
 {% endblock %}

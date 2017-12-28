@@ -74,6 +74,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'tossapp.context_processors.years_processor',
                 'tossapp.context_processors.games_processor',
+                'tossapp.context_processors.current_lotto_processor',
             ],
         },
     },

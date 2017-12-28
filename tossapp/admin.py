@@ -23,7 +23,12 @@ class GameAdmin(admin.ModelAdmin):
     game_photo.allow_tags = True
 
 
-admin.site.register([Game_stat, Transaction, Notification, Contact_us, Country])
+class ContactUsAdmin(admin.ModelAdmin):
+    list_display = ['short_text']
+
+
+admin.site.register([Game_stat, Transaction, Notification,Country])
 admin.site.register(Faq, FaqAdmin)
 admin.site.register(Game, GameAdmin)
+admin.site.register(Contact_us, ContactUsAdmin)
 

@@ -83,8 +83,11 @@
 														<label for="exampleInputPassword1">Sex:</label>
 														<div class="md-radio-inline">
 															<div class="md-radio">
-																<input type="radio" id="radio6" name="sex" class="md-radiobtn" value="M">
-
+                                                                {% if user.sex == 'M' %}
+																<input type="radio" id="radio6" name="sex" class="md-radiobtn" value="M" checked="checked">
+                                                                    {% else %}
+                                                                    <input type="radio" id="radio6" name="sex" class="md-radiobtn" value="M">
+                                                                {% endif %}
 																<label for="radio6">
 																	<span class="inc"></span>
 																	<span class="check"></span>
@@ -92,7 +95,11 @@
 															</div>
 
 															<div class="md-radio">
-																<input type="radio" id="radio7" name="sex" class="md-radiobtn" value="F">
+                                                                {% if user.sex == 'F' %}
+																<input type="radio" id="radio7" name="sex" class="md-radiobtn" value="F" checked="checked">
+                                                                    <input type="radio" id="radio7" name="sex" class="md-radiobtn" value="F">
+                                                                    {% else %}
+                                                                {% endif %}
 																<label for="radio7">
 																	<span class="inc"></span>
 																	<span class="check"></span>

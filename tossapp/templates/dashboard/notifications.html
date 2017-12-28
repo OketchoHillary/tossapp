@@ -16,7 +16,7 @@
                                         <h4 style="float: right; color: #33719e; ">Notifications Settings</h4>
                                     </div>
                                 </div>
-                                <h5>Get notifications via: <span style="color: #33719e;"> Text Message </span></h5>
+                                <h5>Get notifications via: <span style="color: #33719e;"> Text Message </span><span>Click notification to mark as read</span></h5>
                                 <div class="row">
                                     <div class="col-md-12">
                                         <!-- Notifications table -->
@@ -27,7 +27,7 @@
                                                     <span class="caption-subject font-green bold">Notifications</span>
                                                 </div>
                                                 <div class="actions" id="ts_action_div">
-                                                    <h5><span style="font-weight: bold;"> {{ notification_list.count }} UnSeen </span></h5>
+                                                    <h5><span style="font-weight: bold;"> {{notification_count }} UnSeen </span></h5>
                                                 </div>
                                             </div>
                                             <div class="portlet-body">
@@ -35,19 +35,23 @@
                                                     <table class="table table-responsive">
                                                         <tbody>
                                                         {% for notification in notification_list %}
+                                                            {% if notification.seen_status == False %}
                                                             <tr id="ts_notification_unread">
+                                                                {% else %}
+                                                                <tr id="ts_notification_read">
+                                                            {% endif %}
                                                                 <td style="background-color: #4cbb17; text-align: center; ">
                                                                 <h1 style="margin-bottom: 0px;"></h1>
                                                                     {% if notification.type == 1 %}
-                                                                   <h1> <i class="fa fa-info" id="ts_big_notification_icons"></i></h1>
+                                                                   <h1> <a href="/mark_as_read/{{ notification.id }}/"> <i class="fa fa-info" id="ts_big_notification_icons"></i></a></h1>
                                                                         {% elif notification.type == 0 %}
-                                                                       <h1> <i class="fa fa-check" id="ts_big_notification_icons"></i></h1>
+                                                                       <h1> <a href="/mark_as_read/{{ notification.id }}/"><i class="fa fa-check" id="ts_big_notification_icons"></i></a></h1>
                                                                         {% elif notification.type == 4 %}
-                                                                        <h1><i class="fa fa-bank" id="ts_big_notification_icons"></i></h1>
+                                                                        <h1> <a href="/mark_as_read/{{ notification.id }}/"><i class="fa fa-bank" id="ts_big_notification_icons"></i></a></h1>
                                                                         {% elif notification.type == 3 %}
                                                                         <h1><i class="fa fa-info" id="ts_big_notification_icons"></i></h1>
                                                                         {% elif notification.type == 2 %}
-                                                                        <h1><i class="fa fa-info" id="ts_big_notification_icons"></i></h1>
+                                                                        <h1> <a href="/mark_as_read/{{ notification.id }}/"><i class="fa fa-info" id="ts_big_notification_icons"></i></a></h1>
                                                                     {% endif %}
                                                                 </td>
                                                                 <td>
@@ -58,7 +62,11 @@
                                                                     </p>
                                                                 </td>
                                                                 <td style="text-align: -webkit-right;">
+                                                                    {% if notification.seen_status == False %}
                                                                     <i class="fa fa-circle" id="ts_unread_dot_icons"></i>
+                                                                    {% elif notification.seen_status == True %}
+                                                                    <i class="fa fa-circle-o" id="ts_read_dot_icons"></i>
+                                                                    {% endif %}
                                                                 </td>
                                                             </tr>
                                                         {% endfor %}

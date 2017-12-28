@@ -9,6 +9,7 @@ from django.contrib.auth.models import (
 )
 
 # Create your models here.
+from django.db.models import Count
 from django.utils import timezone
 from django_countries.fields import Country, CountryField
 # from django.utils import timezone
@@ -18,6 +19,12 @@ def content_file_name(instance, filename):
     ext = filename.split('.')[-1]
     filename = "%s.%s" % (uuid.uuid4(), ext)
     return '/'.join(['users', instance.username, filename])
+
+
+def toss_share_code():
+    my_share = uuid.uuid4().hex[:8].upper()
+    return my_share
+
 
 class TuserManager(BaseUserManager):
     def create_user(self, username, phone_number, password=None):
@@ -65,7 +72,7 @@ class Tuser(AbstractBaseUser):
     phone_number = models.CharField(max_length=13,unique=True,error_messages={'unique':"A user with this phone number already exists."})
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=30)
-    sex = models.CharField(max_length=1,choices=GENDER_CHOICES)
+    sex = models.CharField(max_length=1, choices=GENDER_CHOICES)
     country = CountryField()
     address = models.CharField(max_length=30)
     referrer = models.ForeignKey('self', blank=True, related_name='referrals', null=True)
@@ -78,6 +85,7 @@ class Tuser(AbstractBaseUser):
     is_active = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
     verification_code = models.CharField(default='',blank=True, max_length=6)
+    share_code = models.CharField(max_length=8, blank=True, unique=True)
 
     objects = TuserManager()
 
@@ -95,15 +103,22 @@ class Tuser(AbstractBaseUser):
         # The user is identified by their username
         return self.username
 
+    def tossapp_ranking(self):
+        aggregate = Tuser.objects.filter(points__gt=self.points).aggregate(tossapp_ranking=Count('points'))
+        return aggregate['tossapp_ranking'] + 1
+
     def __str__(self):             # __unicode__ on Python 2
         return self.username
 
     def save(self, *args, **kwargs):
         if not self.id:
             self.timestamp = timezone.localtime(timezone.now())
-            return super(Tuser, self).save(*args, **kwargs)
-        else:
-            return super(Tuser, self).save(*args, **kwargs)
+            while True:
+                my_code = toss_share_code()
+                if not Tuser.objects.filter(share_code=my_code).exists():
+                    break
+            self.share_code = toss_share_code()
+        return super(Tuser, self).save(*args, **kwargs)
 
     def has_perm(self, perm, obj=None):
         """Does the user have a specific permission?"""

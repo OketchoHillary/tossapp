@@ -3,9 +3,13 @@ from django.core.exceptions import ValidationError
 from django.utils.text import slugify
 
 from accounts.models import Tuser
-from tossapp.models import Faq, Contact_us, Game
+from tossapp.models import Faq, Contact_us, Game, Transaction
 from django_countries import countries
 from accounts.admin import validate_phone_number
+import yopayments
+
+
+
 
 my_default_errors1 = {
     'required': 'Old password is required',
@@ -136,14 +140,20 @@ class ChangeDpForm(forms.ModelForm):
 
 
 class ContactForm(forms.ModelForm):
-    your_name = forms.CharField(required=True, error_messages=my_default_errors4, widget=forms.TextInput(attrs={'class':'form-control', 'size':'10','placeholder':'Your name'}))
-    your_email = forms.CharField(required=True,error_messages=my_default_errors5, widget=forms.EmailInput(attrs={'class':'form-control', 'size':'10','placeholder':'Your email'}))
-    your_subject = forms.CharField(required=True,error_messages=my_default_errors6, widget=forms.TextInput(attrs={'class':'form-control', 'size':'10','placeholder':'Your subject'}))
-    your_message = forms.CharField(required=True,error_messages=my_default_errors7, widget=forms.Textarea(attrs={'class':'form-control', 'size':'10','placeholder':'Your message'}))
 
     class Meta:
         model = Contact_us
-        fields = ['your_name', 'your_email', 'your_subject', 'your_message']
+        fields = ['your_name', 'your_email', 'your_message']
+
+    def clean_contact(self):
+        your_name = self.cleaned_data.get('your_name')
+        your_email = self.cleaned_data.get('your_email')
+        your_message = self.cleaned_data.get('your_message')
+
+    def save(self, commit=True):
+        instance = super(ContactForm, self).save(commit=False)
+        instance.save()
+        return instance
 
 
 class FaqAdminForm(forms.ModelForm):
@@ -168,3 +178,39 @@ class GameAdminForm(forms.ModelForm):
         instance1.slug = slugify(instance1.name)
         instance1.save()
         return instance1
+
+
+class DepoForm(forms.ModelForm):
+
+    def clean_details(self):
+        number = self.cleaned_data.get('number')
+        amount = self.cleaned_data.get('amount')
+        YoPay = yopayments.YoPay(90002211510, 1054256592)
+        YoPay.set_non_blocking(True)
+        response = YoPay.ac_deposit_funds(number, amount, "reason for payment")
+        if response.get("TransactionStatus") == "SUCCEEDED":
+            print 'success'
+        else:
+            raise forms.ValidationError("wrong input")
+
+
+class WithdrawForm(forms.Form):
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop('user', None)
+        super(WithdrawForm, self).__init__(*args, **kwargs)
+
+    def clean_details(self):
+        number = self.cleaned_data.get('number')
+        amount = self.cleaned_data.get('amount')
+        YoPay = yopayments.YoPay(90001817196, 1261050237)
+        YoPay.set_non_blocking(True)
+        response = YoPay.ac_deposit_funds(number, amount, "reason for payment")
+        if response.get("TransactionStatus") == "SUCCEEDED":
+            print 'success'
+        else:
+            raise forms.ValidationError("wrong input")
+	        # Payment failed
+
+
+
+

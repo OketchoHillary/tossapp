@@ -38,7 +38,7 @@ class DailyLotto(models.Model):
     def save(self, *args, **kwargs):
         if not self.lotto_id:
             self.end_date = timezone.now() + now_plus_1()
-            return super(DailyLotto, self).save(*args, **kwargs)
+        return super(DailyLotto, self).save(*args, **kwargs)
 
     class Meta:
         ordering = ["-start_date"]

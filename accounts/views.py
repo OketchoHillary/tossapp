@@ -56,7 +56,7 @@ def activate(request,user):
 
 
 class RegisterView(AnonymousRequiredMixin,CreateView):
-    template_name='registration/register.html'
+    template_name = 'registration/register.html'
     authenticated_redirect_url = reverse_lazy("index")
     form_class = UserCreationForm
     # success_url=reverse_lazy('activate')
@@ -76,7 +76,8 @@ class RegisterView(AnonymousRequiredMixin,CreateView):
         # send_verification_sms(tuser.phone_number,tuser.verification_code)
         return reverse_lazy('activate', kwargs={'user': tuser.username})
 
-def change_number(request,user):
+
+def change_number(request, user):
     tuser = Tuser.objects.get(username=user)
     if request.method == "POST":
         form = ChangeNumberForm(request.POST)
@@ -92,6 +93,7 @@ def change_number(request,user):
         form = ChangeNumberForm()
 
     return render(request, "registration/change_number.html",{'form':form,'user':tuser.username})
+
 
 @deprecate_current_app
 @sensitive_post_parameters()

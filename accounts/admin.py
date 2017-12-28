@@ -43,15 +43,15 @@ class UserCreationForm(forms.ModelForm):
         super(UserCreationForm, self).__init__(*args, **kwargs)
         if not 'initial' in kwargs:
             kwargs['initial'] = {}
-        if not 'referrer_username' in kwargs['initial']:
-            kwargs['initial'].update({'referrer_username': None})
-        if kwargs['initial']['referrer_username'] is not None:
-            self.fields['referrer_username'].widget.attrs['readonly'] = True
+        if not 'referrer_share_code' in kwargs['initial']:
+            kwargs['initial'].update({'referrer_share_code': None})
+        if kwargs['initial']['referrer_share_code'] is not None:
+            self.fields['referrer_share_code'].widget.attrs['readonly'] = True
     phone_number = forms.CharField(error_messages=my_default_errors1, widget=forms.TextInput())
     username = forms.CharField(error_messages=my_default_errors2,widget=forms.TextInput())
     password1 = forms.CharField(error_messages=my_default_errors3,widget=forms.PasswordInput())
     password2 = forms.CharField(error_messages=my_default_errors4,widget=forms.PasswordInput())
-    referrer_username = forms.CharField(max_length=13, required=False, widget=forms.TextInput())
+    referrer_share_code = forms.CharField(max_length=13, required=False, widget=forms.TextInput())
 
     class Meta:
         model = Tuser
@@ -74,7 +74,7 @@ class UserCreationForm(forms.ModelForm):
         return phone_number
 
     def clean_referrer(self):
-        if len(Tuser.objects.filter(username=self.cleaned_data.get("referrer_username"))) == 0:
+        if len(Tuser.objects.filter(share_code=self.cleaned_data.get("referrer_share_code"))) == 0:
             raise forms.ValidationError("Please provide a valid username or leave the field blank")
         return self.cleaned_data.get("referrer")
 
@@ -82,23 +82,23 @@ class UserCreationForm(forms.ModelForm):
         # Save the provided password in hashed format
         user = super(UserCreationForm, self).save(commit=False)
         user.set_password(self.cleaned_data["password1"])
-        if self.cleaned_data["referrer_username"] != "":
-            user.referrer = Tuser.objects.get(username=self.cleaned_data["referrer_username"])
+        if self.cleaned_data["referrer_share_code"] != "":
+            user.referrer = Tuser.objects.get(share_code=self.cleaned_data["referrer_share_code"])
             # getting referree username and prize
-            rp = Tuser.objects.filter(username=self.cleaned_data["referrer_username"]).values_list('referrer_prize')
+            rp = Tuser.objects.filter(share_code=self.cleaned_data["referrer_share_code"]).values_list('referrer_prize')
             ref_p = list(rp[0])
             referee_prize = ref_p[0]
             # getting referral balance
-            rb = Tuser.objects.filter(username=self.cleaned_data["referrer_username"]).values_list('balance')
+            rb = Tuser.objects.filter(share_code=self.cleaned_data["referrer_share_code"]).values_list('balance')
             ref_b = list(rb[0])
             referee_balance = ref_b[0]
             # summing referee prize
             sum_prize = referee_prize + Tuser.REFERRAL_PRIZE
             # summing referee balance
             sum_balance = referee_balance + Tuser.REFERRAL_PRIZE
-            Tuser.objects.filter(username=self.cleaned_data["referrer_username"]).update(referrer_prize=sum_prize, balance=sum_balance)
+            Tuser.objects.filter(share_code=self.cleaned_data["referrer_share_code"]).update(referrer_prize=sum_prize, balance=sum_balance)
             # incrementing points on referee
-            Tuser.objects.filter(username=self.cleaned_data["referrer_username"]).update(points=F("points") + 1)
+            Tuser.objects.filter(share_code=self.cleaned_data["referrer_share_code"]).update(points=F("points") + 1)
             # user.referrer_prize = Tuser.REFERRAL_PRIZE
         if commit:
             user.save()
@@ -127,7 +127,7 @@ class UserChangeForm(forms.ModelForm):
 
     class Meta:
         model = Tuser
-        fields = ('username', 'password', 'phone_number', 'referrer', 'is_active', 'is_admin')
+        fields = ('username', 'password', 'phone_number', 'referrer', 'is_active', 'is_admin', 'share_code')
 
     def clean_password(self):
         # Regardless of what the user provides, return the initial value.
@@ -164,7 +164,7 @@ class UserAdmin(BaseUserAdmin):
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('username', 'phone_number', 'password1', 'password2', 'referrer_username',)}
+            'fields': ('username', 'phone_number', 'password1', 'password2', 'referrer_share_code',)}
         ),
     )
     search_fields = ('username',)
