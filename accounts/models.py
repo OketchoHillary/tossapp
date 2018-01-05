@@ -107,6 +107,13 @@ class Tuser(AbstractBaseUser):
         aggregate = Tuser.objects.filter(points__gt=self.points).aggregate(tossapp_ranking=Count('points'))
         return aggregate['tossapp_ranking'] + 1
 
+    @property
+    def refferal_ranking(self):
+        rTusers = Tuser.objects.annotate(num_ref=Count('referrals'))
+        num_ref = rTusers.get(username=self.username).num_ref
+        referals = rTusers.filter(num_ref__gt=num_ref).aggregate(refferal_ranking=Count('num_ref'))
+        return referals['refferal_ranking'] + 1
+
     def __str__(self):             # __unicode__ on Python 2
         return self.username
 

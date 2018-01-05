@@ -8,7 +8,7 @@ class YoPay:
     instant_payment_notification_url = None
     instant_failure_notification_url = None
     nonBlocking = False
-    url = url = "https://paymentsapi1.yo.co.ug/ybs/task.php"
+    url = "https://41.220.12.206/services/yopaymentsdev/task.php"
 
     def __init__(self, username, password):
         self.username = username

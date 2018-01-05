@@ -1,13 +1,15 @@
 from __future__ import print_function
 
+import json
 import random
 
 from django.contrib.auth.decorators import login_required
-from django.db.models import Sum, F
+from django.core import serializers
+from django.db.models import Sum
 from django.contrib import messages
 from django.core.urlresolvers import reverse_lazy
 from django.shortcuts import render
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.template import RequestContext
 from django.views.decorators.csrf import csrf_protect
 
@@ -219,16 +221,15 @@ def lotto(request, template_name='daily_lotto/home.html'):
                 # current time date and time is less than end date
                 if datetime.datetime.now().isoformat() <= ends:
                     # players balance is greater or equal to 500
-                    if request.user.balance > 499:
-                        # handling none type values
-
-                        if quantity is None:
-                            quantity = 0
-                        else:
-                            quantity = my_quantity.get('quantity')
-
+                    # handling none type values
+                    if quantity is None:
+                        quantity = 0
+                    else:
+                        quantity = my_quantity.get('quantity')
+                    ze = quantity * ticket_cost
+                    total_bet = ze + ticket_cost
+                    if request.user.balance >= total_bet:
                         # calculating number of tickets and ticket price
-                        ze = quantity * ticket_cost
                         instance = form.save(commit=False)
                         instance.player_name = request.user
                         instance.daily_lotto = todays_lotto()
@@ -237,7 +238,7 @@ def lotto(request, template_name='daily_lotto/home.html'):
                         form.save()
                         # calculating users balance
                         ao = balance_calculator(request.user.balance, ze + ticket_cost)
-                        total_bet = ze + ticket_cost
+                        #total_bet = ze + ticket_cost
                         # calculating service fee
                         excess_tickets = fee * quantity
                         service_fee = fee + excess_tickets
@@ -258,18 +259,16 @@ def lotto(request, template_name='daily_lotto/home.html'):
             my_quantity2 = random_ticketform.cleaned_data
             quantity = my_quantity2.get('quantity')
             if request.user.is_authenticated():
+                if quantity is None:
+                    quantity = 0
+                else:
+                    quantity = my_quantity2.get('quantity')
+                fees = fee * quantity
+                qt = quantity * ticket_cost
                 if datetime.datetime.now().isoformat() <= ends:
-                    if request.user.balance >= 500:
-
-                        if quantity is None:
-                            quantity = 0
-                        else:
-                            quantity = my_quantity2.get('quantity')
-                        fees = fee * quantity
-
+                    if request.user.balance >= qt:
                         random_tickets(random_ticketform, request)
                         ap = balance_calculator(request.user.balance, quantity * ticket_cost)
-                        qt = quantity * ticket_cost
                         Tuser.objects.filter(username=request.user).update(balance=ap)
                         Game_stat.objects.create(user=request.user, game=lotto_game, bet_amount=qt, status=Game_stat.PENDING, service_fee=fees)
                         # Game.objects.filter(name='Daily Lotto').update(times_played=F("times_played") + 1)
@@ -287,6 +286,12 @@ def lotto(request, template_name='daily_lotto/home.html'):
     return render(request, template_name, locals(), context)
 
 
+def previous_day_APi(request):
+    my_s = DailyLotto.objects.filter(start_date=datetime.datetime.now()-datetime.timedelta(days=1))
+    json_s = json.loads(serializers.serialize("json", my_s))
+    for i, my_lotto in enumerate(my_s):
+        json_s[i]['fields']['end_date'] = my_lotto.end_date
+    return HttpResponse(json.dumps(json_s))
 
 
 

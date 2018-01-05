@@ -78,6 +78,9 @@
 								<li><a href=""> | </a></li>
 								<li><a href="{% url 'register' %}">Create Account</a></li>
                                 {% endif %}
+                            {% if user.is_authenticated %}
+								<li><a href="{% url 'logout' %}?next={% url 'index' %}">Logout</a></li>
+                                {% endif %}
 							</ul>
 						</div>
 					</div>
@@ -118,10 +121,10 @@
 							<div class="widget">
 								<h5 class="widgetheading">Quick Links</h5>
 								<ul class="link-list">
-									<li><a href="#">Latest Events</a></li>
-									<li><a href="#">Terms and conditions</a></li>
-									<li><a href="#">Privacy policy</a></li>
-									<li><a href="#">Career</a></li>
+									<li><a href="{% url 'Latest_events' %}">Latest Events</a></li>
+									<li><a href="{% url 'tac' %}">Terms and conditions</a></li>
+									<li><a href="{% url 'contact' %}">Privacy policy</a></li>
+									<li><a href="{% url 'career' %}">Career</a></li>
 									<li><a href="{% url 'contact' %}">Contact us</a></li>
 								</ul>
 							</div>

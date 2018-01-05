@@ -45,6 +45,10 @@ INSTALLED_APPS = [
     'django_tables2',
     'testapp',
     'django_ajax',
+    'compound_box',
+    'flip_coin',
+    'money_slot',
+    'rock_paper_scissor',
     # 'djcelery',
 ]
 
