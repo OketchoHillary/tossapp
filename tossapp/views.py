@@ -17,7 +17,7 @@ from django.db.models import Count
 
 from accounts.models import Tuser
 from tossapp.forms import ChangePasswordForm, ChangeUsernameForm, ContactForm, ChangeProfileForm, ChangeDpForm,\
-    WithdrawForm
+DepoForm
 from tossapp.models import Notification, Game, Game_stat, Transaction, Faq
 
 
@@ -57,18 +57,18 @@ def contact(request, template_name='tossapp/contact_us.html'):
     return render(request, template_name, locals(), context)
 
 
-def faq(request, template_name="tossapp/faq.html"):
-    context = RequestContext(request)
+class faq(ListView):
     page_title = 'FAQ | Tossapp'
     page_intro = 'Frequently Asked Questions'
-    faq_list = Faq.objects.all()
-    paginator = Paginator(faq_list, 2)
-    page1 = request.GET.get('page1')
-    try:
-        faqs = paginator.page(page1)
-    except PageNotAnInteger:
-        faqs = paginator.page(paginator.num_pages)
-    return render(request,'tossapp/faq.html', locals(), context)
+    template_name = 'tossapp/faq.html'
+    context_object_name = 'faq_list'
+    model = Faq
+    paginate_by = 10
+
+    def get_context_data(self, **kwargs):
+        context = super(faq, self).get_context_data(**kwargs)
+        context.update({'page_title': self.page_title, 'page_intro': self.page_intro})
+        return context
 
 
 def how_it_works(request):
@@ -123,49 +123,6 @@ class dashboard_games(LoginRequiredMixin, ListView):
         return context
 
 
-class rock_paper_scissor(LoginRequiredMixin, TemplateView):
-    page = 'Rock Paper Scissor'
-    page_brief = "Wrap, Cut and Crash. That's all you have to do."
-    template_name = 'games/rock-paper_scissor.html'
-
-    def get_context_data(self, **kwargs):
-        context = super(rock_paper_scissor, self).get_context_data(**kwargs)
-        context.update({'page': self.page, 'page_brief': self.page_brief})
-        return context
-
-class flip_coin(LoginRequiredMixin, TemplateView):
-    page = 'Flip Coin'
-    page_brief = "Find out how Lucky you can be, Just Flip."
-    template_name = 'games/flip_coin.html'
-
-    def get_context_data(self, **kwargs):
-        context = super(flip_coin, self).get_context_data(**kwargs)
-        context.update({'page': self.page, 'page_brief': self.page_brief})
-        return context
-
-
-class money_slot(LoginRequiredMixin, TemplateView):
-    page = 'Money Slot'
-    page_brief = "Cheapest Money slot of all time. Try it Out."
-    template_name = 'games/money_slot.html'
-
-    def get_context_data(self, **kwargs):
-        context = super(money_slot, self).get_context_data(**kwargs)
-        context.update({'page': self.page, 'page_brief': self.page_brief})
-        return context
-
-
-class compound_boxes(LoginRequiredMixin, TemplateView):
-    page = 'Compound boxes'
-    page_brief = ""
-    template_name = 'games/compound_boxes.html'
-
-    def get_context_data(self, **kwargs):
-        context = super(compound_boxes, self).get_context_data(**kwargs)
-        context.update({'page': self.page, 'page_brief': self.page_brief})
-        return context
-
-
 class dashboard_games_history(LoginRequiredMixin, ListView):
     page = 'Games History'
     page_brief = 'Games Statistics'
@@ -199,8 +156,8 @@ class dashboard_payments_withdraw(LoginRequiredMixin, FormView):
     page = 'Withdraw Funds'
     page_brief = 'Get your Funds onto your prefered Account instantly '
     template_name = 'dashboard/payments_withdraw.html'
-    form_class = WithdrawForm
-    success_url = reverse_lazy('dashboard_transactions')
+    form_class = DepoForm
+    success_url = reverse_lazy('dashboard_payments_withdraw')
 
     def get_context_data(self, **kwargs):
         context = super(dashboard_payments_withdraw, self).get_context_data(**kwargs)
@@ -326,6 +283,53 @@ def edit_profile(request):
     else:
         form = ChangeProfileForm()
     return render(request, 'dashboard/edit_user_settings.html', locals(), context)
+
+
+class Latest_events(TemplateView):
+    page_title = 'Latest events| Tossapp'
+    page_intro = 'Latest events'
+    template_name = 'tossapp/latest_events.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(Latest_events, self).get_context_data(**kwargs)
+        context.update({'page_title': self.page_title, 'page_intro': self.page_intro})
+        return context
+
+
+class Toc(TemplateView):
+    page_title = 'TAC| Tossapp'
+    page_intro = 'Terms and Conditions'
+    template_name = 'tossapp/toc.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(Toc, self).get_context_data(**kwargs)
+        context.update({'page_title': self.page_title, 'page_intro': self.page_intro})
+        return context
+
+
+class Privacy_policy(TemplateView):
+    page_title = 'Privacy| Tossapp'
+    page_intro = 'Our Privacy Policy'
+    template_name = 'tossapp/privacy_p.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(Privacy_policy, self).get_context_data(**kwargs)
+        context.update({'page_title': self.page_title, 'page_intro': self.page_intro})
+        return context
+
+
+class Career(TemplateView):
+    page_title = 'Career| Tossapp'
+    page_intro = 'Careers'
+    template_name = 'tossapp/career.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(Career, self).get_context_data(**kwargs)
+        context.update({'page_title': self.page_title, 'page_intro': self.page_intro})
+        return context
+
+
+
 
 
 

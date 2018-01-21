@@ -28,6 +28,10 @@ urlpatterns = [
     url(r'^',include('accounts.urls')),
     url(r'^',include('tossapp.urls')),
     url(r'^',include('daily_lotto.urls')),
+    url(r'^',include('flip_coin.urls')),
+    url(r'^',include('money_slot.urls')),
+    url(r'^',include('rock_paper_scissor.urls')),
+    url(r'^',include('compound_box.urls')),
     url(r'^admin/', admin.site.urls),
 ] \
               + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)\

@@ -180,20 +180,21 @@ class GameAdminForm(forms.ModelForm):
         return instance1
 
 
-class DepoForm(forms.ModelForm):
+class DepoForm(forms.Form):
 
     def clean_details(self):
         number = self.cleaned_data.get('number')
         amount = self.cleaned_data.get('amount')
-        YoPay = yopayments.YoPay(90002211510, 1054256592)
-        YoPay.set_non_blocking(True)
+        YoPay = yopayments.YoPay("90001817196", "1261050237")
+        api_url = "https://41.220.12.206/services/yopaymentsdev/task.php"
+        YoPay.set_non_blocking(False)
         response = YoPay.ac_deposit_funds(number, amount, "reason for payment")
         if response.get("TransactionStatus") == "SUCCEEDED":
             print 'success'
         else:
             raise forms.ValidationError("wrong input")
 
-
+"""
 class WithdrawForm(forms.Form):
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop('user', None)
@@ -210,6 +211,7 @@ class WithdrawForm(forms.Form):
         else:
             raise forms.ValidationError("wrong input")
 	        # Payment failed
+	        """
 
 
 

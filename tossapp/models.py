@@ -149,7 +149,7 @@ class Faq(models.Model):
     answer = models.TextField(max_length=100)
 
     def __str__(self):
-        return self.title
+        return self.question
 
     def get_absolute_url(self):
         return reverse('faq-view', args=(self.slug, ))
