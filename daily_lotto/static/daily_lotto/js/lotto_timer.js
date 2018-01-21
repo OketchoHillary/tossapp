@@ -14,13 +14,16 @@ function startTimer(duration, display) {
         diff = duration - (((Date.now() - start) / 1000) | 0);
 
         // does the same job as parseInt truncates the float
-        minutes = (diff / 60) | 0;
-        seconds = (diff % 60) | 0;
+        var hours = Math.floor(diff / 3600);
+        var minutes = Math.floor((diff - (hours * 3600)) / 60);
+        var seconds = diff - (hours * 3600) - (minutes * 60);
 
+        hours = hours < 10 ? "0" + hours : hours;
         minutes = minutes < 10 ? "0" + minutes : minutes;
         seconds = seconds < 10 ? "0" + seconds : seconds;
 
-        display.textContent = minutes + ":" + seconds;
+        // display.textContent = hours + ":" + minutes + ":" + seconds;
+        display.textContent = hours + ':' + minutes + ':' + seconds;
 
         if (diff <= 0) {
             // add one second so that the count down starts at the full duration
@@ -34,7 +37,12 @@ function startTimer(duration, display) {
 }
 
 window.onload = function () {
-    var fiveMinutes = 60 * 5,
+    var t = new Date(time_now*1000)
+    t.setHours(23)
+    t.setMinutes(55)
+    t.setSeconds(0)
+
+    var fiveMinutes = (t.getTime() - time_now*1000) / 1000;
         display = document.querySelector('#time');
     startTimer(fiveMinutes, display);
 };

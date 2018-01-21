@@ -16,6 +16,17 @@ from daily_lotto.models import *
 from daily_lotto.tables import TicketTable
 from tossapp.models import *
 import datetime
+import time
+from django.core import serializers
+import json
+from django.http import HttpResponse
+
+def lotto_today(request):
+    obj = DailyLotto.objects.get(start_date__startswith=datetime.datetime.now().isoformat().split('T')[0]);
+    data = serializers.serialize('json', [obj,])
+    struct = json.loads(data)
+    data = json.dumps(struct[0])
+    return HttpResponse(data, content_type="application/json")
 
 
 def todays_lotto():
@@ -205,6 +216,10 @@ def lotto(request, template_name='daily_lotto/home.html'):
 
     # lotto fee
     fee = ticket_cost * DailyLotto.HOUSE_COMMISSION_RATE
+
+    #current_time
+    t=datetime.datetime.now()
+    time_now = time.mktime(t.timetuple())
 
     """Ticket purchase"""
 
