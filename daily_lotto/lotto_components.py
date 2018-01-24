@@ -218,3 +218,4 @@ def draw():
         my_backup_jackpot = backup + no3 + no4 + no5
 
         DailyLotto.objects.filter(lotto_id=lottoid).update(backup_jackpot=my_backup_jackpot)
+    print 'Done'

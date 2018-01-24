@@ -25,7 +25,7 @@ SECRET_KEY = 'c4(e91q)de5(klm^q=!e)o&ao!bs5yzgsgs0zpmbp-r@-+11(2'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 
 
 # Application definition
@@ -49,7 +49,6 @@ INSTALLED_APPS = [
     'flip_coin',
     'money_slot',
     'rock_paper_scissor',
-    # 'djcelery',
 ]
 
 MIDDLEWARE_CLASSES = [
