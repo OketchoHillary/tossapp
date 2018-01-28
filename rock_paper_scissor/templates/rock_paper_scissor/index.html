@@ -1,0 +1,28 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Rock Paper and Scissor</title>
+    <script src="{% static 'rock_paper_scissor/js/' %}pixi.min.js"></script>
+    <script src="{% static 'rock_paper_scissor/js/' %}rps_functions.js"></script>
+    <script src="{% static 'rock_paper_scissor/js/' %}scaleToWindow.js"></script>
+    <script src="{% static 'rock_paper_scissor/js/' %}bump.js"></script>
+    <script src="{% static 'rock_paper_scissor/js/' %}charm.js"></script>
+    <script src="{% static 'rock_paper_scissor/js/' %}dust.js"></script>
+    <script src="{% static 'rock_paper_scissor/js/' %}tink.js"></script>
+    <script src="{% static 'rock_paper_scissor/js/' %}spriteUtilities.js"></script>
+    <script src="{% static 'rock_paper_scissor/js/' %}gameUtilities.js"></script>
+</head>
+
+<body>
+    <div id="display"></div>
+    <script>
+        var rps_json = "{% static 'rock_paper_scissor/img/' %}rps.json"
+        var clear_bet_png = "{% static 'rock_paper_scissor/img/' %}clear_bet_button.png"
+        var reset_game_png = "{% static 'rock_paper_scissor/img/' %}reset_game_button.png"
+    </script>
+    <script src="{% static 'rock_paper_scissor/js/' %}rps.js"></script>
+</body>
+
+</html>

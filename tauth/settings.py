@@ -45,10 +45,10 @@ INSTALLED_APPS = [
     'django_tables2',
     'testapp',
     'django_ajax',
-    # 'compound_box',
-    # 'flip_coin',
-    # 'money_slot',
-    # 'rock_paper_scissor',
+    'compound_box',
+    'flip_coin',
+    'money_slot',
+    'rock_paper_scissor',
     # 'djcelery',
 ]
 
@@ -141,6 +141,11 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static"),
+    '/var/www/static/',
+]
 
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/'

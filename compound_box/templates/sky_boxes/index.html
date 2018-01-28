@@ -1,0 +1,27 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Sky Boxes</title>
+    <script src="{% static 'compound_box/js/' %}pixi.min.js"></script>
+    <script src="{% static 'compound_box/js/' %}sky_boxes_functions.js"></script>
+    <script src="{% static 'compound_box/js/' %}scaleToWindow.js"></script>
+    <script src="{% static 'compound_box/js/' %}bump.js"></script>
+    <script src="{% static 'compound_box/js/' %}charm.js"></script>
+    <script src="{% static 'compound_box/js/' %}dust.js"></script>
+    <script src="{% static 'compound_box/js/' %}tink.js"></script>
+    <script src="{% static 'compound_box/js/' %}spriteUtilities.js"></script>
+    <script src="{% static 'compound_box/js/' %}gameUtilities.js"></script>
+</head>
+
+<body>
+    <div id="display"></div>
+    <script>
+        var sky_boxes_json = "{% static 'compound_box/img/' %}sky_boxes.json";
+    </script>
+    <script src ="{% static 'compound_box/js/' %}sky_boxes.js"></script>
+    <script src="{% static 'compound_box/js/' %}sky_boxes_f2.js"></script>
+</body>
+
+</html>
