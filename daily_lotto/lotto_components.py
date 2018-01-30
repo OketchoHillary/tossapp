@@ -6,18 +6,10 @@ from django.db.models import F
 from daily_lotto.views import todays_lotto, previous_lotto
 
 
-def countdown(n):
-    while n > 0:
-        print (n)
-        time.sleep(1)
-        n = n-1
-        if n == 0:
-            print('draw_starting')
-
-
+# calculating ticket purchase commission
 def commission():
     ticket_count = DailyLottoTicket.objects.filter(daily_lotto=todays_lotto()).count()
-    print ticket_count
+    print (ticket_count)
     # daily revenue
     daily_revenue = DailyLotto.TICKET_PRICE * ticket_count
 
@@ -91,7 +83,7 @@ def draw():
     DailyLotto.objects.filter(lotto_id=lottoid).update(win1=num1, win2=num2, win3=num3, win4=num4, win5=num5, win6=num6)
 
     for ticket in DailyLottoTicket.objects.filter(daily_lotto=todays_lotto()):
-        winning_numbers = DailyLotto.objects.filter(lotto_id=lottoid).values_list('win1', 'win2','win3', 'win4', 'win5', 'win6')
+        winning_numbers = DailyLotto.objects.filter(lotto_id=lottoid).values_list('win1', 'win2', 'win3', 'win4', 'win5', 'win6')
         lucky_numbers = list(winning_numbers[0])
         ticket_numbers = [z for z in [int(y) for y in str(ticket).split(',')]]
         matches = set(lucky_numbers).intersection(set(ticket_numbers))
@@ -107,8 +99,8 @@ def draw():
 
         # creating winners
         if len(list(matches)) >= 3:
-            DailyLottoResult.objects.create(daily_lotto=todays_lotto(), hits_number_prize=len(list(matches)), prize=0, daily_lotto_ticket=c2,
-                                            winners=p2)
+            DailyLottoResult.objects.create(daily_lotto=todays_lotto(), hits_number_prize=len(list(matches)), prize=0,
+                                            daily_lotto_ticket=c2, winners=p2)
 
         # Commissions
         a = DailyLottoTicket.objects.filter(daily_lotto=todays_lotto(), hits=3).count()
@@ -136,7 +128,6 @@ def draw():
         my_pool3 = v[0]
 
         # commissions
-
         if d >= 1:
             for6 = pool6 / d
         else:
@@ -144,24 +135,43 @@ def draw():
 
         if c >= 1:
             for5 = my_pool5 / c
-            no5 = my_pool5
+            no5 = 0
         else:
             for5 = 0
-            no5 = 0
+            no5 = my_pool5
 
         if b >= 1:
             for4 = my_pool4 / b
-            no4 = my_pool4
+            no4 = 0
         else:
             for4 = 0
-            no4 = 0
+            no4 = my_pool4
 
         if a >= 1:
             for3 = my_pool3 / a
-            no3 = my_pool3
+            no3 = 0
         else:
             for3 = 0
+            no3 = my_pool3
+
+        """
+
+        if a == 0:
+            no3 = my_pool3
+        else:
             no3 = 0
+        # if no 4 winners
+        if b == 0:
+            no4 = my_pool4
+        else:
+            no4 = 0
+        # if no 5 winners
+        if b == 0:
+            no5 = my_pool5
+        else:
+            no5 = my_pool5
+            
+        """
 
         if len(list(matches)) == 3:
             DailyQuota.objects.filter(daily_lotto=todays_lotto()).update(three_number_prize_pool_commission=for3)
@@ -189,33 +199,14 @@ def draw():
             Tuser.objects.filter(username=p2).update(balance=F("balance") + for6)
 
         else:
-            print 'No Lotto Winners'
+            print ('No Lotto Winners')
 
-        if len(list(matches)) > 2:
-            Game_stat.objects.filter(user=p2, timestamp=datetime.date.today(), game=lotto_game).update(status=Game_stat.WIN)
+        if ticket.hits >= 3:
+            Game_stat.objects.filter(user=ticket.player_name, timestamp=datetime.date.today(), game=lotto_game).update(status=Game_stat.WIN)
         else:
-            Game_stat.objects.filter(user=p2, timestamp=datetime.date.today(), game=lotto_game).update(status=Game_stat.LOSE)
-
-        # if no 3 winners
-        """
-
-        if a == 0:
-            no3 = my_pool3
-        else:
-            no3 = 0
-        # if no 4 winners
-        if b == 0:
-            no4 = my_pool4
-        else:
-            no4 = 0
-        # if no 5 winners
-        if b == 0:
-            no5 = my_pool5
-        else:
-            no5 = my_pool5
-            """
+            Game_stat.objects.filter(user=ticket.player_name, timestamp=datetime.date.today(), game=lotto_game).update(status=Game_stat.LOSE)
 
         my_backup_jackpot = backup + no3 + no4 + no5
 
         DailyLotto.objects.filter(lotto_id=lottoid).update(backup_jackpot=my_backup_jackpot)
-    print 'Done'
+    print ('Done')

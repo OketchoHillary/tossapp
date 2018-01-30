@@ -13,7 +13,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         def do_something(sc):
             create_lotto()
-            print 'done'
+            print ('done')
             s.enter(50, 1, do_something, (sc,))
         s.enter(50, 1, do_something, (s,))
         s.run()

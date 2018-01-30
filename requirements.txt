@@ -224,4 +224,3 @@ WebTest==2.0.24
 Werkzeug==0.12.1
 win-unicode-console==0.5
 xmltodict==0.10.2
->>>>>>> 7eaf616a621a59346c2c47dd488af33658f47b73

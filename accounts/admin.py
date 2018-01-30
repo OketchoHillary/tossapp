@@ -14,6 +14,7 @@ from django.db.models import F
 
 from accounts.models import Tuser
 
+
 def validate_phone_number(phone):
     match = re.match(r'^(\+?256|0)7[0578]\d{7}$', phone)
     return match is not None
@@ -140,7 +141,7 @@ class UserChangeForm(forms.ModelForm):
         if not validate_phone_number(phone_number):
             raise forms.ValidationError("Please provide a valid MTN or Airtel number")
         if phone_number.startswith('0'):
-            phone_number = phone_number.replace('0' ,'256', 1)
+            phone_number = phone_number.replace('0', '256', 1)
         return phone_number
 
 

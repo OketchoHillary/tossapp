@@ -34,7 +34,7 @@ from accounts.utils import generate_verification_code
 # def index(request):
 #     return render(request,'registration/index.html')
 
-def activate(request,user):
+def activate(request, user):
     tuser = Tuser.objects.get(username=user)
     if request.method == "POST":
         form = ActivationForm(request.POST, user=tuser)

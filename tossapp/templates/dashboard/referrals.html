@@ -61,12 +61,15 @@
                                                                 </a>
 														</span>
 														<span>
-                                                            <a href="http://pinterest.com/pin/create/button/?url=www.tossapp.com/{{user.share_code }}" onclick="window.open(this.href); return false;">
-															<button class="btn green uppercase" id="ts_social_icon" style=" background-color: #cc2127; border-color: #cc2127; "><i class="fa fa-pinterest" style=" float: left; padding-top: 2.5%; "> </i> Pinterest </button>
+                                                            <a href="sms:?&body=www.tossapp.com/{{user.share_code }}">
+															<button class="btn green uppercase" id="ts_social_icon" style=" background-color: #e08e0b; border-color: #e08e0b; "><i class="fa fa-sms" style=" float: left; padding-top: 2.5%; "> </i> SMS </button>
                                                                 </a>
 														</span>
 														<span>
 															 <a href="whatsapp://send?text=www.tossapp.com/{{user.share_code }}" data-action="share/whatsapp/share"><button class="btn green uppercase" id="ts_social_icon" style=" background-color: green; border-color: green; "><i class="fa fa-whatsapp" style=" float: left; padding-top: 2.5%; "> </i> Whatsapp </button></a>
+														</span>
+                                                        <span>
+															 <a href="mailto:?subject=Go to this link;body=www.tossapp.com/{{user.share_code }}" data-action="share/whatsapp/share"><button class="btn green uppercase" id="ts_social_icon" style=" background-color: gray; border-color: green; "><i class="fa fa-envelope" style=" float: left; padding-top: 2.5%; "> </i> Email </button></a>
 														</span>
 													</div>
 

@@ -1,10 +1,7 @@
 from __future__ import print_function
-
-import json
 import random
 
 from django.contrib.auth.decorators import login_required
-from django.core import serializers
 from django.db.models import Sum
 from django.contrib import messages
 from django.core.urlresolvers import reverse_lazy
@@ -18,6 +15,17 @@ from daily_lotto.models import *
 from daily_lotto.tables import TicketTable
 from tossapp.models import *
 import datetime
+import time
+from django.core import serializers
+import json
+
+
+def lotto_today(request):
+    obj = DailyLotto.objects.get(start_date__startswith=datetime.datetime.now().isoformat().split('T')[0])
+    data = serializers.serialize('json', [obj, ])
+    struct = json.loads(data)
+    data = json.dumps(struct[0])
+    return HttpResponse(data, content_type="application/json")
 
 
 def todays_lotto():
@@ -208,6 +216,10 @@ def lotto(request, template_name='daily_lotto/home.html'):
     # lotto fee
     fee = ticket_cost * DailyLotto.HOUSE_COMMISSION_RATE
 
+    # current_time
+    t=datetime.datetime.now()
+    time_now = time.mktime(t.timetuple())
+
     """Ticket purchase"""
 
     if request.method == 'POST':
@@ -238,7 +250,7 @@ def lotto(request, template_name='daily_lotto/home.html'):
                         form.save()
                         # calculating users balance
                         ao = balance_calculator(request.user.balance, ze + ticket_cost)
-                        #total_bet = ze + ticket_cost
+                        # total_bet = ze + ticket_cost
                         # calculating service fee
                         excess_tickets = fee * quantity
                         service_fee = fee + excess_tickets

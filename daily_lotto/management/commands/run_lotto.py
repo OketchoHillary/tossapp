@@ -23,14 +23,3 @@ class Command(BaseCommand):
             draw()
         t = Timer(secs, the_draw())
         t.start()
-
-
-"""
-def do_something(sc):
-    print 'Draw is starting'
-    draw()
-    print 'done'
-    s.enter(30, 1, do_something, (sc,))
-    s.enter(30, 1, do_something, (s,))
-    s.run()
-    """

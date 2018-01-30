@@ -1,8 +1,6 @@
 from __future__ import unicode_literals
 
 from django.db import models
-
-# Create your models here.
 from django.template.defaultfilters import truncatechars
 # from django.urls import reverse
 from django.core.urlresolvers import reverse
@@ -11,9 +9,15 @@ from django.utils import timezone
 from accounts.models import Tuser
 
 
+def content_file_name(instance, filename):
+    ext = filename.split('.')[-1]
+    filename = "%s.%s" % (instance.name, ext)
+    return '/'.join(['games', filename])
+
+
 class Game(models.Model):
     name = models.CharField(max_length=30)
-    display_photo = models.ImageField(upload_to='games', default=None)
+    display_photo = models.ImageField(upload_to=content_file_name, default=None)
     slug = models.SlugField(max_length=230, unique=True)
     times_played = models.BigIntegerField(default=0)
 

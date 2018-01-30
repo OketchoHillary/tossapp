@@ -74,8 +74,7 @@ class DailyQuota(models.Model):
 
 
 class DailyLottoTicket(models.Model):
-    id = models.AutoField(primary_key=True)
-    # id = models.BigAutoField(primary_key=True)
+    id = models.BigAutoField(primary_key=True)
     player_name = models.ForeignKey(Tuser, on_delete=models.CASCADE)
     daily_lotto = models.ForeignKey(DailyLotto, on_delete=models.CASCADE)
     cost = models.IntegerField(default=500)
