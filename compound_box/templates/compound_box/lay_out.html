@@ -9,8 +9,8 @@
 <head>
     <meta charset="utf-8" />
     <title>{% block title %}Tossapp | Dashboard{% endblock %}</title>
- {% load staticfiles %}
-{% load humanize %}
+    {% load staticfiles %}
+    {% load humanize %}
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta content="width=device-width, initial-scale=1" name="viewport" />
     <meta content="" name="description" />
@@ -42,6 +42,17 @@
     <link href="{% static 'tossapp/assets/css/tossapp.css' %}" rel="stylesheet" type="text/css" id="style_color" />
     <link href="{% static 'tossapp/assets/css/custom.css' %}" rel="stylesheet" type="text/css" />
     <!-- END THEME LAYOUT STYLES -->
+
+    <!-- PAGE STATIC FILES -->
+     <script src="{% static 'compound_box/js/' %}pixi.min.js"></script>
+    <script src="{% static 'compound_box/js/' %}sky_boxes_functions.js"></script>
+    <script src="{% static 'compound_box/js/' %}scaleToWindow.js"></script>
+    <script src="{% static 'compound_box/js/' %}bump.js"></script>
+    <script src="{% static 'compound_box/js/' %}charm.js"></script>
+    <script src="{% static 'compound_box/js/' %}dust.js"></script>
+    <script src="{% static 'compound_box/js/' %}tink.js"></script>
+    <script src="{% static 'compound_box/js/' %}spriteUtilities.js"></script>
+    <script src="{% static 'compound_box/js/' %}gameUtilities.js"></script>
 
     <link rel="shortcut icon" type="image/png" href="{%  static 'tossapp/assets/img/download.jpg' %}"/>
 </head>
@@ -87,8 +98,8 @@
                     {% if user.is_authenticated %}
                     <li class="dropdown dropdown-user">
                         <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
-                            <img alt="" class="img-circle" src="{{ profile_pic }}" />
-                            <span class="username username-hide-on-mobile" style=" color: #4cbb17; font-family: Ubuntu; font-size: 15px; "> {{ full_name }}</span>
+                            <img alt="" class="img-circle" src="{{ user.profile_photo.url }}" />
+                            <span class="username username-hide-on-mobile" style=" color: #4cbb17; font-family: Ubuntu; font-size: 15px; "> {{ user.get_my_full_name }}</span>
                             <i class="fa fa-angle-down"></i>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-default">
@@ -143,8 +154,8 @@
                     <li class="nav-item" style="pointer-events: none; padding-left: 0px; ">
                         <a href="#" class="nav-link nav-toggle">
                             <!-- <i class="glyphicon glyphicon-bell"></i> -->
-                            <img src="{{ profile_pic }}" class="img-circle" alt="Cinque Terre" width="50px" height="50px">
-                            <span class="title"><strong id="ts_sidebar_username">{{ player|capfirst }}</strong></span>
+                            <img src="{{ user.profile_photo.url }}" class="img-circle" alt="Cinque Terre" width="50px" height="50px">
+                            <span class="title"><strong id="ts_sidebar_username">{{ user.username|capfirst }}</strong></span>
                         </a>
                     </li>
                     <li class="heading">
@@ -175,11 +186,7 @@
                         <ul class="sub-menu">
                                 {% for game in games %}
                                     <li class="nav-item open">
-                                    {% if game.name == 'Compopound Box' %}
                                 <a href="{{ game.slug }}" class="nav-link active open">
-                                        {% else %}
-                                        <a href="{{ game.slug }}" class="nav-link active ">
-                                    {% endif %}
                                     <!-- <i class="icon-plus"></i> -->
                                     <img src="{{ game.display_photo.url }}" id="ts_sidebar_game_icons" />
                                     <span class="title"> {{ game.name }} </span>
@@ -287,7 +294,7 @@
                             <div class="">
                                 <ul class="page-breadcrumb">
                                     <li>
-                                        <span style="color: 4cbb17; "> <strong> Ugx {{ account_balance|intcomma }}/= </strong></span>
+                                        <span style="color: 4cbb17; "> <strong> Ugx {{ user.balance|intcomma }}/= </strong></span>
                                     </li>
                                 </ul>
                             </div>
@@ -349,6 +356,7 @@
 
     <!-- BEGIN PAGE LEVEL SCRIPTS -->
     <script src="{% static 'tossapp/assets/js/dashboard.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'daily_lotto/js/lotto_url.js' %}" type="text/javascript"></script>
     <!-- END PAGE LEVEL SCRIPTS -->
 
 
@@ -356,6 +364,17 @@
     <script src="{% static 'tossapp/assets/js/layout.min.js' %}" type="text/javascript"></script>
     <script src="{% static 'tossapp/assets/js/quick-sidebar.min.js' %}" type="text/javascript"></script>
     <!-- END THEME LAYOUT SCRIPTS -->
+
+    {% block scripts %}
+
+    <!-- some default content here -->
+        <script>
+            var sky_boxes_json = "{% static 'compound_box/img/' %}sky_boxes.json";
+        </script>
+        <script src ="{% static 'compound_box/js/' %}sky_boxes.js"></script>
+        <script src="{% static 'compound_box/js/' %}sky_boxes_f2.js"></script>
+
+    {% endblock %}
 
 
 </body>

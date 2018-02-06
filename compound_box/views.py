@@ -1,13 +1,17 @@
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import TemplateView
+from django.contrib.auth.decorators import login_required
+from django.template import RequestContext
+from django.views.decorators.csrf import csrf_protect
+from django.shortcuts import render
+
+from tossapp.models import Game
 
 
-class compound_boxes(LoginRequiredMixin, TemplateView):
+@login_required
+@csrf_protect
+def compound_boxes(request):
+    context = RequestContext(request)
     page = 'Compound boxes'
     page_brief = ""
-    template_name = 'games/compound_boxes.html'
+    games = Game.objects.all()
+    return render(request, 'sky_boxes/index.html', locals(), context)
 
-    def get_context_data(self, **kwargs):
-        context = super(compound_boxes, self).get_context_data(**kwargs)
-        context.update({'page': self.page, 'page_brief': self.page_brief})
-        return context

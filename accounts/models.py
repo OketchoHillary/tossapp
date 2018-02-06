@@ -23,7 +23,7 @@ def content_file_name(instance, filename):
 
 def toss_share_code():
     m_code = ""
-    for x in range(3):
+    for x in range(6):
         m_code = m_code + str(random.randint(0, 9))
     return str(m_code)
 
@@ -87,7 +87,7 @@ class Tuser(AbstractBaseUser):
     is_active = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
     verification_code = models.CharField(default='',blank=True, max_length=6)
-    share_code = models.CharField(max_length=24, blank=True, unique=True, validators=[RegexValidator(regex='^.{10}$', message='Username must not exceed 10 characters', code=None)])
+    share_code = models.CharField(max_length=6, blank=True, unique=True, validators=[RegexValidator(regex='^.{6}$', message='Share code must not exceed 6 characters', code=None)])
 
     objects = TuserManager()
 
@@ -126,7 +126,7 @@ class Tuser(AbstractBaseUser):
                 my_code = toss_share_code()
                 if not Tuser.objects.filter(share_code=my_code).exists():
                     break
-            self.share_code = self.username + toss_share_code()
+            self.share_code = toss_share_code()
         return super(Tuser, self).save(*args, **kwargs)
 
     def has_perm(self, perm, obj=None):

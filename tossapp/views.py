@@ -1,18 +1,14 @@
-from pprint import pprint
-
 from cbvtoolkit.views import MultiFormView
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import reverse_lazy
 from django.http import HttpResponseForbidden, HttpResponseRedirect, Http404
 from django.shortcuts import render, get_object_or_404
 # Create your views here.
 from django.template import RequestContext
 from django.views.decorators.csrf import csrf_protect
-from django.core.paginator import Paginator, PageNotAnInteger
-from django.views.generic import TemplateView, ListView, DetailView, UpdateView, CreateView, FormView
+from django.views.generic import TemplateView, ListView, UpdateView, FormView
 from django.db.models import Count
 
 from accounts.models import Tuser

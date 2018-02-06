@@ -63,6 +63,7 @@ def lotto(request, template_name='daily_lotto/home.html'):
     context = RequestContext(request)
     page = 'The Daily Lotto'
     page_brief = 'The more tickets you Buy, the more chances of moving away with the Jackpot.'
+    games = Game.objects.all()
 
     my_lotto = DailyLotto.objects.all().values_list('lotto_id').order_by('-start_date').first()
     if my_lotto is None:
@@ -217,7 +218,7 @@ def lotto(request, template_name='daily_lotto/home.html'):
     fee = ticket_cost * DailyLotto.HOUSE_COMMISSION_RATE
 
     # current_time
-    t=datetime.datetime.now()
+    t = datetime.datetime.now()
     time_now = time.mktime(t.timetuple())
 
     """Ticket purchase"""
