@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.humanize',
     'django_countries',
+    #'mod_wsgi.server',
     'tossapp',
     'daily_lotto',
     'testapp',

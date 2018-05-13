@@ -66,7 +66,7 @@ class RegisterView(AnonymousRequiredMixin,CreateView):
 
     def get_success_url(self):
         tuser = self.object
-        print "In register view"
+        print("In register view")
         pprint(tuser)
         code = generate_verification_code()
         tuser.verification_code = code

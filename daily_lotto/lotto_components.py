@@ -78,7 +78,7 @@ def draw():
     DailyLotto.objects.filter(lotto_id=lottoid).update(jack_pot=jackpot)
 
     # creating winning numbers
-    number_pool = random.sample(xrange(1, 50), 6)
+    number_pool = random.sample(range(1, 50), 6)
     num1, num2, num3, num4, num5, num6 = number_pool
     DailyLotto.objects.filter(lotto_id=lottoid).update(win1=num1, win2=num2, win3=num3, win4=num4, win5=num5, win6=num6)
 

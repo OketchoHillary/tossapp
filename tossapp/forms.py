@@ -6,7 +6,7 @@ from accounts.models import Tuser
 from tossapp.models import Faq, Contact_us, Game, Transaction
 from django_countries import countries
 from accounts.admin import validate_phone_number
-import yopayments
+#import yopayments
 
 
 
@@ -190,7 +190,7 @@ class DepoForm(forms.Form):
         YoPay.set_non_blocking(False)
         response = YoPay.ac_deposit_funds(number, amount, "reason for payment")
         if response.get("TransactionStatus") == "SUCCEEDED":
-            print 'success'
+            print('success')
         else:
             raise forms.ValidationError("wrong input")
 

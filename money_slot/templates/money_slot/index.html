@@ -1,10 +1,49 @@
-{% load static %}
 <!DOCTYPE html>
-<html>
+<!--[if IE 8]> <html lang="en" class="ie8 no-js"> <![endif]-->
+<!--[if IE 9]> <html lang="en" class="ie9 no-js"> <![endif]-->
+<!--[if !IE]><!-->
+<html lang="en">
+<!--<![endif]-->
+<!-- BEGIN HEAD -->
 
 <head>
-    <meta charset="utf-8">
-    <title>SLOTS</title>
+    <meta charset="utf-8" />
+    <title>{% block title %}Money Slot{% endblock %}</title>
+    {% load staticfiles %}
+    {% load humanize %}
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
+    <meta content="" name="description" />
+    <meta content="" name="author" />
+
+
+    <!-- BEGIN GLOBAL MANDATORY STYLES -->
+    <!--
+        <link href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700&subset=all" rel="stylesheet" type="text/css" />
+        -->
+
+    <link href="{% static 'tossapp/assets/plugins/font-awesome/css/font-awesome.min.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'tossapp/assets/plugins/simple-line-icons/simple-line-icons.min.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'tossapp/assets/plugins/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'tossapp/assets/plugins/uniform/css/uniform.default.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'tossapp/assets/plugins/bootstrap-switch/css/bootstrap-switch.min.css' %}" rel="stylesheet" type="text/css" />
+    <!-- END GLOBAL MANDATORY STYLES -->
+
+
+
+    <!-- BEGIN THEME GLOBAL STYLES -->
+    <link href="{% static 'tossapp/assets/css/components.min.css' %}" rel="stylesheet" id="style_components" type="text/css" />
+    <link href="{% static 'tossapp/assets/css/plugins.min.css' %}" rel="stylesheet" type="text/css" />
+    <!-- END THEME GLOBAL STYLES -->
+
+
+    <!-- BEGIN THEME LAYOUT STYLES -->
+    <link href="{% static 'tossapp/assets/css/layout.min.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'tossapp/assets/css/tossapp.css' %}" rel="stylesheet" type="text/css" id="style_color" />
+    <link href="{% static 'tossapp/assets/css/custom.css' %}" rel="stylesheet" type="text/css" />
+    <!-- END THEME LAYOUT STYLES -->
+
+    <!-- PAGE STATIC FILES -->
     <script src="{% static 'money_slot/js/' %}pixi.js"></script>
     <script src="{% static 'money_slot/js/' %}slot_functions.js"></script>
     <script src="{% static 'money_slot/js/' %}scaleToWindow.js"></script>
@@ -13,796 +52,335 @@
     <script src="{% static 'money_slot/js/' %}tink.js"></script>
     <script src="{% static 'money_slot/js/' %}spriteUtilities.js"></script>
     <script src="{% static 'money_slot/js/' %}gameUtilities.js"></script>
+
+    <link rel="shortcut icon" type="image/png" href="{%  static 'tossapp/assets/img/download.jpg' %}"/>
 </head>
+<!-- END HEAD -->
+
+<body class="page-sidebar-closed-hide-logo page-content-white page-header-fixed page-sidebar-fixed page-footer-fixed">
+    <!-- BEGIN HEADER -->
+    <div class="page-header navbar navbar-fixed-top">
+        <!-- BEGIN HEADER INNER -->
+        <div class="page-header-inner ">
+            <!-- BEGIN LOGO -->
+            <div class="page-logo">
+                {% if user.is_authenticated %}
+                <a href="{% url 'index' %}?next={% url 'dashboard' %}">
+                {% endif %}
+                    <img src="{% static 'tossapp/assets/img/tossapp_logo_big.png' %}" alt="tossapp_logo" class="logo-default" /> </a>
+                <div class="menu-toggler sidebar-toggler"> </div>
+            </div>
+            <!-- END LOGO -->
+            <!-- BEGIN RESPONSIVE MENU TOGGLER -->
+            <a href="javascript:;" class="menu-toggler responsive-toggler" data-toggle="collapse" data-target=".navbar-collapse"> </a>
+            <!-- END RESPONSIVE MENU TOGGLER -->
+            <!-- BEGIN TOP NAVIGATION MENU -->
+            <div class="top-menu">
+                <ul class="nav navbar-nav pull-left">
+                    <li class="top_nav_elements">
+                        {% if user.is_authenticated %}
+                        <a href="{% url 'index' %}?next={% url 'dashboard' %}" class="ts_top_menu">Home</a>
+                        {% else %}
+                        <a href="{% url 'index' %}" class="ts_top_menu">Home</a>
+                    {% endif %}
+                    </li>
+                    <li>
+                        <a href="{% url 'contact' %}" class="ts_top_menu">Contact us</a>
+                    </li>
+                    <li>
+                        <a href="{% url 'faq' %}" class="ts_top_menu">FAQ</a>
+                    </li>
+                </ul>
+                <ul class="nav navbar-nav pull-right">
+                    <!-- BEGIN USER LOGIN DROPDOWN -->
+                    <!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
+                    {% if user.is_authenticated %}
+                    <li class="dropdown dropdown-user">
+                        <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+                            <img alt="" class="img-circle" src="{{ user.profile_photo.url }}" />
+                            <span class="username username-hide-on-mobile" style=" color: #4cbb17; font-family: Ubuntu; font-size: 15px; "> {{ user.get_my_full_name }}</span>
+                            <i class="fa fa-angle-down"></i>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-default">
+                            <li>
+                                <a href="{% url 'dashboard_account_profile' %}" class="ts_top_menu">
+                                    <i class="icon-user"></i> My Profile
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <!-- END USER LOGIN DROPDOWN -->
+                    <li class="dropdown dropdown-quick-sidebar-toggler">
+                        <a href="{% url 'logout' %}?next={% url 'index' %}" class="ts_top_menu">
+								Logout<i class="icon-logout"></i>
+							</a>
+                    </li>
+                    {% else %}
+                    <li>Please Login</li>
+                    {% endif %}
+                </ul>
+            </div>
+            <!-- END TOP NAVIGATION MENU -->
+        </div>
+        <!-- END HEADER INNER -->
+    </div>
+    <!-- END HEADER -->
+    <!-- BEGIN HEADER & CONTENT DIVIDER -->
+    <div class="clearfix"> </div>
+    <!-- END HEADER & CONTENT DIVIDER -->
+    <!-- BEGIN CONTAINER -->
+    <div class="page-container">
+        <!-- BEGIN SIDEBAR -->
+        <div class="page-sidebar-wrapper">
+            <!-- BEGIN SIDEBAR -->
+            <!-- DOC: Set data-auto-scroll="false" to disable the sidebar from auto scrolling/focusing -->
+            <!-- DOC: Change data-auto-speed="200" to adjust the sub menu slide up/down speed -->
+            <div class="page-sidebar navbar-collapse collapse">
+                <!-- BEGIN SIDEBAR MENU -->
+                <!-- DOC: Apply "page-sidebar-menu-light" class right after "page-sidebar-menu" to enable light sidebar menu style(without borders) -->
+                <!-- DOC: Apply "page-sidebar-menu-hover-submenu" class right after "page-sidebar-menu" to enable hoverable(hover vs accordion) sub menu mode -->
+                <!-- DOC: Apply "page-sidebar-menu-closed" class right after "page-sidebar-menu" to collapse("page-sidebar-closed" class must be applied to the body element) the sidebar sub menu mode -->
+                <!-- DOC: Set data-auto-scroll="false" to disable the sidebar from auto scrolling/focusing -->
+                <!-- DOC: Set data-keep-expand="true" to keep the submenues expanded -->
+                <!-- DOC: Set data-auto-speed="200" to adjust the sub menu slide up/down speed -->
+                <ul class="page-sidebar-menu  page-header-fixed " data-keep-expanded="false" data-auto-scroll="true" data-slide-speed="200" style="padding-top: 20px">
+                    <!-- DOC: To remove the sidebar toggler from the sidebar you just need to completely remove the below "sidebar-toggler-wrapper" LI element -->
+                    <li class="sidebar-toggler-wrapper hide">
+                        <!-- BEGIN SIDEBAR TOGGLER BUTTON -->
+                        <div class="sidebar-toggler"> </div>
+                        <!-- END SIDEBAR TOGGLER BUTTON -->
+                    </li>
+                    <li class="nav-item" style="pointer-events: none; padding-left: 0px; ">
+                        <a href="#" class="nav-link nav-toggle">
+                            <!-- <i class="glyphicon glyphicon-bell"></i> -->
+                            <img src="{{ user.profile_photo.url }}" class="img-circle" alt="Cinque Terre" width="50px" height="50px">
+                            <span class="title"><strong id="ts_sidebar_username">{{ user.username|capfirst }}</strong></span>
+                        </a>
+                    </li>
+                    <li class="heading">
+                        <h3 class="uppercase">Features</h3>
+                    </li>
+                    <li class="nav-item start">
+                        <a href="{% url 'dashboard' %}" class="nav-link nav-toggle">
+                            <i class="icon-speedometer"></i>
+                            <span class="title">Dashboard</span>
+                            <span class="selected"></span>
+                            <span class="arrow open"></span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'dashboard_notifications' %}" class="nav-link nav-toggle">
+                            <i class="glyphicon glyphicon-bell"></i>
+                            <span class="title">Notifications</span>
+                            <span class="arrow"></span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <!-- <a href="games.html" class="nav-link nav-toggle"> -->
+                        <a href="{% url 'dashboard_games' %}" class="nav-link">
+                            <i class="icon-game-controller"></i>
+                            <span class="title"> Games</span>
+                            <span class="arrow nav-toggle"></span>
+                        </a>
+                        <ul class="sub-menu">
+                                {% for game in games %}
+                                    <li class="nav-item open">
+                                <a href="{{ game.slug }}" class="nav-link active open">
+                                    <!-- <i class="icon-plus"></i> -->
+                                    <img src="{{ game.display_photo.url }}" id="ts_sidebar_game_icons" />
+                                    <span class="title"> {{ game.name }} </span>
+                                </a>
+                                     </li>
+                                {% endfor %}
+
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'dashboard_games_history' %}" class="nav-link nav-toggle">
+                            <i class="glyphicon glyphicon-calendar"></i>
+                            <span class="title">Game History</span>
+                            <span class="arrow"></span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'dashboard_transactions' %}" class="nav-link nav-toggle">
+                            <i class="icon-shuffle"></i>
+                            <span class="title">Transactions</span>
+                            <span class="arrow"></span>
+                        </a>
+                    </li>
+                    <li class="nav-item  ">
+                        <a href="javascript:;" class="nav-link nav-toggle">
+                            <i class="icon-credit-card"></i>
+                            <span class="title">Payments</span>
+                            <span class="arrow"></span>
+                        </a>
+                        <ul class="sub-menu">
+                            <li class="nav-item  ">
+                                <a href="{% url 'dashboard_payments_deposit' %}" class="nav-link ">
+                                    <i class="icon-plus"></i>
+                                    <span class="title">Deposit Funds</span>
+                                </a>
+                            </li>
+                            <li class="nav-item  ">
+                                <a href="{% url 'dashboard_payments_withdraw' %}" class="nav-link ">
+                                    <i class="icon-wallet"></i>
+                                    <span class="title">Withdraw Funds</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="nav-item  ">
+                        <a href="{% url 'dashboard_referrals' %}" class="nav-link nav-toggle">
+                            <i class="icon-users"></i>
+                            <span class="title">Referrals</span>
+                            <span class="arrow"></span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="javascript:;" class="nav-link nav-toggle">
+                            <i class="icon-wrench"></i>
+                            <span class="title">Account</span>
+                            <span class="arrow"></span>
+                        </a>
+                        <ul class="sub-menu">
+                            <li class="nav-item">
+                                <a href="{% url 'dashboard_account_profile' %}" class="nav-link ">
+                                    <i class="icon-user"></i>
+                                    <span class="title">Your Profile</span>
+                                </a>
+                            </li>
+                            <li class="nav-item  ">
+                                <a href="{% url 'dashboard_account_settings' %}" class="nav-link ">
+                                    <i class="icon-settings"></i>
+                                    <span class="title">Settings</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="nav-item  ">
+                        <a href="javascript:;" class="nav-link nav-toggle">
+                            <i class="icon-logout"></i>
+                            <span class="title">Logout</span>
+                            <span class="arrow"></span>
+                        </a>
+                    </li>
+                </ul>
+                <!-- END SIDEBAR MENU -->
+                <!-- END SIDEBAR MENU -->
+            </div>
+            <!-- END SIDEBAR -->
+        </div>
+        <!-- END SIDEBAR -->
+        <!-- BEGIN CONTENT -->
+        <div class="page-content-wrapper">
+            <!-- BEGIN CONTENT BODY -->
+            <div class="page-content">
+                <!-- BEGIN PAGE HEADER-->
+                <!-- BEGIN PAGE BAR -->
+                <div class="page-bar">
+                    <ul class="page-breadcrumb">
+                        <li>
+                            <a href="{% url 'index' %}">Home</a>
+                            <i class="fa fa-circle"></i>
+                        </li>
+                        <li>
+                            <span>{{ page }}</span>
+                        </li>
+                    </ul>
+                    <div class="page-toolbar" id="amount_box">
+                        <div class="btn-group pull-right">
+                            <div class="">
+                                <ul class="page-breadcrumb">
+                                    <li>
+                                        <span style="color: 4cbb17; "> <strong> Ugx {{ user.balance|intcomma }}/= </strong></span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- END PAGE BAR -->
+                <!-- BEGIN PAGE TITLE-->
+                <h3 class="page-title"> {{ page }}
+			<small>{{ page_brief }}</small>
+			</h3>
+                <!-- END PAGE TITLE-->
+                <!-- END PAGE HEADER-->
+                <div class="row">
+                    <div class="col-md-12">
+
+                        <div id="display"></div>
+                    </div>
+                </div>
+            </div>
+            <!-- END CONTENT BODY -->
+        </div>
+        <!-- END CONTENT -->
+    </div>
+    <!-- END CONTAINER -->
+
+    <!-- BEGIN FOOTER -->
+    <div class="page-footer">
+        <div class="page-footer-inner"> &copy; Tossapp {{ year }}
+            <a href="#" title="Play and win" target="_blank">Tossapp</a>
+        </div>
+        <div class="scroll-to-top">
+            <i class="icon-arrow-up"></i>
+        </div>
+    </div>
+    <!-- END FOOTER -->
+
+    <!--[if lt IE 9]>
+			<script src="assets/global/plugins/respond.min.js"></script>
+			<script src="assets/global/plugins/excanvas.min.js"></script>
+			<![endif]-->
+
+    <!-- BEGIN CORE PLUGINS -->
+    <script src="{% static 'tossapp/assets/plugins/jquery.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'tossapp/assets/plugins/bootstrap/js/bootstrap.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'tossapp/assets/plugins/js.cookie.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'tossapp/assets/plugins/bootstrap-hover-dropdown/bootstrap-hover-dropdown.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'tossapp/assets/plugins/jquery-slimscroll/jquery.slimscroll.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'tossapp/assets/plugins/jquery.blockui.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'tossapp/assets/plugins/uniform/jquery.uniform.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'tossapp/assets/plugins/bootstrap-switch/js/bootstrap-switch.min.js' %}" type="text/javascript"></script>
+    <!-- END CORE PLUGINS -->
+
+    <!-- BEGIN PAGE LEVEL PLUGINS -->
+    <script src="{% static 'tossapp/assets/plugins/morris/morris.min.js' %}" type="text/javascript"></script>
+    <!-- END PAGE LEVEL PLUGINS -->
+
+
+    <!-- BEGIN THEME GLOBAL SCRIPTS -->
+    <script src="{% static 'tossapp/assets/js/app.min.js' %}" type="text/javascript"></script>
+    <!-- END THEME GLOBAL SCRIPTS -->
+
+
+    <!-- BEGIN PAGE LEVEL SCRIPTS -->
+    <script src="{% static 'tossapp/assets/js/dashboard.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'daily_lotto/js/lotto_url.js' %}" type="text/javascript"></script>
+    <!-- END PAGE LEVEL SCRIPTS -->
+
+
+    <!-- BEGIN THEME LAYOUT SCRIPTS -->
+    <script src="{% static 'tossapp/assets/js/layout.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'tossapp/assets/js/quick-sidebar.min.js' %}" type="text/javascript"></script>
+    <!-- END THEME LAYOUT SCRIPTS -->
+
+    {% block scripts %}
+
+    <!-- some default content here -->
+        <script>
+            var slots_json = "{% static 'money_slot/img/' %}slots.json";
+            var play_buttons_json = "{% static 'money_slot/img/' %}pay_buttons.json";
+            var slot_slider_png = "{% static 'money_slot/img/' %}slot_slider.png";
+        </script>
+        <script src="{% static 'money_slot/js/slot.js' %}" type="text/javascript"></script>
+
+    {% endblock %}
 
-<body>
-    <script>
-        var slots_json = "{% static 'money_slot/img/' %}slots.json";
-        var play_buttons_json = "{% static 'money_slot/img/' %}pay_buttons.json";
-        var slot_slider_png = "{% static 'money_slot/img/' %}slot_slider.png";
-    </script>
-    <script>
-    //(x, y)
-    var renderer = PIXI.autoDetectRenderer(800, 600);
 
-    renderer.view.style.border = "2px dashed RED";
-    renderer.backgroundColor = 0x4cbb12;
-    renderer.autoResize = true;
-
-
-    //  var scale = scaleToWindow(renderer.view);
-    /* rescale itself every time the size of the browser window is changed*/
-    /*
-    window.addEventListener("resize", event => {
-        scale = scaleToWindow(renderer.view);
-    });
-*/
-
-    //Aliases
-    var Container = PIXI.Container;
-    var autoDetectRenderer = PIXI.autoDetectRenderer;
-    var loader = PIXI.loader;
-    var resources = PIXI.loader.resources;
-    var TextureCache = PIXI.utils.TextureCache;
-    var Texture = PIXI.Texture;
-    var Sprite = PIXI.Sprite;
-    var Text = PIXI.Text;
-    var Graphics = PIXI.Graphics;
-    var MovieClip = PIXI.extras.MovieClip;
-
-    //LIBRARY ALIESES
-
-    var b = new Bump(PIXI);
-    var c = new Charm(PIXI);
-    var t = new Tink(PIXI, renderer.view);
-    var su = new SpriteUtilities(PIXI);
-    var gu = new GameUtilities();
-
-    //Tink
-    var pointer = t.makePointer();
-
-
-    //Add the canvas to the HTML document
-    document.body.appendChild(renderer.view);
-
-
-    //Create the container object called the "stage"
-    var stage = new Container();
-
-
-    //The Container that will Keep all the game Plays
-    var gameScene = new Container();
-    stage.addChild(gameScene);
-
-    //THE SLOT MACHINE STAGE
-    var slotMachine = new Container();
-    gameScene.addChild(slotMachine);
-
-    var payButtons = new Container();
-    slotMachine.addChild(payButtons);
-
-
-
-    PIXI.loader
-        .add([slots_json, play_buttons_json, slot_slider_png]).on("progress", loadProgressHandler).load(setup);
-
-
-    function loadProgressHandler(loader, resource) {
-
-    }
-
-
-    //GAME VARIEBLES
-    //Define any variables that are used in more than one function
-    //Set the game's Current state to "play":
-    var state = play;
-    var pixie;
-    var message;
-    var resultMessageDisplay;
-    var check_results; //check where the user has had any wins
-    //---------GDLX--------
-    var slot1_rand;
-    var slot2_rand;
-    var slot3_rand;
-
-    //----------ACCOUNT SECTION
-    var accountBalance = 5000;
-    var accountBalance_Display;
-    var betPlaced = 0;
-    var newBalance;
-
-
-    var redseven;
-    var bell;
-    var redbar;
-    var plum;
-    var goldbar;
-    var lemon;
-    var greenbar;
-    var grape;
-    var redbar;
-
-
-    //==== MESSAGES ------
-    var jackpot_Message;
-
-
-
-
-
-    function setup() {
-
-
-        //1. Create an optional alias called `id` for all the texture atlas
-        //frame id textures.
-        id = PIXI.loader.resources[slots_json].textures;
-        id2 = PIXI.loader.resources[play_buttons_json].textures;
-
-
-        var slider_x = 162;
-        var slider_xx = 328;
-        var slider_xxx = 494;
-        var spin_speed = 0.2;
-
-
-
-        //Make the redseven
-        create_icon_sprites(redseven, "redseven", 1);
-
-
-        //Make the Bell
-        create_icon_sprites(bell, "bell", 1);
-
-
-        //Make the plum
-        create_icon_sprites(plum, "plum", 1);
-
-
-        //Make the goldbar
-        create_icon_sprites(goldbar, "goldbar", 1);
-
-
-        //Make the lemon
-        create_icon_sprites(lemon, "lemon", 1);
-
-        //Make the greenbar
-        create_icon_sprites(greenbar, "greenbar", 1);
-
-        //Make the grape
-        create_icon_sprites(grape, "grape", 1);
-
-
-        //Make the redbar
-        create_icon_sprites(redbar, "redbar", 1);
-
-
-        //ACCOUNT BALACE
-        accountBalance_Display = new Text(
-            "Balance: " + accountBalance, {
-                font: "30px Impact",
-                fill: "red"
-            }
-        );
-        accountBalance_Display.x = 10;
-        accountBalance_Display.y = 10;
-        gameScene.addChild(accountBalance_Display);
-
-
-
-
-        //Make the slot_machine_flame
-        slot_machine_flame = new Sprite(id["slot_machine_flame"]);
-        slot_machine_flame.position.set(100, 0);
-        slotMachine.addChild(slot_machine_flame);
-
-
-
-        //RETURN MESSSAGE
-        resultMessageDisplay = new Text(
-            "", {
-                font: "30px Impact",
-                fill: "White"
-            }
-        );
-        resultMessageDisplay.x = slotMachine.width / 2 - 20;
-        resultMessageDisplay.y = slotMachine.y + 47;
-        slotMachine.addChild(resultMessageDisplay);
-
-
-
-
-        //Make the spin_button
-        spin_button = new Sprite(id["spin_button"]);
-        machine_icon_resize(spin_button);
-        spin_button.x = slotMachine.x + 550;
-        spin_button.y = slotMachine.y + 390;
-        spin_button.width = 95;
-        spin_button.height = 95;
-        spin_button.visible = true;
-        slotMachine.addChild(spin_button);
-
-
-        var coin_100;
-        var coin_500;
-        var coin_1000;
-        var coin_5000;
-
-
-        coin_100 = new Sprite(id2["coin_100"]);
-        coin_100.x = slotMachine.x + 140;
-        coin_100.y = slotMachine.y + 416;
-        coin_100.width = 70;
-        coin_100.height = 70;
-        slotMachine.addChild(coin_100);
-
-
-        coin_500 = new Sprite(id2["coin_500"]);
-        coin_500.x = slotMachine.x + 210;
-        coin_500.y = slotMachine.y + 411;
-        coin_500.width = 75;
-        coin_500.height = 75;
-        slotMachine.addChild(coin_500);
-
-        coin_1000 = new Sprite(id2["coin_1000"]);
-        coin_1000.x = slotMachine.x + 285;
-        coin_1000.y = slotMachine.y + 410;
-        coin_1000.width = 77;
-        coin_1000.height = 77;
-        slotMachine.addChild(coin_1000);
-
-
-
-        //Create an array that references the frames you want to use
-        var frames1 = [
-            id2["diamond"],
-            id["redseven"],
-            id["bell"],
-            id["plum"],
-            id["goldbar"],
-            id["lemon"],
-            //id["greenbar"],
-            id["grape"],
-            id["redbar"]
-        ];
-        //Create a MoveClip from the frames
-        pixie1 = new MovieClip(frames1);
-        //Making the Animation Play
-        //pixie1.play();
-        //Seting the Animation Speed
-        pixie1.animationSpeed = spin_speed;
-        pixie1.position.set(162, 175);
-        pixie1.width = 150;
-        pixie1.height = 150;
-        //pixie.loop = false;
-        slotMachine.addChild(pixie1);
-
-
-        var frames2 = [
-            id["plum"],
-            id["grape"],
-            id["goldbar"],
-            id["redseven"],
-            id2["diamond"],
-            id["bell"],
-            id["lemon"],
-            id["redbar"]
-            //id["greenbar"]
-        ];
-        pixie2 = new MovieClip(frames2);
-        //Making the Animation Play
-        //pixie2.play();
-        //Seting the Animation Speed
-        pixie2.animationSpeed = spin_speed;
-        pixie2.position.set(328, 175);
-        pixie2.width = 150;
-        pixie2.height = 150;
-        //pixie.loop = false;
-        slotMachine.addChild(pixie2);
-
-
-        var frames3 = [
-            //id["greenbar"],
-            id["lemon"],
-            id["redseven"],
-            id["grape"],
-            id["redbar"],
-            id["goldbar"],
-            id["plum"],
-            id2["diamond"],
-            id["bell"]
-        ];
-        pixie3 = new MovieClip(frames3);
-        //Making the Animation Play
-        //pixie3.play();
-        //Seting the Animation Speed
-        pixie3.animationSpeed = spin_speed;
-        pixie3.position.set(494, 175);
-        pixie3.width = 150;
-        pixie3.height = 150;
-        //pixie.loop = false;
-        slotMachine.addChild(pixie3);
-
-
-        //Aligning the slotMachine
-        slotMachine.y = 70;
-
-        ///THE FIRST IMAGES
-        var init_rand = randomInt(0, 7);
-        pixie1.gotoAndStop(init_rand);
-        pixie2.gotoAndStop(init_rand);
-        pixie3.gotoAndStop(init_rand);
-
-        //MAKING INTERACTIONS
-        t.makeInteractive(coin_100);
-        t.makeInteractive(coin_500);
-        t.makeInteractive(coin_1000);
-        t.makeInteractive(spin_button);
-
-
-        coin_100.tap = () => {
-            //Do something when the pointer is released after pressing the sprite
-
-            console.log("PAY 100 PRESSED");
-
-
-            //ADDINT THE USER'S BET
-            betPlaced = betPlaced + 100;
-
-            console.log("Bet Placed: " + betPlaced);
-
-            resultMessageDisplay.text = "Your Bet: " + betPlaced;
-            resultMessageDisplay.x = slotMachine.width / 2 - 20;
-
-
-            //REMOVING DISPLAY MESSAGE
-            other_display_message.text = " ";
-            jackpot_Message.text = " ";
-
-        };
-
-
-        coin_500.tap = () => {
-            //Do something when the pointer is released after pressing the sprite
-
-            console.log("PAY 500 PRESSED");
-
-
-            //ADDING USER'S BET
-            betPlaced = betPlaced + 500;
-            console.log("Bet Placed: " + betPlaced);
-
-
-            resultMessageDisplay.text = "Your Bet: " + betPlaced;
-            resultMessageDisplay.x = slotMachine.width / 2 - 20;
-
-
-            //REMOVING DISPLAY MESSAGE
-            other_display_message.text = " ";
-            jackpot_Message.text = " ";
-
-        };
-
-
-        coin_1000.tap = () => {
-            //Do something when the pointer is released after pressing the sprite
-
-            console.log("PAY 1000 PRESSED");
-
-
-            //ADDING USER'S BET
-            betPlaced = betPlaced + 1000;
-            console.log("Bet Placed: " + betPlaced);
-
-
-            resultMessageDisplay.text = "Your Bet: " + betPlaced;
-            resultMessageDisplay.x = slotMachine.width / 2 - 20;
-
-
-
-            //REMOVING DISPLAY MESSAGE
-            other_display_message.text = " ";
-            jackpot_Message.text = " ";
-
-        };
-
-
-        spin_button.tap = () => {
-            //Do something when the pointer is released after pressing the sprite
-
-            console.log("SPIN BUTTON PRESSED");
-            console.log("Bet Placed: " + betPlaced);
-
-            if (betPlaced > 1 && accountBalance >= betPlaced) {
-
-                console.log("BET IS OK!!");
-
-                //Removing the Result Message Display
-                resultMessageDisplay.text = " ";
-
-
-                //OTHER MESSSAGE
-                other_display_message = new Text(
-                    "SPINNING...", {
-                        font: "30px Impact",
-                        fill: "White"
-                    }
-                );
-                other_display_message.x = slotMachine.width / 2 + 50;
-                other_display_message.y = slotMachine.y - 5;
-                other_display_message.anchor.set(0.5, 0.5);
-                slotMachine.addChild(other_display_message);
-
-                //START THE ANIMATIONS
-                pixie1.play();
-                pixie2.play();
-                pixie3.play();
-
-
-
-                /////RANDING
-
-
-                wait(2000).then(() => {
-                    slot1_rand = 4;
-                    slot1_rand = randomInt(0, 7);
-                    console.log("SLOT 1 Rand: " + slot1_rand);
-                    pixie1.gotoAndStop(slot1_rand);
-
-                });
-
-
-                wait(4000).then(() => {
-                    //slot2_rand = 2;
-                    slot2_rand = randomInt(0, 7);
-                    console.log("SLOT 2 Rand: " + slot2_rand);
-                    pixie2.gotoAndStop(slot2_rand);
-
-                });
-
-
-                wait(7000).then(() => {
-                    slot3_rand = 4;
-                    slot3_rand = randomInt(0, 7);
-                    console.log("SLOT 3 Rand: " + slot3_rand);
-                    pixie3.gotoAndStop(slot3_rand);
-
-                    get_slot_scores();
-
-                    betPlaced = 0;
-
-
-
-                }); //---End of Wait(6000).. Don't Delete
-
-
-
-                function get_slot_scores() {
-
-                    check_results = 0;
-
-
-
-
-
-
-                    ////------------ CHECKING IF WON OR LOST ------------------------
-                    /*var slot1_rand
-                    var slot2_rand
-                    var slot3_rand*/
-
-                    //---- JACKPOT: 7:7:7 ==> 1:3:1  | X12
-                    if (slot1_rand == 1 && slot2_rand == 3 && slot3_rand == 1) {
-                        console.log("IT A JACKPOT");
-
-                        accountBalance = accountBalance + (betPlaced * 12);
-
-
-                        //DISPLAYING THE REMAING BALANCE
-                        accountBalance_Display.text = "Balance: " + accountBalance;
-
-                        console.log("NEW ACCOUNT BALANCE: " + accountBalance);
-
-
-                        //RETURN MESSSAGE
-                        jackpot_Message = new Text(
-                            "-- JACKPOT --", {
-                                font: "30px Impact",
-                                fill: "White"
-                            }
-                        );
-                        jackpot_Message.x = slotMachine.width / 2 + 50;
-                        jackpot_Message.y = slotMachine.y - 5;
-                        slotMachine.addChild(jackpot_Message);
-
-
-
-                        c.pulse(jackpot_Message, 60, 0.5);
-                        jackpot_Message.anchor.set(0.5, 0.5);
-                        c.breathe(jackpot_Message, 0.1, 0.1);
-
-                        //----Will use this variable to c if the user has had the win.
-                        check_results = 1;
-
-                    }
-
-
-                    //---- GOLDENBARS: bar:bar:bar ==> 4:2:4  | X11
-                    if (slot1_rand == 4 && slot2_rand == 2 && slot3_rand == 4) {
-                        console.log("GOT 3 GOLDENBARS");
-
-                        accountBalance = accountBalance + (betPlaced * 11);
-
-                        //DISPLAYING THE REMAING BALANCE
-                        accountBalance_Display.text = "Balance: " + accountBalance;
-
-                        other_display_message.text = "GOLDENBARS: " + (betPlaced * 11);
-
-                        //----Will use this variable to c if the user has had the win.
-                        check_results = 1;
-
-                    }
-
-
-                    //---- REDBARS: bar:bar:bar ==> 7:7:3  | X10
-                    if (slot1_rand == 7 && slot2_rand == 7 && slot3_rand == 3) {
-                        console.log("GOT 3 REDBARS");
-
-                        accountBalance = accountBalance + (betPlaced * 10);
-
-                        //DISPLAYING THE REMAING BALANCE
-                        accountBalance_Display.text = "Balance: " + accountBalance;
-
-                        other_display_message.text = "3 REDBARS: " + (betPlaced * 10);
-
-                        //----Will use this variable to c if the user has had the win.
-                        check_results = 1;
-
-                    }
-
-
-                    //---- DIAMONDS: diamonds:diamonds:diamonds ==> 0:4:6  | X9
-                    if (slot1_rand == 0 && slot2_rand == 4 && slot3_rand == 6) {
-                        console.log("GOT 3 REDBARS");
-
-                        accountBalance = accountBalance + (betPlaced * 9);
-
-                        //DISPLAYING THE REMAING BALANCE
-                        accountBalance_Display.text = "Balance: " + accountBalance;
-
-                        other_display_message.text = "DIAMONDS: " + (betPlaced * 9);
-
-                        //----Will use this variable to c if the user has had the win.
-                        check_results = 1;
-
-                    }
-
-
-                    //---- BELLS: bell:bell:bell ==> 2;5:7  | X8
-                    if (slot1_rand == 2 && slot2_rand == 5 && slot3_rand == 7) {
-                        console.log("GOT 3  BELLS");
-
-                        accountBalance = accountBalance + (betPlaced * 8);
-
-                        //DISPLAYING THE REMAING BALANCE
-                        accountBalance_Display.text = "Balance: " + accountBalance;
-
-                        other_display_message.text = "3 BELLS: " + (betPlaced * 8);
-
-                        //----Will use this variable to c if the user has had the win.
-                        check_results = 1;
-
-                    } else if (slot1_rand == 2 && slot2_rand == 5 || slot1_rand == 2 && slot3_rand == 7 || slot2_rand == 5 && slot3_rand == 7) {
-                        //------ GOT 2 BELLS ---
-                        console.log("GOR 2 BELLS");
-
-                        accountBalance = accountBalance + (betPlaced * 7);
-
-                        //DISPLAYING THE REMAING BALANCE
-                        accountBalance_Display.text = "Balance: " + accountBalance;
-
-                        other_display_message.text = "2 BELLS: " + (betPlaced * 7);
-
-                        //----Will use this variable to c if the user has had the win.
-                        check_results = 1;
-
-                    } //--End of 2 section  --//
-
-
-                    //---- PLUMS: plums:plums:plums ==> 3:0:5  | X6
-                    if (slot1_rand == 3 && slot2_rand == 0 && slot3_rand == 5) {
-                        console.log("GOT 3  PLUMS");
-
-                        accountBalance = accountBalance + (betPlaced * 6);
-
-                        //DISPLAYING THE REMAING BALANCE
-                        accountBalance_Display.text = "Balance: " + accountBalance;
-
-                        other_display_message.text = "3 PLUMS: " + (betPlaced * 6);
-
-                        //----Will use this variable to c if the user has had the win.
-                        check_results = 1;
-
-                    } else if (slot1_rand == 3 && slot2_rand == 0 || slot1_rand == 3 && slot3_rand == 5 || slot2_rand == 0 && slot3_rand == 5) {
-                        //------ GOT 2 BELLS ---
-                        console.log("GOR 2 PLUMS");
-
-                        accountBalance = accountBalance + (betPlaced * 5);
-
-                        //DISPLAYING THE REMAING BALANCE
-                        accountBalance_Display.text = "Balance: " + accountBalance;
-
-                        other_display_message.text = "2 PLUMS: " + (betPlaced * 5);
-
-                        //----Will use this variable to c if the user has had the win.
-                        check_results = 1;
-
-                    } //--End of 2 section  --//
-
-
-                    //---- LEMONS: lemons:lemons:lemons ==> 5:6:0  | X4
-                    if (slot1_rand == 5 && slot2_rand == 6 && slot3_rand == 0) {
-                        console.log("GOT 3  LEMONS");
-
-                        accountBalance = accountBalance + (betPlaced * 4);
-
-                        //DISPLAYING THE REMAING BALANCE
-                        accountBalance_Display.text = "Balance: " + accountBalance;
-
-                        other_display_message.text = "3 LEMONS: " + (betPlaced * 4);
-
-                        //----Will use this variable to c if the user has had the win.
-                        check_results = 1;
-
-                    } else if (slot1_rand == 5 && slot2_rand == 6 || slot1_rand == 5 && slot3_rand == 0 || slot2_rand == 6 && slot3_rand == 0) {
-                        //------ GOT 2 BELLS ---
-                        console.log("GOR 2 LEMONS");
-
-                        accountBalance = accountBalance + (betPlaced * 3);
-
-                        //DISPLAYING THE REMAING BALANCE
-                        accountBalance_Display.text = "Balance: " + accountBalance;
-
-                        other_display_message.text = "2 LEMONS: " + (betPlaced * 3);
-
-                        //----Will use this variable to c if the user has had the win.
-                        check_results = 1;
-
-                    } //--End of 2 section  --//
-
-
-
-                    //---- GRAPES: grapes:grapes:grapes ==> 6:1:2  | X2
-                    if (slot1_rand == 6 && slot2_rand == 1 && slot3_rand == 2) {
-                        console.log("GOT 3  GRAPES");
-
-                        accountBalance = accountBalance + (betPlaced * 2);
-
-                        //DISPLAYING THE REMAING BALANCE
-                        accountBalance_Display.text = "Balance: " + accountBalance;
-
-                        other_display_message.text = "3 GRAPES: " + (betPlaced * 2);
-
-                        //----Will use this variable to c if the user has had the win.
-                        check_results = 1;
-
-                    } else if (slot1_rand == 6 && slot2_rand == 1 || slot1_rand == 6 && slot3_rand == 2 || slot2_rand == 1 && slot3_rand == 2) {
-                        //------ GOT 2 BELLS ---
-                        console.log("GOR 2 GRAPES");
-                        console.log("HERE U JUST GET YOUR MONEY BACK");
-
-                        accountBalance = accountBalance + (betPlaced * 1);
-
-                        //DISPLAYING THE REMAING BALANCE
-                        accountBalance_Display.text = "Balance: " + accountBalance;
-
-                        other_display_message.text = "2 GRAPES: " + (betPlaced * 1);
-
-                        //----Will use this variable to c if the user has had the win.
-                        check_results = 1;
-
-                    } //--End of 2 section  --//
-
-
-                    //--WHAT HAPPENS WHEN THE USER LOSES THE BET
-                    if (check_results == 1) {
-                        //--the user has had a win
-                    } else {
-                        //-- USER LOST THE BET
-
-                        //-- Deducting the Account balance
-                        accountBalance = accountBalance - betPlaced;
-
-                        //DISPLAYING THE REMAING BALANCE
-                        accountBalance_Display.text = "Balance: " + accountBalance;
-
-                        other_display_message.text = "YOU LOST: TRY AGAIN";
-                    };
-
-
-
-
-                } //--End of Function Get slot Scores---
-
-
-
-
-
-
-
-            } else {
-                console.log("YOUR BET HAS IS INVALIED");
-
-
-                resultMessageDisplay.text = "PLACE A BET";
-
-                //REMOVING DISPLAY MESSAGE
-                other_display_message.text = " ";
-                jackpot_Message.text = " ";
-
-            }
-
-
-
-
-
-
-
-
-
-
-            //---End of Spin Button Pressed---
-        };
-
-
-
-        /*
-                wait(10000).then(() => {
-
-                    pixie1.play();
-                    pixie2.play();
-                    pixie3.play();
-
-                });
-
-        */
-
-
-        //Start the game loop
-        gameLoop();
-
-    };
-
-
-
-    function resetGame() {
-
-    };
-
-
-
-
-    function gameLoop() {
-        // Loop this Function 60 times per Second
-        requestAnimationFrame(gameLoop);
-
-        //Update the Current game state
-        state();
-        c.update();
-        t.update();
-
-
-        //Tell the "renderer" to "render" the "stage".
-        //Render the stage to see the animation
-        renderer.render(stage);
-
-    };
-
-
-
-    function play() {
-        // body...
-    };
-    </script>
 </body>
 
 </html>

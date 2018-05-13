@@ -10,7 +10,7 @@ from tossapp.models import Game
 @csrf_protect
 def compound_boxes(request):
     context = RequestContext(request)
-    page = 'Compound boxes'
+    page = 'Sky boxes'
     page_brief = ""
     games = Game.objects.all()
     return render(request, 'sky_boxes/index.html', locals(), context)

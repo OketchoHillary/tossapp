@@ -12,7 +12,6 @@ from django.views.decorators.csrf import csrf_protect
 
 from daily_lotto.forms import TicketForm, RandomTicketForm
 from daily_lotto.models import *
-from daily_lotto.tables import TicketTable
 from tossapp.models import *
 import datetime
 import time
@@ -50,7 +49,7 @@ def random_tickets(tick, req):
 
     if quantity >= 1:
         for random_qunatity in range(quantity):
-            generated_numbers = random.sample(xrange(1, 51),6)
+            generated_numbers = random.sample(range(1, 51), 6)
             t1,t2,t3,t4,t5,t6 = generated_numbers
             DailyLottoTicket.objects.create(player_name=req.user, daily_lotto=todays_lotto(), n1=t1, n2=t2, n3=t3, n4=t4, n5=t5, n6=t6)
 
@@ -112,8 +111,6 @@ def lotto(request, template_name='daily_lotto/home.html'):
 
     # retrieving tickets from logged in user
     my_ticket_list = DailyLottoTicket.objects.filter(player_name=current_user).order_by('-purchased_time')
-    table = TicketTable(DailyLottoTicket.objects.filter(player_name=current_user).order_by('-purchased_time'))
-    table.paginate(page=request.GET.get('page', 1), per_page=10)
     # retrieving daily lotto from games list
     lotto_game = Game.objects.filter(name='Daily Lotto')[0]
     tickets = DailyLottoTicket.objects.all()
