@@ -11,7 +11,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
 
         # schedule.every(1).minutes.do(create_lotto)
-        schedule.every(3).minutes.do(draw)
+        schedule.every(1).minutes.do(draw)
         # schedule.every().hour.do(draw)
         # schedule.every().day.at("10:30").do(job)
         # schedule.every().monday.do(job)
