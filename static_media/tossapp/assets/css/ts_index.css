@@ -1,0 +1,110 @@
+.login {
+    background-color: #4cbb17!important;
+}
+
+#space_here {
+	
+	padding-top: 100px;
+}
+
+
+/* Malking the Signin word Kelly green */
+.font-green {
+    color: #4cbb17!important;
+}
+
+/* INPUT FIELDS */
+/*the icons in the INPUT fields*/
+.input-group-addon>i {
+    color: #333333;
+}
+
+.input-group-addon {
+    background-color: #dde3ec;
+    border: 1px solid #dde3ec;
+    border-radius: 4px;
+}
+/* END OF - INPUT FIELDS */
+
+.login .content .form-control {
+	color: #333333;
+}
+
+.login .content .create-account {
+    background-color: #333333;
+}
+
+/* Color of the word "Remember Me" */
+.login .content .check {
+    color: #333333;
+}
+
+
+/* Changing the color of "Create an account" */
+.login .content .create-account p a {
+    color: #4cbb17;
+}
+
+
+.btn.green:not(.btn-outline) {
+    color: #fff;
+    background-color: #4cbb17;
+    border-color: #4cbb17;
+}
+
+
+/* REMEMBER ME CHECK BOX */
+/*Changing the color of the "Remember Me" Check Box */
+.md-checkbox label>.box {
+    border: 2px solid #4cbb17;
+}
+
+/* Changing the Color of the Checkbox Tick To our Green */
+.md-checkbox label>.check {
+    top: -4px;
+    left: 6px;
+    width: 10px;
+    height: 20px;
+    border: 2px solid #4cbb17;
+    border-top: none;
+    border-left: none;
+    opacity: 0;
+    z-index: 5;
+    -webkit-transform: rotate(180deg);
+    -moz-transform: rotate(180deg);
+    transform: rotate(180deg);
+    -webkit-transition-delay: .3s;
+    -moz-transition-delay: .3s;
+    transition-delay: .3s;
+}
+/* END OF - REMEMBER ME CHECK BOX */
+
+
+/* This is when the signin button is hovered over, */
+.btn.green:not(.btn-outline):hover {
+   color: #FFF;
+    background-color: #333333;
+    border-color: #333333;
+}
+
+/* Putting the login button to the Left of the div */
+#right_bt {
+	float: right;
+}
+
+
+/* i was hidding the small copyright in the background */
+.login .copyright {
+	color: #333333;
+}
+
+
+.page-footer {
+	background-color: #333333!important;
+}
+
+
+			.navbar-default .navbar-nav>li>a:hover, .navbar-default .navbar-nav>li>a:focus {
+				color: #red;
+				background-color: white;
+			}
