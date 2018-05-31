@@ -1,5 +1,5 @@
 
-var num_arr = Array.apply(null, Array(50)).map(function (_, i) {
+var num_arr = Array.apply(null, Array(number_range-1)).map(function (_, i) {
     return i + 1;
 });
 var lotto_sample = [""].concat(num_arr);

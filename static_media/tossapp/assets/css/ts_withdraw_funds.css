@@ -1,0 +1,98 @@
+/* here you can put your own css to customize and override the theme */
+
+
+#ubuntu_font {
+	font-family: Ubuntu;
+}
+
+.ts_top_menu {
+	font-family: Ubuntu;
+	color: #4cbb17; 
+	font-size: 15px;
+}
+
+#ts_sidebar_username {
+	font-family: Ubuntu;
+	color: #333333; 
+	font-size: 15px;
+}
+
+
+.nav>li>a:focus, .nav>li>a:hover {
+	
+	text-decoration: none;
+    background-color: #4cbb17;
+	color: #fff;
+}
+
+#amount_box {
+	
+	padding-right: 15px;
+	font-family: Ubuntu;
+	color: #ffffff;
+	
+}
+
+
+/*This ID is for the Kelly Green And the Ubuntu Font */
+#kelly_and_ubuntu {
+	font-family: Ubuntu;
+	color: #4cbb17; 	
+}
+
+
+/*This is the line under the Breadcrumbs */
+.page-content-white .page-content .page-bar {
+	border-bottom: 1px solid #4cbb17;
+}
+
+
+
+/* PAGE SCRIPT CSS */
+#ts_all_content {
+	margin-left: 4.5%;
+}
+
+#ts_withdraw_div {
+	width: 60%;
+	margin-left: 20%;
+	
+}
+
+.portlet.box.red>.portlet-title, .portlet.red, .portlet>.portlet-body.red {
+    background-color: #333333;
+}
+
+/* Withdraw box words */
+.portlet.box.red>.portlet-title>.caption, .portlet.box.red>.portlet-title>.caption>i {
+    color: #4cbb17;
+}
+
+/* withdraw box boarder */
+.portlet.box.red {
+    border: 1px solid #4cbb17;
+    border-top: 0;
+}
+
+.input-group-addon>i {
+    color: #4cbb17;
+}
+
+.btn.green:not(.btn-outline) {
+    color: #fff;
+    background-color: #4cbb17;
+    border-color: #4cbb17;
+}
+ 
+/* This is when the signin button is hovered over, */
+.btn.green:not(.btn-outline):hover {
+   color: #4cbb17;
+    background-color: #333333;
+    border-color: #333333;
+}
+
+#right_bt {
+	float: right;
+}
+
+/* PAGE SCRIPT CSS */

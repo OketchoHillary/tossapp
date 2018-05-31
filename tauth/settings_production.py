@@ -141,10 +141,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
 
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "static"),
-    '/var/www/static/',
+    os.path.join(BASE_DIR, "static/"),
+    #'/var/www/static/',
 ]
 
+STATIC_ROOT= os.path.join(BASE_DIR,'static_media/')
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
@@ -153,3 +154,5 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 AUTH_USER_MODEL = 'accounts.Tuser'
 LOGIN_REDIRECT_URL = '/'
 LOGIN_URL = '/login'
+
+NUMBER_RANGE = 31

@@ -1,0 +1,283 @@
+/* here you can put your own css to customize and override the theme */
+
+
+#ubuntu_font {
+	font-family: Ubuntu;
+}
+
+.ts_top_menu {
+	font-family: Ubuntu;
+	color: #4cbb17; 
+	font-size: 15px;
+}
+
+#ts_sidebar_username {
+	font-family: Ubuntu;
+	color: #333333; 
+	font-size: 15px;
+}
+
+
+.nav>li>a:focus, .nav>li>a:hover {
+	
+	text-decoration: none;
+    background-color: #4cbb17;
+	color: #fff;
+}
+
+#amount_box {
+	
+	padding-right: 15px;
+	font-family: Ubuntu;
+	color: #ffffff;
+	
+}
+
+
+/*This ID is for the Kelly Green And the Ubuntu Font */
+#kelly_and_ubuntu {
+	font-family: Ubuntu;
+	color: #4cbb17; 	
+}
+
+
+/*This is the line under the Breadcrumbs */
+.page-content-white .page-content .page-bar {
+	border-bottom: 1px solid #4cbb17;
+}
+
+
+/* PAGE LEVEL CSS */
+
+
+/* GAME BOX PLAY BUTTON */
+.btn.blue:not(.btn-outline) {
+    color: #f6f6f6;
+    background-color: #4cbb17;
+    border-color: #333333;
+	font-weight: bold;
+}
+
+/* GAME BOX PLAY BUTTON HOVERED */
+.btn.blue:not(.btn-outline):hover {
+    color: #4cbb17;
+    background-color: #f6f6f6;
+    border-color: #4cbb17;
+}
+/* GAME BOX PLAY BUTTON HOVERED */
+
+
+/* GAME BOX PLAY BUTTON ACTIVE */
+
+.btn.blue:not(.btn-outline).focus, .btn.blue:not(.btn-outline):focus {
+	color: #4cbb17;
+    background-color: #f6f6f6;
+    border-color: #333333;
+	
+}
+/* GAME BOX PLAY BUTTON ACTIVE */
+
+
+
+/* DAILY LOTTO GAMES */
+.nav-tabs>li.active>a, .nav-tabs>li.active>a:focus, .nav-tabs>li.active>a:hover {
+    color: #fdfdfd;
+    font-weight: 800;
+    background-color: #4cbb17;
+    border: 1px solid #ddd;
+    border-bottom-color: transparent;
+    cursor: default;
+}
+
+.nav-tabs {
+    border-bottom: 0px;
+}
+
+
+#main-lotto-row{
+	/*background-color: blanchedalmond; */
+    /* border-color: darkblue; */
+    /* border-right: 10px; */
+    padding: 10px;
+    border: 2px solid #904;
+	background-image: url("assets/img/ts_game_box_images/the_daily_lotto.jpg");
+}
+
+
+#game-column{
+	/* border: 2px solid #904; */
+	padding: 2px;
+}
+
+.tab-content{
+	background-color: #135BAC;
+    padding: 6px;
+    line-height: 10px;
+}
+
+.lotto_menu{
+	background-color: #fff;
+    font-weight: 600;
+	width: 25%;
+	text-align: -webkit-center;
+}
+
+#next_draw_details{
+	padding: 20px;	
+}
+
+#details_column1{
+	color: #fff;
+	font-size: 15px;
+    line-height: 30px;
+}
+
+.text1 {
+    font-size: 17px;
+    color: #ffffff;
+    display: inline-block;
+    /*width: 175px;*/
+    text-align: right;
+}
+
+.text2 {
+    font-size: 25px;
+	font-weight: 800;
+    color: #ffffff;
+    display: inline-block;
+    /*width: 160px;*/
+}
+
+.buy_tickets_div{
+	padding: 10px;
+    font-weight: 600;
+    font-size: initial;
+}
+
+.ticketform{
+    display: none;
+    border: solid 1px #fff;
+    -webkit-border-radius: 6px;
+    -moz-border-radius: 6px;
+    border-radius: 6px;
+    padding-top: 6px;
+    background-color: #b9d5ee;
+    color: #135cad;
+    line-height: 10px;
+}
+
+.ticketform_headings{
+	font-weight: 700;
+	text-decoration: underline;
+}
+
+
+/*Past Result CSS*/
+.t_bottom .column2 {
+    float: left;
+}
+
+.winning_star {
+	padding-left: 2.6%;
+    font-size: 20px;
+    line-height: 15px;
+    width: 51px;
+    height: 49px;
+    color: white;
+    display: inline-block;
+	text-align: -webkit-center;
+}
+
+#lotto_detail_1{
+	padding-left: 20px;
+	padding-top: 20px;
+}
+
+#detail_table{
+    font-weight: 600;
+	margin-top: 20px;
+    margin-left: 10%;
+}
+
+#rslt_table{
+    font-weight: 600;
+	margin-top: 20px;
+	margin-bottom: 20px;
+	line-height: 1.6;
+	border: 2px solid #ffffff;
+	width: inherit;
+}
+
+
+#winners_table{
+    font-weight: 600;
+	margin-top: 20px;
+	margin-bottom: 20px;
+	line-height: 1.6;
+	border: 2px solid #ffffff;
+	width: inherit;
+}
+
+#all_winners_table{
+	font-size: unset;
+	font-weight: 600;
+	margin-top: 20px;
+	margin-bottom: 20px;
+	line-height: 1.6;
+	border: 2px solid #4cbb17;
+	width: inherit;
+	height: -webkit-fill-available;
+    color: #fff;
+}
+
+.past_lotto_col_1{
+	text-align: -webkit-center;
+}
+
+.past_lotto_col_2{
+}
+
+#all_tym_header{
+	color: #fff;
+	text-align: -webkit-center;
+	text-decoration: underline;
+}
+
+.all_tym_win_rows{
+	border-bottom: 1px solid #4cbb17;
+}
+.all_tym_win_col_1{
+	text-align: -webkit-left;
+	border-right: 6px solid #4cbb17;
+    padding-left: 3%;
+}
+.all_tym_win_col_2{
+	text-align: -webkit-center;
+	border-right: 6px solid #4cbb17;
+}
+.all_tym_win_col_3{
+	text-align: -webkit-right;
+	padding-right: 4%;
+}
+
+
+.lotto_rules{
+	padding: 20px 40px;
+    border: solid 1px #fff;
+    -webkit-border-radius: 6px;
+    -moz-border-radius: 6px;
+    border-radius: 6px;
+    margin: 10px 14px 14px 14px;
+    background-color: #b9d5ee;
+    color: #135cad;
+    font-size: 13px;
+    line-height: 20px;
+	font-weight: 600;
+}
+/*Past Result CSS*/
+
+/* DAILY LOTTO GAMES*/
+
+
+/* PAGE LEVEL CSS */
+

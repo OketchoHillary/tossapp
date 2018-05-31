@@ -4,12 +4,15 @@ from daily_lotto.models import *
 from tossapp.models import *
 from django.db.models import F
 from daily_lotto.views import todays_lotto, previous_lotto
+from tauth.settings import NUMBER_RANGE
 
 
 # calculating ticket purchase commission
+
 def commission():
     ticket_count = DailyLottoTicket.objects.filter(daily_lotto=todays_lotto()).count()
     print(ticket_count)
+
     # daily revenue
     daily_revenue = DailyLotto.TICKET_PRICE * ticket_count
 
@@ -55,19 +58,23 @@ def create_lotto():
 def draw():
     lotto_game = Game.objects.filter(name='Daily Lotto')[0]
 
-    print(todays_lotto())
-    commission()
+    # print(todays_lotto())
+    # commission()
 
     # retrieving current lotto id
-    toss_lotto = DailyLotto.objects.all().values_list('lotto_id').order_by('-start_date')[0]
-    lottoid = int(toss_lotto[0])
+    # toss_lotto = DailyLotto.objects.all().values_list('lotto_id').order_by('-start_date')[0]
+    # toss_lotto = DailyLotto.objects.all().order_by('-start_date')[0]
+    toss_lotto = todays_lotto()
+    lottoid = toss_lotto.lotto_id
+
+    commission(toss_lotto)
 
     # previous jackpot
     my_p = DailyLotto.objects.all().values_list('jack_pot').order_by('-start_date')[1]
     pjackpot = int(my_p[0])
 
     # retrieving today's six_prize pool quota
-    current_sixQuota = DailyQuota.objects.filter(daily_lotto=todays_lotto()).values_list('six_number_prize_pool')
+    current_sixQuota = DailyQuota.objects.filter(daily_lotto=toss_lotto).values_list('six_number_prize_pool')
     cq = list(current_sixQuota[0])
     current_quota = cq[0]
 
@@ -78,15 +85,22 @@ def draw():
     DailyLotto.objects.filter(lotto_id=lottoid).update(jack_pot=jackpot)
 
     # creating winning numbers
+<<<<<<< HEAD
     number_pool = random.sample(range(1, 50), 6)
+=======
+    number_pool = random.sample(xrange(1, NUMBER_RANGE), 6)
+>>>>>>> c59c1102ce3b06cedde3b1ab9a43bafc4b4a7cbc
     num1, num2, num3, num4, num5, num6 = number_pool
     DailyLotto.objects.filter(lotto_id=lottoid).update(win1=num1, win2=num2, win3=num3, win4=num4, win5=num5, win6=num6)
 
-    for ticket in DailyLottoTicket.objects.filter(daily_lotto=todays_lotto()):
-        winning_numbers = DailyLotto.objects.filter(lotto_id=lottoid).values_list('win1', 'win2', 'win3', 'win4', 'win5', 'win6')
-        lucky_numbers = list(winning_numbers[0])
+    
+    cur_ticket = 0
+    for ticket in DailyLottoTicket.objects.filter(daily_lotto=toss_lotto):
+        cur_ticket = cur_ticket + 1
         ticket_numbers = [z for z in [int(y) for y in str(ticket).split(',')]]
-        matches = set(lucky_numbers).intersection(set(ticket_numbers))
+        matches = list(set(number_pool).intersection(set(ticket_numbers)))
+        matches_count = len(matches)
+        print matches_count
 
         # Getting the winning ticket
         c2 = ticket
@@ -94,19 +108,22 @@ def draw():
         # Getting the winning player
         p2 = ticket.player_name
 
-        ticket.hits = len(list(matches))
+        ticket.hits = matches_count
         ticket.save(update_fields=["hits"])
 
+        if matches_count < 3:
+            print(cur_ticket,':', "Less than 3 hits, no win")
+            continue
+
         # creating winners
-        if len(list(matches)) >= 3:
-            DailyLottoResult.objects.create(daily_lotto=todays_lotto(), hits_number_prize=len(list(matches)), prize=0,
+        DailyLottoResult.objects.create(daily_lotto=toss_lotto, hits_number_prize=matches_count, prize=0,
                                             daily_lotto_ticket=c2, winners=p2)
 
         # Commissions
-        a = DailyLottoTicket.objects.filter(daily_lotto=todays_lotto(), hits=3).count()
-        b = DailyLottoTicket.objects.filter(daily_lotto=todays_lotto(), hits=4).count()
-        c = DailyLottoTicket.objects.filter(daily_lotto=todays_lotto(), hits=5).count()
-        d = DailyLottoTicket.objects.filter(daily_lotto=todays_lotto(), hits=6).count()
+        a = DailyLottoTicket.objects.filter(daily_lotto=toss_lotto, hits=3).count()
+        b = DailyLottoTicket.objects.filter(daily_lotto=toss_lotto, hits=4).count()
+        c = DailyLottoTicket.objects.filter(daily_lotto=toss_lotto, hits=5).count()
+        d = DailyLottoTicket.objects.filter(daily_lotto=toss_lotto, hits=6).count()
 
         # backupJackpot
         bp = DailyLotto.objects.all().values_list('backup_jackpot').order_by('-lotto_id')[1]
@@ -115,19 +132,21 @@ def draw():
         p6 = DailyLotto.objects.all().values_list('jack_pot').order_by('-lotto_id')[0]
         pool6 = int(p6[0])
 
-        pool5 = DailyQuota.objects.filter(daily_lotto=todays_lotto()).values_list('five_number_prize_pool')
+        pool5 = DailyQuota.objects.filter(daily_lotto=toss_lotto).values_list('five_number_prize_pool')
         y = list(pool5[0])
         my_pool5 = y[0]
 
-        pool4 = DailyQuota.objects.filter(daily_lotto=todays_lotto()).values_list('four_number_prize_pool')
+        pool4 = DailyQuota.objects.filter(daily_lotto=toss_lotto).values_list('four_number_prize_pool')
         z = list(pool4[0])
         my_pool4 = z[0]
 
-        pool3 = DailyQuota.objects.filter(daily_lotto=todays_lotto()).values_list('three_number_prize_pool')
+        pool3 = DailyQuota.objects.filter(daily_lotto=toss_lotto).values_list('three_number_prize_pool')
         v = list(pool3[0])
         my_pool3 = v[0]
 
-        # commissions
+        
+
+        #commissions
         if d >= 1:
             for6 = pool6 / d
         else:
@@ -173,40 +192,39 @@ def draw():
             
         """
 
-        if len(list(matches)) == 3:
-            DailyQuota.objects.filter(daily_lotto=todays_lotto()).update(three_number_prize_pool_commission=for3)
-            DailyLottoResult.objects.filter(daily_lotto=todays_lotto(), hits_number_prize=3).update(prize=for3)
-            DailyLottoTicket.objects.filter(daily_lotto=todays_lotto(), hits=3).update(ticket_prize=for3)
+        if matches_count == 3:
+            DailyQuota.objects.filter(daily_lotto=toss_lotto).update(three_number_prize_pool_commission=for3)
+            DailyLottoResult.objects.filter(daily_lotto=toss_lotto, hits_number_prize=3).update(prize=for3)
+            DailyLottoTicket.objects.filter(daily_lotto=toss_lotto, hits=3).update(ticket_prize=for3)
             Tuser.objects.filter(username=p2).update(balance=F("balance") + for3)
 
-        if len(list(matches)) == 4:
-            DailyQuota.objects.filter(daily_lotto=todays_lotto()).update(four_number_prize_pool_commission=for4)
-            DailyLottoResult.objects.filter(daily_lotto=todays_lotto(), hits_number_prize=4).update(prize=for4)
-            DailyLottoTicket.objects.filter(daily_lotto=todays_lotto(), hits=4).update(ticket_prize=for4)
+        if matches_count == 4:
+            DailyQuota.objects.filter(daily_lotto=toss_lotto).update(four_number_prize_pool_commission=for4)
+            DailyLottoResult.objects.filter(daily_lotto=toss_lotto, hits_number_prize=4).update(prize=for4)
+            DailyLottoTicket.objects.filter(daily_lotto=toss_lotto, hits=4).update(ticket_prize=for4)
             Tuser.objects.filter(username=p2).update(balance=F("balance") + for4)
 
-        if len(list(matches)) == 5:
-            DailyQuota.objects.filter(daily_lotto=todays_lotto()).update(five_number_prize_pool_commission=for5)
-            DailyLottoResult.objects.filter(daily_lotto=todays_lotto(), hits_number_prize=5).update(prize=for5)
-            DailyLottoTicket.objects.filter(daily_lotto=todays_lotto(), hits=5).update(ticket_prize=for5)
+        if matches_count == 5:
+            DailyQuota.objects.filter(daily_lotto=toss_lotto).update(five_number_prize_pool_commission=for5)
+            DailyLottoResult.objects.filter(daily_lotto=toss_lotto, hits_number_prize=5).update(prize=for5)
+            DailyLottoTicket.objects.filter(daily_lotto=toss_lotto, hits=5).update(ticket_prize=for5)
             Tuser.objects.filter(username=p2).update(balance=F("balance") + for5)
 
-        if len(list(matches)) == 6:
-            DailyQuota.objects.filter(daily_lotto=todays_lotto()).update(six_number_prize_pool_commission=for6)
-            DailyLottoResult.objects.filter(daily_lotto=todays_lotto(), hits_number_prize=6).update(prize=for6)
+        if matches_count == 6:
+            DailyQuota.objects.filter(daily_lotto=toss_lotto).update(six_number_prize_pool_commission=for6)
+            DailyLottoResult.objects.filter(daily_lotto=toss_lotto, hits_number_prize=6).update(prize=for6)
             DailyLotto.objects.filter(lotto_id=lottoid).update(jack_pot=backup, backup_jackpot=0)
-            DailyLottoTicket.objects.filter(daily_lotto=todays_lotto(), hits=6).update(ticket_prize=for6)
+            DailyLottoTicket.objects.filter(daily_lotto=toss_lotto, hits=6).update(ticket_prize=for6)
             Tuser.objects.filter(username=p2).update(balance=F("balance") + for6)
 
-        else:
-            print ('No Lotto Winners')
-
-        if ticket.hits >= 3:
-            Game_stat.objects.filter(user=ticket.player_name, timestamp=datetime.date.today(), game=lotto_game).update(status=Game_stat.WIN)
-        else:
-            Game_stat.objects.filter(user=ticket.player_name, timestamp=datetime.date.today(), game=lotto_game).update(status=Game_stat.LOSE)
+        # if ticket.hits >= 3:
+        #     Game_stat.objects.filter(user=ticket.player_name, timestamp=datetime.date.today(), game=lotto_game).update(status=Game_stat.WIN)
+        # else:
+        #     Game_stat.objects.filter(user=ticket.player_name, timestamp=datetime.date.today(), game=lotto_game).update(status=Game_stat.LOSE)
 
         my_backup_jackpot = backup + no3 + no4 + no5
 
         DailyLotto.objects.filter(lotto_id=lottoid).update(backup_jackpot=my_backup_jackpot)
-    print ('Done')
+        print(cur_ticket,":",matches_count,"", "win")
+        
+    print('Done')

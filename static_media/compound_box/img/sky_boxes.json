@@ -1,0 +1,593 @@
+{
+    "frames":
+    {
+        "account_balance":
+        {
+            "frame":
+            {
+                "x": 0,
+                "y": 319,
+                "w": 350,
+                "h": 100
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize":
+            {
+                "x": 0,
+                "y": 0,
+                "w": 350,
+                "h": 100
+            },
+            "sourceSize":
+            {
+                "w": 350,
+                "h": 100
+            }
+        },
+        "add_bet_button":
+        {
+            "frame":
+            {
+                "x": 551,
+                "y": 772,
+                "w": 100,
+                "h": 100
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize":
+            {
+                "x": 0,
+                "y": 0,
+                "w": 100,
+                "h": 100
+            },
+            "sourceSize":
+            {
+                "w": 100,
+                "h": 100
+            }
+        },
+        "box_background":
+        {
+            "frame":
+            {
+                "x": 0,
+                "y": 991,
+                "w": 550,
+                "h": 150
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize":
+            {
+                "x": 0,
+                "y": 0,
+                "w": 550,
+                "h": 150
+            },
+            "sourceSize":
+            {
+                "w": 550,
+                "h": 150
+            }
+        },
+        "clear_bet_button":
+        {
+            "frame":
+            {
+                "x": 569,
+                "y": 398,
+                "w": 100,
+                "h": 100
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize":
+            {
+                "x": 0,
+                "y": 0,
+                "w": 100,
+                "h": 100
+            },
+            "sourceSize":
+            {
+                "w": 100,
+                "h": 100
+            }
+        },
+        "closed_box":
+        {
+            "frame":
+            {
+                "x": 569,
+                "y": 570,
+                "w": 170,
+                "h": 162
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize":
+            {
+                "x": 0,
+                "y": 0,
+                "w": 170,
+                "h": 162
+            },
+            "sourceSize":
+            {
+                "w": 170,
+                "h": 162
+            }
+        },
+        "continue_game_button":
+        {
+            "frame":
+            {
+                "x": 0,
+                "y": 0,
+                "w": 200,
+                "h": 67
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize":
+            {
+                "x": 0,
+                "y": 0,
+                "w": 200,
+                "h": 67
+            },
+            "sourceSize":
+            {
+                "w": 200,
+                "h": 67
+            }
+        },
+        "must_read_note":
+        {
+            "frame":
+            {
+                "x": 0,
+                "y": 68,
+                "w": 350,
+                "h": 250
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize":
+            {
+                "x": 0,
+                "y": 0,
+                "w": 350,
+                "h": 250
+            },
+            "sourceSize":
+            {
+                "w": 350,
+                "h": 250
+            }
+        },
+        "open_box":
+        {
+            "frame":
+            {
+                "x": 351,
+                "y": 317,
+                "w": 217,
+                "h": 180
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize":
+            {
+                "x": 0,
+                "y": 0,
+                "w": 217,
+                "h": 180
+            },
+            "sourceSize":
+            {
+                "w": 217,
+                "h": 180
+            }
+        },
+        "open_box_win":
+        {
+            "frame":
+            {
+                "x": 569,
+                "y": 0,
+                "w": 233,
+                "h": 228
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize":
+            {
+                "x": 0,
+                "y": 0,
+                "w": 233,
+                "h": 228
+            },
+            "sourceSize":
+            {
+                "w": 233,
+                "h": 228
+            }
+        },
+        "play_again_button":
+        {
+            "frame":
+            {
+                "x": 0,
+                "y": 923,
+                "w": 200,
+                "h": 67
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize":
+            {
+                "x": 0,
+                "y": 0,
+                "w": 200,
+                "h": 67
+            },
+            "sourceSize":
+            {
+                "w": 200,
+                "h": 67
+            }
+        },
+        "start_game_button":
+        {
+            "frame":
+            {
+                "x": 351,
+                "y": 181,
+                "w": 200,
+                "h": 67
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize":
+            {
+                "x": 0,
+                "y": 0,
+                "w": 200,
+                "h": 67
+            },
+            "sourceSize":
+            {
+                "w": 200,
+                "h": 67
+            }
+        },
+        "start_game_button_2":
+        {
+            "frame":
+            {
+                "x": 551,
+                "y": 991,
+                "w": 200,
+                "h": 67
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize":
+            {
+                "x": 0,
+                "y": 0,
+                "w": 200,
+                "h": 67
+            },
+            "sourceSize":
+            {
+                "w": 200,
+                "h": 67
+            }
+        },
+        "stop_here_button":
+        {
+            "frame":
+            {
+                "x": 201,
+                "y": 923,
+                "w": 200,
+                "h": 67
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize":
+            {
+                "x": 0,
+                "y": 0,
+                "w": 200,
+                "h": 67
+            },
+            "sourceSize":
+            {
+                "w": 200,
+                "h": 67
+            }
+        },
+        "title_sky_boxes":
+        {
+            "frame":
+            {
+                "x": 0,
+                "y": 420,
+                "w": 350,
+                "h": 100
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize":
+            {
+                "x": 0,
+                "y": 0,
+                "w": 350,
+                "h": 100
+            },
+            "sourceSize":
+            {
+                "w": 350,
+                "h": 100
+            }
+        },
+        "500_bet_button":
+        {
+            "frame":
+            {
+                "x": 569,
+                "y": 229,
+                "w": 200,
+                "h": 67
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize":
+            {
+                "x": 0,
+                "y": 0,
+                "w": 200,
+                "h": 67
+            },
+            "sourceSize":
+            {
+                "w": 200,
+                "h": 67
+            }
+        },
+        "1000_bet_button":
+        {
+            "frame":
+            {
+                "x": 551,
+                "y": 1059,
+                "w": 200,
+                "h": 67
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize":
+            {
+                "x": 0,
+                "y": 0,
+                "w": 200,
+                "h": 67
+            },
+            "sourceSize":
+            {
+                "w": 200,
+                "h": 67
+            }
+        },
+        "5000_bet_button":
+        {
+            "frame":
+            {
+                "x": 351,
+                "y": 249,
+                "w": 200,
+                "h": 67
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize":
+            {
+                "x": 0,
+                "y": 0,
+                "w": 200,
+                "h": 67
+            },
+            "sourceSize":
+            {
+                "w": 200,
+                "h": 67
+            }
+        },
+        "locked_level":
+        {
+            "frame":
+            {
+                "x": 0,
+                "y": 772,
+                "w": 550,
+                "h": 150
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize":
+            {
+                "x": 0,
+                "y": 0,
+                "w": 550,
+                "h": 150
+            },
+            "sourceSize":
+            {
+                "w": 550,
+                "h": 150
+            }
+        },
+        "display_bet":
+        {
+            "frame":
+            {
+                "x": 569,
+                "y": 499,
+                "w": 200,
+                "h": 70
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize":
+            {
+                "x": 0,
+                "y": 0,
+                "w": 200,
+                "h": 70
+            },
+            "sourceSize":
+            {
+                "w": 200,
+                "h": 70
+            }
+        },
+        "100_bet_button":
+        {
+            "frame":
+            {
+                "x": 402,
+                "y": 923,
+                "w": 200,
+                "h": 67
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize":
+            {
+                "x": 0,
+                "y": 0,
+                "w": 200,
+                "h": 67
+            },
+            "sourceSize":
+            {
+                "w": 200,
+                "h": 67
+            }
+        },
+        "subtract_bet_button":
+        {
+            "frame":
+            {
+                "x": 569,
+                "y": 297,
+                "w": 100,
+                "h": 100
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize":
+            {
+                "x": 0,
+                "y": 0,
+                "w": 100,
+                "h": 100
+            },
+            "sourceSize":
+            {
+                "w": 100,
+                "h": 100
+            }
+        },
+        "place_initial_bet":
+        {
+            "frame":
+            {
+                "x": 0,
+                "y": 521,
+                "w": 500,
+                "h": 250
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize":
+            {
+                "x": 0,
+                "y": 0,
+                "w": 500,
+                "h": 250
+            },
+            "sourceSize":
+            {
+                "w": 500,
+                "h": 250
+            }
+        },
+        "open_box_lose":
+        {
+            "frame":
+            {
+                "x": 351,
+                "y": 0,
+                "w": 217,
+                "h": 180
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize":
+            {
+                "x": 0,
+                "y": 0,
+                "w": 217,
+                "h": 180
+            },
+            "sourceSize":
+            {
+                "w": 217,
+                "h": 180
+            }
+        },
+        "background":
+        {
+            "frame":
+            {
+                "x": 0,
+                "y": 1142,
+                "w": 800,
+                "h": 1600
+            },
+            "rotated": false,
+            "trimmed": false,
+            "spriteSourceSize":
+            {
+                "x": 0,
+                "y": 0,
+                "w": 800,
+                "h": 1600
+            },
+            "sourceSize":
+            {
+                "w": 800,
+                "h": 1600
+            }
+        }
+    },
+    "meta":
+    {
+        "app": "https://www.leshylabs.com/apps/sstool/",
+        "version": "Leshy SpriteSheet Tool v0.8.4",
+        "image": "sky_boxes.png",
+        "size":
+        {
+            "w": 802,
+            "h": 2742
+        },
+        "scale": 1
+    }
+}

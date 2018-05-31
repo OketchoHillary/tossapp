@@ -154,3 +154,5 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 AUTH_USER_MODEL = 'accounts.Tuser'
 LOGIN_REDIRECT_URL = '/'
 LOGIN_URL = '/login'
+
+NUMBER_RANGE = 31

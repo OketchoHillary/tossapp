@@ -13,6 +13,7 @@ from django.views.decorators.csrf import csrf_protect
 from daily_lotto.forms import TicketForm, RandomTicketForm
 from daily_lotto.models import *
 from tossapp.models import *
+from tauth.settings import NUMBER_RANGE
 import datetime
 import time
 from django.core import serializers
@@ -214,6 +215,7 @@ def lotto(request, template_name='daily_lotto/home.html'):
     # lotto fee
     fee = ticket_cost * DailyLotto.HOUSE_COMMISSION_RATE
 
+    number_range = NUMBER_RANGE
     # current_time
     t = datetime.datetime.now()
     time_now = time.mktime(t.timetuple())

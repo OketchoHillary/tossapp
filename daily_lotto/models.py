@@ -5,6 +5,7 @@ from django.dispatch import receiver
 from django.db.models.signals import post_save
 from accounts.models import Tuser
 from django.utils import timezone
+from tauth.settings import NUMBER_RANGE
 
 
 def now_plus_1():
@@ -79,7 +80,7 @@ class DailyLottoTicket(models.Model):
     daily_lotto = models.ForeignKey(DailyLotto, on_delete=models.CASCADE)
     cost = models.IntegerField(default=500)
     purchased_time = models.DateTimeField(auto_now_add=True, editable=False)
-    NUMBER_CHOICES = tuple([(i, i,) for i in range(1, 51)])
+    NUMBER_CHOICES = tuple([(i, i,) for i in range(1, NUMBER_RANGE)])
     n1 = models.IntegerField(verbose_name='Number 1', choices=NUMBER_CHOICES, blank=False, null=False)
     n2 = models.IntegerField(verbose_name='Number 2', choices=NUMBER_CHOICES, blank=False, null=False)
     n3 = models.IntegerField(verbose_name='Number 3', choices=NUMBER_CHOICES, blank=False, null=False)
