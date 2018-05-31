@@ -9,7 +9,7 @@ from daily_lotto.views import todays_lotto, previous_lotto
 # calculating ticket purchase commission
 def commission():
     ticket_count = DailyLottoTicket.objects.filter(daily_lotto=todays_lotto()).count()
-    print (ticket_count)
+    print(ticket_count)
     # daily revenue
     daily_revenue = DailyLotto.TICKET_PRICE * ticket_count
 

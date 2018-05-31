@@ -106,6 +106,11 @@ def notification_status(request, n_id):
         raise Http404
 
 
+class Update_notification(LoginRequiredMixin, UpdateView):
+    model = Notification
+    success_url = reverse_lazy('update_notification')
+
+
 class dashboard_games(LoginRequiredMixin, ListView):
     page = 'All Games'
     page_brief = 'Choose a game you want to play'

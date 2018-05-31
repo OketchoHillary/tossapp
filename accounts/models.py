@@ -87,7 +87,10 @@ class Tuser(AbstractBaseUser):
     is_active = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
     verification_code = models.CharField(default='',blank=True, max_length=6)
-    share_code = models.CharField(max_length=6, blank=True, unique=True, validators=[RegexValidator(regex='^.{6}$', message='Share code must not exceed 6 characters', code=None)])
+    share_code = models.CharField(max_length=6, blank=True, unique=True,
+                                  validators=[RegexValidator(regex='^.{6}$',
+                                                             message='Share code must not exceed 6 characters',
+                                                             code=None)])
 
     objects = TuserManager()
 

@@ -2,14 +2,14 @@
 from AfricasTalkingGateway import AfricasTalkingGateway, AfricasTalkingGatewayException
 # Specify your login credentials
 username = "emupuya"
-apikey   = "73ec71f21c21e25e0b496c37845ebfa08d2dc3ab431a6a97b74b70dd5340a3a5"
+apikey = "73ec71f21c21e25e0b496c37845ebfa08d2dc3ab431a6a97b74b70dd5340a3a5"
 
 
 def send_verification_sms(phone_number,code):
     # Specify the numbers that you want to send to in a comma-separated list
     # Please ensure you include the country code (+256 for Uganda)
     # to      = "+256705920191"
-    to      = phone_number
+    to = phone_number
     # And of course we want our recipients to know what we really do
     message = "Tossapp verification code: "+str(code)
     # Create a new instance of our awesome gateway class
@@ -27,8 +27,8 @@ def send_verification_sms(phone_number,code):
                                                                              recipient['status'],
                                                                              recipient['messageId'],
                                                                              recipient['cost'])
-            print success_message
+            print(success_message)
 
         return success_message
     except AfricasTalkingGatewayException, e:
-        print 'Encountered an error while sending: %s' % str(e)
+        print('Encountered an error while sending: %s' % str(e))

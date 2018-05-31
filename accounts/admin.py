@@ -31,11 +31,18 @@ my_default_errors3 = {
 my_default_errors4 = {
     'required': 'Retype password is required',
 }
+my_default_errors5 = {
+    'required': 'Select your Gender',
+}
 
 
 class UserCreationForm(forms.ModelForm):
     """A form for creating new users. Includes all the required
     fields, plus a repeated password."""
+    GENDER_CHOICES = (
+        ('M', 'Male'),
+        ('F', 'Female'),
+    )
 
     def __init__(self, *args, **kwargs):
         super(UserCreationForm, self).__init__(*args, **kwargs)
@@ -50,10 +57,11 @@ class UserCreationForm(forms.ModelForm):
     password1 = forms.CharField(error_messages=my_default_errors3,widget=forms.PasswordInput())
     password2 = forms.CharField(error_messages=my_default_errors4,widget=forms.PasswordInput())
     referrer_share_code = forms.CharField(max_length=13, required=False, widget=forms.TextInput())
+    sex = forms.ChoiceField(error_messages=my_default_errors5, choices=GENDER_CHOICES, required=True)
 
     class Meta:
         model = Tuser
-        fields = ('username', 'phone_number')
+        fields = ('username', 'phone_number', 'sex')
 
     def clean_password2(self):
         # Check that the two password entries match
@@ -77,27 +85,14 @@ class UserCreationForm(forms.ModelForm):
         return self.cleaned_data.get("referrer")
 
     def save(self, commit=True):
+        gender = self.cleaned_data.get('sex')
         # Save the provided password in hashed format
         user = super(UserCreationForm, self).save(commit=False)
+        user.sex = self.cleaned_data["sex"]
         user.set_password(self.cleaned_data["password1"])
         if self.cleaned_data["referrer_share_code"] != "":
             user.referrer = Tuser.objects.get(share_code=self.cleaned_data["referrer_share_code"])
-            # getting referree username and prize
-            rp = Tuser.objects.filter(share_code=self.cleaned_data["referrer_share_code"]).values_list('referrer_prize')
-            ref_p = list(rp[0])
-            referee_prize = ref_p[0]
-            # getting referral balance
-            rb = Tuser.objects.filter(share_code=self.cleaned_data["referrer_share_code"]).values_list('balance')
-            ref_b = list(rb[0])
-            referee_balance = ref_b[0]
-            # summing referee prize
-            sum_prize = referee_prize + Tuser.REFERRAL_PRIZE
-            # summing referee balance
-            sum_balance = referee_balance + Tuser.REFERRAL_PRIZE
-            Tuser.objects.filter(share_code=self.cleaned_data["referrer_share_code"]).update(referrer_prize=sum_prize, balance=sum_balance)
-            # incrementing points on referee
-            Tuser.objects.filter(share_code=self.cleaned_data["referrer_share_code"]).update(points=F("points") + 1)
-            # user.referrer_prize = Tuser.REFERRAL_PRIZE
+
         if commit:
             user.save()
         return user
@@ -121,7 +116,7 @@ class UserChangeForm(forms.ModelForm):
     password = ReadOnlyPasswordHashField(label="Password",
                                          help_text=("Raw passwords are not stored, so there is no way to see "
                                                     "this user's password, but you can change the password "
-                                                    "using <a href=\"password/\">this form</a>."))
+                                                    "using <a href=\"/admin/accounts/tuser/12/password/\">this form</a>."))
 
     class Meta:
         model = Tuser

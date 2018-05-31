@@ -3,12 +3,10 @@ from django.core.exceptions import ValidationError
 from django.utils.text import slugify
 
 from accounts.models import Tuser
-from tossapp.models import Faq, Contact_us, Game, Transaction
+from tossapp.models import Faq, Contact_us, Game, Transaction, Notification
 from django_countries import countries
 from accounts.admin import validate_phone_number
-#import yopayments
-
-
+import yopayments
 
 
 my_default_errors1 = {
@@ -194,6 +192,12 @@ class DepoForm(forms.Form):
         else:
             raise forms.ValidationError("wrong input")
 
+
+class Update_notice(forms.ModelForm):
+    class Meta:
+        model = Notification
+        fields = ['seen_status']
+
 """
 class WithdrawForm(forms.Form):
     def __init__(self, *args, **kwargs):
@@ -210,7 +214,7 @@ class WithdrawForm(forms.Form):
             print 'success'
         else:
             raise forms.ValidationError("wrong input")
-	        # Payment failed
+            Payment failed
 	        """
 
 

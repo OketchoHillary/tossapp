@@ -262,7 +262,7 @@ class AfricasTalkingGateway:
             self.responseCode = response.getcode()
             response          = ''.join(response.readlines())
             if self.Debug:
-                print "Raw response: " + response
+                print("Raw response: " + response)
                 
             return response
 
@@ -279,9 +279,9 @@ class AfricasTalkingGateway:
             raise AfricasTalkingGatewayException(e.read())
         else:
             self.responseCode = response.getcode()
-            response          = ''.join(response.readlines())
+            response = ''.join(response.readlines())
             if self.Debug:
-                print "Raw response: " + response
+                print("Raw response: " + response)
                 
             return response
         
