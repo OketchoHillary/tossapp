@@ -67,7 +67,7 @@ def draw():
     toss_lotto = todays_lotto()
     lottoid = toss_lotto.lotto_id
 
-    commission(toss_lotto)
+    commission()
 
     # previous jackpot
     my_p = DailyLotto.objects.all().values_list('jack_pot').order_by('-start_date')[1]
@@ -85,22 +85,18 @@ def draw():
     DailyLotto.objects.filter(lotto_id=lottoid).update(jack_pot=jackpot)
 
     # creating winning numbers
-<<<<<<< HEAD
-    number_pool = random.sample(range(1, 50), 6)
-=======
-    number_pool = random.sample(xrange(1, NUMBER_RANGE), 6)
->>>>>>> c59c1102ce3b06cedde3b1ab9a43bafc4b4a7cbc
+    number_pool = random.sample(range(1, NUMBER_RANGE), 6)
+
     num1, num2, num3, num4, num5, num6 = number_pool
     DailyLotto.objects.filter(lotto_id=lottoid).update(win1=num1, win2=num2, win3=num3, win4=num4, win5=num5, win6=num6)
 
-    
     cur_ticket = 0
     for ticket in DailyLottoTicket.objects.filter(daily_lotto=toss_lotto):
         cur_ticket = cur_ticket + 1
         ticket_numbers = [z for z in [int(y) for y in str(ticket).split(',')]]
         matches = list(set(number_pool).intersection(set(ticket_numbers)))
         matches_count = len(matches)
-        print matches_count
+        print(matches_count)
 
         # Getting the winning ticket
         c2 = ticket
@@ -143,8 +139,6 @@ def draw():
         pool3 = DailyQuota.objects.filter(daily_lotto=toss_lotto).values_list('three_number_prize_pool')
         v = list(pool3[0])
         my_pool3 = v[0]
-
-        
 
         #commissions
         if d >= 1:
