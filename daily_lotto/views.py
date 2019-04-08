@@ -10,6 +10,7 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.template import RequestContext
 from django.views.decorators.csrf import csrf_protect
 
+
 from daily_lotto.forms import TicketForm, RandomTicketForm
 from daily_lotto.models import *
 from tossapp.models import *
@@ -247,7 +248,6 @@ def lotto(request, template_name='daily_lotto/home.html'):
                         instance.daily_lotto = todays_lotto()
                         random_tickets(random_ticketform, request)
                         instance.save()
-                        form.save()
                         # calculating users balance
                         ao = balance_calculator(request.user.balance, ze + ticket_cost)
                         # total_bet = ze + ticket_cost

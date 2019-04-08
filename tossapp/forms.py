@@ -119,8 +119,13 @@ class ChangeProfileForm(forms.ModelForm):
         address = self.cleaned_data.get('address')
 
     def save(self, commit=True):
+        phone_number = self.cleaned_data.get("phone_number")
+        if not validate_phone_number(phone_number):
+            raise forms.ValidationError("Please provide a valid MTN or Airtel number")
+        if phone_number.startswith('0'):
+            phone_number = phone_number.replace('0', '256', 1)
         user = super(ChangeProfileForm, self).save(commit=False)
-        user.phone_number = self.cleaned_data['phone_number']
+        user.phone_number = phone_number
         if commit:
             user.save()
         return user

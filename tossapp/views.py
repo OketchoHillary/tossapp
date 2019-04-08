@@ -25,7 +25,7 @@ def index(request):
         page = ''
     page_brief = 'dashboard & statistics'
     if request.user.is_authenticated:
-        return render(request, 'tossapp/index.html', locals(), contact)
+        return render(request, 'tossapp/index.html', locals(), context)
     else:
         return render(request, 'dashboard/index.html', locals(), context)
 
@@ -81,7 +81,6 @@ def about_us(request):
 class dashboard_notifications(LoginRequiredMixin, ListView):
     page = 'Notifications'
     page_brief = 'Notification & updates'
-    template_name = 'dashboard/notifications.html'
     context_object_name = 'notification_list'
     paginate_by = 10
 
@@ -114,7 +113,6 @@ class Update_notification(LoginRequiredMixin, UpdateView):
 class dashboard_games(LoginRequiredMixin, ListView):
     page = 'All Games'
     page_brief = 'Choose a game you want to play'
-    template_name = 'dashboard/games.html'
     context_object_name = 'game_list'
     model = Game
 
@@ -127,7 +125,6 @@ class dashboard_games(LoginRequiredMixin, ListView):
 class dashboard_games_history(LoginRequiredMixin, ListView):
     page = 'Games History'
     page_brief = 'Games Statistics'
-    template_name = 'dashboard/games_history.html'
     context_object_name = 'game_stat_list'
 
     def get_queryset(self):
@@ -141,7 +138,6 @@ class dashboard_games_history(LoginRequiredMixin, ListView):
 
 class dashboard_transactions(LoginRequiredMixin, ListView):
     page = 'Transactions'
-    template_name = 'dashboard/transactions.html'
     context_object_name = 'transaction_list'
 
     def get_queryset(self):
@@ -156,7 +152,6 @@ class dashboard_transactions(LoginRequiredMixin, ListView):
 class dashboard_payments_withdraw(LoginRequiredMixin, FormView):
     page = 'Withdraw Funds'
     page_brief = 'Get your Funds onto your prefered Account instantly '
-    template_name = 'dashboard/payments_withdraw.html'
     form_class = DepoForm
     success_url = reverse_lazy('dashboard_payments_withdraw')
 
@@ -169,7 +164,6 @@ class dashboard_payments_withdraw(LoginRequiredMixin, FormView):
 class dashboard_payments_deposit(LoginRequiredMixin, TemplateView):
     page = 'Deposit Funds'
     page_brief = 'Deposit & Play'
-    template_name = 'dashboard/payments_deposit.html'
 
     def get_context_data(self, **kwargs):
         context = super(dashboard_payments_deposit, self).get_context_data(**kwargs)
@@ -180,7 +174,6 @@ class dashboard_payments_deposit(LoginRequiredMixin, TemplateView):
 class dashboard_referrals(LoginRequiredMixin, ListView):
     page = 'Referrals'
     page_brief = 'Tell some of your friends and earn more Money'
-    template_name = 'dashboard/referrals.html'
     players = Tuser.objects.all().annotate(num_refferals=Count('referrals')).order_by('-num_refferals')[:10]
     context_object_name = 'referral_list'
     paginate_by = 10
@@ -198,7 +191,6 @@ class dashboard_referrals(LoginRequiredMixin, ListView):
 class dashboard_account_profile(LoginRequiredMixin, UpdateView):
     page = 'Profile'
     page_brief = 'This is how your Profile Looks Like'
-    template_name = 'dashboard/account_profile.html'
     context_object_name = 'tuser'
     form_class = ChangeDpForm
     success_url = reverse_lazy('dashboard_account_profile')
@@ -220,7 +212,6 @@ class dashboard_account_profile(LoginRequiredMixin, UpdateView):
 class dashboard_account_settings(LoginRequiredMixin, MultiFormView):
     page = 'Settings'
     page_brief = 'Customize your Account your way'
-    template_name = 'dashboard/account_settings.html'
     success_url = reverse_lazy('dashboard_account_settings')
     forms = (ChangeUsernameForm, ChangePasswordForm)
 
@@ -228,7 +219,6 @@ class dashboard_account_settings(LoginRequiredMixin, MultiFormView):
         context = super(dashboard_account_settings, self).get_context_data(**kwargs)
         context.update({'page': self.page, 'page_brief': self.page_brief})
         return context
-
 
     # def get_success_url(self):
     #     pprint(self)

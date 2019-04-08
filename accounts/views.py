@@ -1,21 +1,19 @@
+from pprint import pprint
+
 from braces.views import AnonymousRequiredMixin
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import (
-    REDIRECT_FIELD_NAME, get_user_model, login as auth_login,
-    logout as auth_logout, update_session_auth_hash,
+    REDIRECT_FIELD_NAME, login as auth_login,
     login, logout)
-from pprint import pprint
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.views import deprecate_current_app
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.urlresolvers import reverse_lazy
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponseRedirect
 from django.shortcuts import render, resolve_url
-import random
-
 # Create your views here.
+from django.template import RequestContext
 from django.template.response import TemplateResponse
 from django.utils.http import is_safe_url
 from django.views.decorators.cache import never_cache
@@ -23,10 +21,10 @@ from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.debug import sensitive_post_parameters
 from django.views.generic import CreateView
 
+
 from accounts.admin import UserCreationForm
-from accounts.forms import ActivationForm, ChangeNumberForm, AuthForm
+from accounts.forms import ActivationForm, ChangeNumberForm, AuthForm, ForgotLoginPassForm, NewCodeForm, NewPassForm
 from accounts.models import Tuser
-from accounts.sendSms import send_verification_sms
 from accounts.utils import generate_verification_code
 
 
@@ -77,6 +75,54 @@ class RegisterView(AnonymousRequiredMixin,CreateView):
         return reverse_lazy('activate', kwargs={'user': tuser.username})
 
 
+def forgot_password(request):
+    context = RequestContext(request)
+    if request.method == "POST":
+        form = ForgotLoginPassForm(request.POST)
+        if form.is_valid():
+            my_dial = form.cleaned_data.get('phone_number')
+            tuser = Tuser.objects.filter(phone_number=my_dial)[0]
+            code = generate_verification_code()
+            tuser.verification_code = code
+            tuser.save()
+            # send_verification_sms(tuser.phone_number,tuser.verification_code)
+            return HttpResponseRedirect(reverse_lazy('enter_code', kwargs={'user': tuser.username}))
+    else:
+        form = ForgotLoginPassForm()
+
+    return render(request, "registration/forgot_password.html", locals(), context)
+
+
+def new_pass(request, user):
+    tuser = Tuser.objects.get(username=user)
+    if request.method == "POST":
+        form = NewPassForm(request.POST, user=tuser)
+        if form.is_valid():
+            user = Tuser.objects.get(username=tuser.username)
+            user.backend = 'accounts.backends.TauthBackend'
+            # print settings.AUTHENTICATION_BACKENDS[0]
+            if user is not None:
+                login(request, user)
+                return HttpResponseRedirect(reverse_lazy('index'))
+    else:
+        form = NewPassForm(tuser)
+
+    return render(request, "registration/set_new_password.html",{'form':form,'user':tuser})
+
+
+def enter_code(request, user):
+    tuser = Tuser.objects.get(username=user)
+    if request.method == "POST":
+        form = NewCodeForm(request.POST)
+        if form.is_valid():
+            if tuser.verification_code == form.cleaned_data['verification_code']:
+                return HttpResponseRedirect(reverse_lazy('new_pass', kwargs={'user': tuser.username}))
+    else:
+        form = NewCodeForm()
+
+    return render(request, "registration/enter_code.html",{'form':form,'user':tuser.username, 'dial':tuser.phone_number})
+
+
 def change_number(request, user):
     tuser = Tuser.objects.get(username=user)
     if request.method == "POST":
@@ -100,9 +146,9 @@ def change_number(request, user):
 @csrf_protect
 @never_cache
 def tlogin(request, template_name='registration/login.html',
-          redirect_field_name=REDIRECT_FIELD_NAME,
-          authentication_form=AuthForm,
-          extra_context=None):
+           redirect_field_name=REDIRECT_FIELD_NAME,
+           authentication_form=AuthForm,
+           extra_context=None):
     """
     Displays the login form and handles the login action.
     """
@@ -154,3 +200,4 @@ def tlogin(request, template_name='registration/login.html',
 def user_logout(request):
     logout(request)
     return HttpResponseRedirect('/')
+

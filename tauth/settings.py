@@ -40,6 +40,11 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.humanize',
     'django_countries',
+    'rest_framework',
+    'rest_framework.authtoken',
+    'api',
+    'lotto_api',
+    'tossapp_api',
     #'mod_wsgi.server',
     'tossapp',
     'daily_lotto',
@@ -95,7 +100,7 @@ DATABASES = {
         'NAME': 'toss_app_db',
         'USER': 'root',
         'PASSWORD': '',
-        'HOST': '127.0.0.1',   # Or an IP Address that your DB is hosted on
+        'HOST': 'localhost',   # Or an IP Address that your DB is hosted on
         'PORT': '3306',
     }
 }
@@ -122,6 +127,17 @@ AUTHENTICATION_BACKENDS = (
     'accounts.backends.TauthBackend',
 )
 
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'api.authentication.TossApiAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    )
+}
 COUNTRIES_FIRST_REPEAT = True
 
 # Internationalization

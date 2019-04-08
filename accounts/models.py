@@ -10,8 +10,11 @@ from django.contrib.auth.models import (
 
 # Create your models here.
 from django.db.models import Count
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 from django.utils import timezone
 from django_countries.fields import Country, CountryField
+from rest_framework.authtoken.models import Token
 # from django.utils import timezone
 
 
@@ -75,7 +78,7 @@ class Tuser(AbstractBaseUser):
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=30)
     sex = models.CharField(max_length=1, choices=GENDER_CHOICES)
-    country = CountryField()
+    country = CountryField(null=True)
     address = models.CharField(max_length=30)
     referrer = models.ForeignKey('self', blank=True, related_name='referrals', null=True)
     referrer_prize = models.IntegerField(editable=False, default=0)
@@ -150,3 +153,22 @@ class Tuser(AbstractBaseUser):
 
     class Meta:
         ordering = ['points']
+
+
+@receiver(post_save, sender=Tuser)
+def create_auth_token(sender, created, instance, **kwargs):
+        if created:
+            token = Token(user=instance)
+            token.save()
+
+
+"""
+        def restore_objects(self, attrs, instance=None):
+            if instance is not None:
+                instance.tuser.username = attrs.get('user.username', instance.tuser.username)
+                instance.tuser.phone_number = attrs.get('user.phone_number', instance.tuser.phone_number)
+                instance.tuser.sex = attrs.get('user.sex', instance.tuser.sex)
+                instance.tuser.password = attrs.get('user.password', instance.tuser.password)
+            user = Tuser.objects.create(username=attrs.get('user.username'), phone_number=attrs.get('user.phone_number'), sex=attrs.get('user.sex'), password=attrs.get('user.password'))
+            return Tuser(user=user)
+"""

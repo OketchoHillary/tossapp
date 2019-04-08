@@ -8,6 +8,19 @@ from django.test import TestCase, Client
 from accounts.models import Tuser
 from bs4 import BeautifulSoup as bs
 
+"""
+def get_this_profile(self, request, username):
+    queryset = self.get_profile(username)
+    if queryset:
+        profile = UserProfileSerializer(queryset)
+        game_played = Game_stat.objects.filter(user=queryset).count()
+        referral_count = queryset.referrals.count()
+        return Response(
+            {'code': 1, 'response': profile.data, 'games_played': game_played, 'referral_count': referral_count})
+    else:
+        return Response({'message': "Does Not Exist", 'code': 0})
+        """
+
 def merge_two_dicts(x, y):
     """Given two dicts, merge them into a new dict as a shallow copy."""
     z = x.copy()

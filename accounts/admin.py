@@ -114,9 +114,12 @@ class UserChangeForm(forms.ModelForm):
         self.fields['profile_photo'].required = False
 
     password = ReadOnlyPasswordHashField(label="Password",
-                                         help_text=("Raw passwords are not stored, so there is no way to see "
-                                                    "this user's password, but you can change the password "
-                                                    "using <a href=\"/admin/accounts/tuser/12/password/\">this form</a>."))
+                                         help_text=(
+                                             "Raw passwords are not stored, so there is no way to see this "
+                                             "user's password, but you can change the password using "
+                                             "<a href=\"../password/\">this form</a>."
+                                         ),
+                                         )
 
     class Meta:
         model = Tuser
