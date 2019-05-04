@@ -6,7 +6,7 @@ from accounts.models import Tuser
 from tossapp.models import Faq, Contact_us, Game, Transaction, Notification
 from django_countries import countries
 from accounts.admin import validate_phone_number
-import yopayments
+# import yopayments
 
 
 my_default_errors1 = {

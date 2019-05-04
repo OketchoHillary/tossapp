@@ -6,7 +6,7 @@ from django.http import HttpResponseRedirect
 
 from accounts.admin import validate_phone_number
 from accounts.models import Tuser
-from accounts.sendSms import send_verification_sms
+# from accounts.sendSms import send_verification_sms
 from accounts.utils import generate_verification_code
 from tossapp.models import Notification
 

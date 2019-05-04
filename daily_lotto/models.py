@@ -1,6 +1,5 @@
 import datetime
 from django.db import models
-from django.db.models import BigIntegerField
 from django.dispatch import receiver
 from django.db.models.signals import post_save
 from accounts.models import Tuser
@@ -20,8 +19,14 @@ class DailyLotto(models.Model):
     FOUR_SHARE_RATE = 0.15
     FIVE_SHARE_RATE = 0.25
     JACKPOT_SHARE_RATE = 0.45
+    LOTTO_TYPE = (
+        ('D', 'Daily'),
+        ('H', 'Hourly'),
+        ('S', 'Quarterly'),
+    )
 
     lotto_id = models.AutoField(primary_key=True)
+    lotto_type = models.CharField(max_length=1, choices=LOTTO_TYPE)
     start_date = models.DateTimeField(auto_now_add=True, null=False)
     end_date = models.DateTimeField(editable=False, null=False)
     win1 = models.IntegerField(default=0)

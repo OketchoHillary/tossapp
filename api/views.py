@@ -12,8 +12,6 @@ from rest_framework import viewsets
 # Account APIs
 from api.account_serializers import *
 from daily_lotto.models import DailyLottoTicket
-from lotto_api.lotto_serializers import SingleTicketSerializer
-
 
 # Create your views here.
 

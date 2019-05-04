@@ -3,33 +3,45 @@ import time
 from daily_lotto.models import *
 from tossapp.models import *
 from django.db.models import F
-from daily_lotto.views import todays_lotto, previous_lotto
 from tauth.settings import NUMBER_RANGE
 
 
+def previous_lotto():
+    return DailyLotto.objects.filter(lotto_type='D').order_by('-start_date')[1]
+
+
+def todays_lotto():
+    return DailyLotto.objects.filter(lotto_type='D').order_by('-start_date')[0]
+
+
+ticket_count = DailyLottoTicket.objects.filter(daily_lotto=todays_lotto()).count()
+
+
+# daily revenue
+daily_revenue = DailyLotto.TICKET_PRICE * ticket_count
+
+# house share
+house_pool = DailyLotto.HOUSE_COMMISSION_RATE * daily_revenue
+
+# Six share
+six_prize_pool = DailyLotto.JACKPOT_SHARE_RATE * daily_revenue
+
+# Five share
+five_prize_pool = DailyLotto.FIVE_SHARE_RATE * daily_revenue
+
+# Four share
+four_prize_pool = DailyLotto.FOUR_SHARE_RATE * daily_revenue
+
+# Three share
+three_prize_pool = DailyLotto.THREE_SHARE_RATE * daily_revenue
+
+# current lotto id
+toss_lotto = todays_lotto()
+lottoid = toss_lotto.lotto_id
+
+
 # calculating ticket purchase commission
-
 def commission():
-    ticket_count = DailyLottoTicket.objects.filter(daily_lotto=todays_lotto()).count()
-    print(ticket_count)
-
-    # daily revenue
-    daily_revenue = DailyLotto.TICKET_PRICE * ticket_count
-
-    # house share
-    house_pool = DailyLotto.HOUSE_COMMISSION_RATE * daily_revenue
-
-    # Six share
-    six_prize_pool = DailyLotto.JACKPOT_SHARE_RATE * daily_revenue
-
-    # Five share
-    five_prize_pool = DailyLotto.FIVE_SHARE_RATE * daily_revenue
-
-    # Four share
-    four_prize_pool = DailyLotto.FOUR_SHARE_RATE * daily_revenue
-
-    # Three share
-    three_prize_pool = DailyLotto.THREE_SHARE_RATE * daily_revenue
 
     DailyQuota.objects.filter(daily_lotto=todays_lotto()).update(house_commission=house_pool,
                                                                  six_number_prize_pool=six_prize_pool,
@@ -46,28 +58,11 @@ def commission():
 
     # update my database
     CommissionSum.objects.create(commission_total=new_hse_sum)
-
     return
 
 
-def create_lotto():
-    lotto = DailyLotto.objects.create(start_date=datetime.date.today())
-    return lotto
-
-
-def draw():
-    lotto_game = Game.objects.filter(name='Daily Lotto')[0]
-
-    # print(todays_lotto())
-    # commission()
-
-    # retrieving current lotto id
-    # toss_lotto = DailyLotto.objects.all().values_list('lotto_id').order_by('-start_date')[0]
-    # toss_lotto = DailyLotto.objects.all().order_by('-start_date')[0]
-    toss_lotto = todays_lotto()
-    lottoid = toss_lotto.lotto_id
-
-    commission()
+# managing jackpot
+def lotto_jackpot():
 
     # previous jackpot
     my_p = DailyLotto.objects.all().values_list('jack_pot').order_by('-start_date')[1]
@@ -83,6 +78,20 @@ def draw():
 
     # updating current jackpot
     DailyLotto.objects.filter(lotto_id=lottoid).update(jack_pot=jackpot)
+    return
+
+
+def create_daily_lotto():
+    lotto = DailyLotto.objects.create(start_date=datetime.date.today(), lotto_type='D')
+    return lotto
+
+
+def daily_draw():
+    # lotto commission function
+    commission()
+
+    # jackpot function
+    lotto_jackpot()
 
     # creating winning numbers
     number_pool = random.sample(range(1, NUMBER_RANGE), 6)
