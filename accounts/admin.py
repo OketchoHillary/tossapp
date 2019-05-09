@@ -13,7 +13,7 @@ from accounts.models import Tuser
 
 
 def validate_phone_number(phone):
-    match = re.match(r'^(\+?256|0)7[0578]\d{7}$', phone)
+    match = re.match(r'^(\+?256|0|"+256")7[0578]\d{7}$', phone)
     return match is not None
 
 my_default_errors1 = {
@@ -77,6 +77,8 @@ class UserCreationForm(forms.ModelForm):
             raise forms.ValidationError("Please provide a valid MTN or Airtel number")
         if phone_number.startswith('0'):
             phone_number = phone_number.replace('0','256',1)
+        elif phone_number.startswith('+256'):
+            phone_number = phone_number.replace('+256', '256', 1)
         return phone_number
 
     def clean_referrer(self):
@@ -90,8 +92,6 @@ class UserCreationForm(forms.ModelForm):
         user = super(UserCreationForm, self).save(commit=False)
         user.sex = self.cleaned_data["sex"]
         user.set_password(self.cleaned_data["password1"])
-        if self.cleaned_data["referrer_share_code"] != "":
-            user.referrer = Tuser.objects.get(share_code=self.cleaned_data["referrer_share_code"])
 
         if commit:
             user.save()

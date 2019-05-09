@@ -1,11 +1,9 @@
 from django.conf.urls import url
-from lotto_api.views import SingleTicketDailyCreate
+from lotto_api.views import TicketDailyCreate
 
 urlpatterns = [
     # ticket buy APIs
-    url(r'^get-ticket', SingleTicketDailyCreate.as_view({'post':'single_ticket'}), name='single_ticket_create'),
-    url(r'^get-multiple-ticket', SingleTicketDailyCreate.as_view({'post':'multiple_ticket'}),
-        name='multiple_ticket_create'),
+    url(r'^get-ticket', TicketDailyCreate.as_view({'post':'my_tickets'}), name='my_tickets'),
 ]
 
 
