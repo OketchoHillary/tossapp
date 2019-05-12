@@ -16,7 +16,7 @@ def content_file_name(instance, filename):
 
 
 class Game(models.Model):
-    name = models.CharField(max_length=30)
+    name = models.CharField(max_length=30, unique=True)
     display_photo = models.ImageField(upload_to=content_file_name, default=None)
     slug = models.SlugField(max_length=230, unique=True)
     times_played = models.BigIntegerField(default=0)

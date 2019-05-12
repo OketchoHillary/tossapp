@@ -10,10 +10,9 @@ from rest_framework.authentication import TokenAuthentication, SessionAuthentica
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.generics import get_object_or_404
 from rest_framework.parsers import FileUploadParser, MultiPartParser, FormParser
-from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework import viewsets
+from rest_framework import viewsets, mixins
 from api.account_serializers import *
 from api.permissions import IsOwnerOrReadOnly
 from tossapp.models import Notification
@@ -41,7 +40,7 @@ class LoginView(APIView):
         user = serializer.validated_data["user"]
         django_login(request, user)
         token, created = Token.objects.get_or_create(user=user)
-        return Response({'token':token.key}, status=200)
+        return Response({'token':token.key, 'message':"Login successful"}, status=200)
 
 
 class LogoutView(APIView):
@@ -52,60 +51,29 @@ class LogoutView(APIView):
         return Response(status=204)
 
 
-"""
 class ProfileView(viewsets.ViewSet):
-    
-    def get_profile(self, username):
-        
-        try:
-            userprofile = Tuser.objects.get(username=username)
-            return userprofile
-        except Tuser.DoesNotExist as e:
-            return False
-
-    def get_this_profile(self, request, username):
-        queryset = self.get_profile(username)
-        if queryset:
-            profile = UserProfileSerializer(queryset)
-            return Response({'code': 1, 'response': profile.data})
-        else:
-            return Response({'message': "Does Not Exist", 'code': 0})
-
-    def update_profile(self, request, username):
-        profile_instance = self.get_profile(username)
-        if profile_instance:
-            updated_profile = UserProfileSerializer(profile_instance, data=request.data)
-            if updated_profile.is_valid():
-                updated_profile.save()
-                return Response({'code': 1, 'response': updated_profile.data})
-            return Response({'code': 0, 'response': updated_profile.errors}, status=status.HTTP_400_BAD_REQUEST)
-
-        else:
-            return Response({'code': 0})
-            """
-
-
-class ProfileView(viewsets.ViewSet):
+    permission_classes = [IsOwnerOrReadOnly]
 
     def get_this_profile(self, request):
         serializer = UserProfileSerializer(request.user)
         return Response(serializer.data)
 
-    def update_profile(self, request):
-        updated_profile = UserProfileSerializer(request.user, data=request.data)
-        if updated_profile.is_valid():
-            updated_profile.save()
-            return Response({'code': 1, 'response': updated_profile.data})
-        return Response({'code': 0, 'response': updated_profile.errors}, status=status.HTTP_400_BAD_REQUEST)
+
+class ProfileUpdateView(generics.RetrieveUpdateAPIView, mixins.UpdateModelMixin):
+    queryset = Tuser.objects.all()
+    serializer_class = EditProfileSerializer
+
+    def get_object(self):
+        return self.request.user
 
 
-class ProfilePicViewSet(APIView):
-    parser_classes = (MultiPartParser, FormParser, )
+class ProfilePicViewSet(generics.RetrieveUpdateAPIView, mixins.UpdateModelMixin):
+    parser_classes = (MultiPartParser, FileUploadParser)
+    queryset = Tuser.objects.all()
+    serializer_class = ProfilePicSerializer
 
-    def post(self, request, format=None):
-        print(request.File)
-        print(request.data)
-        return Response({'received data': request.data})
+    def get_object(self):
+        return self.request.user
 
 
 class VerificationAPI(viewsets.ViewSet):

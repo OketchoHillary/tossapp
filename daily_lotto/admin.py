@@ -12,7 +12,7 @@ class DailyLottoResultAdmin(admin.ModelAdmin):
 
 class DailyLottoTicketAdmin(admin.ModelAdmin):
     search_fields = ['purchased_time', 'id']
-    list_filter = ['purchased_time', 'daily_lotto']
+    list_filter = ['purchased_time']
     list_display = ['id', 'purchased_time', 'player_name']
     list_per_page = 50
 

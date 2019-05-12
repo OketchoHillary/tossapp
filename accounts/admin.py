@@ -76,7 +76,7 @@ class UserCreationForm(forms.ModelForm):
         if not validate_phone_number(phone_number):
             raise forms.ValidationError("Please provide a valid MTN or Airtel number")
         if phone_number.startswith('0'):
-            phone_number = phone_number.replace('0','256',1)
+            phone_number = phone_number.replace('0', '256', 1)
         elif phone_number.startswith('+256'):
             phone_number = phone_number.replace('+256', '256', 1)
         return phone_number
@@ -148,8 +148,8 @@ class UserAdmin(BaseUserAdmin):
     # The fields to be used in displaying the User model.
     # These override the definitions on the base UserAdmin
     # that reference specific fields on auth.User.
-    list_display = ('username', 'phone_number', 'is_admin','timestamp', 'sex')
-    list_filter = ('is_admin',)
+    list_display = ('username', 'phone_number', 'is_admin', 'timestamp', 'sex', 'balance')
+    list_filter = ('is_admin', 'sex', 'last_login')
     fieldsets = (
         (None, {'fields': ('username','phone_number','referrer', 'password',)}),
         ('Personal info', {'fields': ('first_name','last_name','sex','country','address','profile_photo',)}),

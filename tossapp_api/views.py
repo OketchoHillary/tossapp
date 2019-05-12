@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from django.db.models import Count
+from django.db.models import Count, F
 from rest_framework import status
 
-from api.permissions import IsOwnerOrReadOnly
+from api.account_serializers import UserProfileSerializer
 from tossapp_api.tossapp_serializers import *
 from rest_framework.views import APIView
+from rest_framework import viewsets
 from rest_framework.response import Response
 
 
@@ -42,8 +43,32 @@ class GameStatView(APIView):
         return Response(GamesHistorySerializer(Game_stat.objects.filter(user=request.user), many=True).data)
 
 
-class TransactionView(APIView):
+class TransactionHistoryView(APIView):
     def get(self, request):
         return Response(TransactionSerializer(Transaction.objects.filter(user=request.user), many=True).data)
+
+
+class TransactionView(viewsets.ViewSet):
+    def get(self, request):
+        response = []
+        my_balance = Tuser.objects.filter(id=request.user.id).values_list('balance')[0]
+        balance = int(my_balance[0])
+        bal = {
+            'balance': balance,
+        }
+
+        response.append(bal)
+
+        return Response({'response': bal}, status=status.HTTP_200_OK)
+
+    def fund_deposit(self, request):
+        depo = DepositSerializer(request.user)
+        if depo.is_valid():
+            amount = depo.validated_data["amount"]
+            if amount > 0:
+                Transaction.objects.create(user=request.user, transaction_type=0, status=1, payment_method=0,
+                                           amount=amount)
+                Tuser.objects.filter(id=request.user.id).update(balance=F("balance") + amount)
+
 
 

@@ -28,3 +28,12 @@ class TransactionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Transaction
         fields = '__all__'
+
+
+class WithdrawSerializer(serializers.Serializer):
+    amount = serializers.CharField()
+
+
+class DepositSerializer(serializers.Serializer):
+    amount = serializers.IntegerField()
+

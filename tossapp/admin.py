@@ -4,7 +4,7 @@ from daily_lotto.admin import *
 
 # Register your models here.
 from tossapp.forms import *
-from tossapp.models import Notification, Game_stat, Transaction, Contact_us, Faq, Country
+from tossapp.models import Notification, Game_stat, Transaction, Contact_us, Faq
 
 
 class FaqAdmin(admin.ModelAdmin):
@@ -23,12 +23,20 @@ class GameAdmin(admin.ModelAdmin):
     game_photo.allow_tags = True
 
 
+class TransactionAdmin(admin.ModelAdmin):
+    list_display = ['user', 'reference_no', 'transaction_type', 'payment_method', 'amount', 'status', 'timestamp']
+    list_per_page = 100
+    list_filter = ['transaction_type', 'payment_method', 'status', 'timestamp']
+    search_fields = ['reference_no']
+
+
 class ContactUsAdmin(admin.ModelAdmin):
     list_display = ['short_text']
 
 
-admin.site.register([Game_stat, Transaction, Notification,Country])
-admin.site.register(Faq, FaqAdmin)
+admin.site.register([Game_stat, Notification])
+admin.site.register(Transaction, TransactionAdmin)
 admin.site.register(Game, GameAdmin)
+admin.site.register(Faq, FaqAdmin)
 admin.site.register(Contact_us, ContactUsAdmin)
 

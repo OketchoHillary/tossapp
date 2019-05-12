@@ -4,13 +4,21 @@ from __future__ import unicode_literals
 # Create your views here.
 import random
 
+from django.db.models import F
 from rest_framework import generics, viewsets, status
 from rest_framework.response import Response
-from api.permissions import IsOwnerOrReadOnly
+
+from accounts.models import Tuser
 from daily_lotto.lotto_components import todays_lotto, ticket_count
-from daily_lotto.models import DailyLottoTicket
+from daily_lotto.models import DailyLottoTicket, DailyLotto
+from daily_lotto.views import balance_calculator
 from lotto_api.lotto_serializers import TicketDailySerializer
-from tossapp.models import Game_stat
+from tossapp.models import Game_stat, Game
+
+
+lotto_game = Game.objects.get(name='Daily Lotto')
+# lotto fee
+fee = DailyLotto.TICKET_PRICE * DailyLotto.HOUSE_COMMISSION_RATE
 
 
 class TicketDailyCreate(viewsets.ViewSet):
@@ -46,11 +54,17 @@ class TicketDailyCreate(viewsets.ViewSet):
                 t1, t2, t3, t4, t5, t6 = generated_numbers
                 DailyLottoTicket.objects.create(player_name=self.request.user, daily_lotto=todays_lotto(), n1=t1, n2=t2, n3=t3,
                                                 n4=t4, n5=t5, n6=t6)
-                """
-        Game_stat.objects.create(user=request.user, game=lotto_game, bet_amount=total_bet, status=Game_stat.PENDING,
-                                 service_fee=service_fee)
-                                 """
+        # calculating ticket cost
+        total_random = ticketno * DailyLotto.TICKET_PRICE  # total cost of random tickets
+        ticket_cost = DailyLotto.TICKET_PRICE + total_random
+        # calculating users balance
+        new_balance = balance_calculator(request.user.balance, ticket_cost)
+        multiple_ticket_service_fee = fee * ticketno
+        Tuser.objects.filter(username=self.request.user.username).update(balance=new_balance)
+        Game_stat.objects.create(user=self.request.user, game=lotto_game, bet_amount=ticket_cost, status=Game_stat.PENDING,
+                                 service_fee=multiple_ticket_service_fee + fee)
+        Game.objects.filter(name='Daily Lotto').update(times_played=F("times_played") + 1)
+        return Response({'code': 0, 'response': ticketno})
 
-        return Response({'code': 0, 'response': ticketno}, status=status.HTTP_400_BAD_REQUEST)
 
 

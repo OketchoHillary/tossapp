@@ -54,7 +54,7 @@ class Migration(migrations.Migration):
                 ('hits_number_prize', models.IntegerField()),
                 ('service_commission', models.IntegerField(default=25)),
                 ('prize', models.IntegerField()),
-                ('daily_lotto', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='daily_lotto.DailyLotto')),
+                ('tossapp', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='daily_lotto.DailyLotto')),
             ],
             options={
                 'db_table': 'lotto_results',
@@ -75,7 +75,7 @@ class Migration(migrations.Migration):
                 ('ticket_prize', models.IntegerField(default=0)),
                 ('hits', models.IntegerField(default=0)),
                 ('tax', models.IntegerField(default=0)),
-                ('daily_lotto', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='daily_lotto.DailyLotto')),
+                ('tossapp', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='daily_lotto.DailyLotto')),
                 ('player_name', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
             ],
             options={
@@ -97,7 +97,7 @@ class Migration(migrations.Migration):
                 ('five_number_prize_pool_commission', models.IntegerField(default=0)),
                 ('four_number_prize_pool_commission', models.IntegerField(default=0)),
                 ('three_number_prize_pool_commission', models.IntegerField(default=0)),
-                ('daily_lotto', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to='daily_lotto.DailyLotto', verbose_name=b'Daily Lotto')),
+                ('tossapp', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to='daily_lotto.DailyLotto', verbose_name=b'Daily Lotto')),
             ],
             options={
                 'db_table': 'quotas',

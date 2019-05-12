@@ -16,7 +16,7 @@ class DrawTest(TestCase):
         #     pl = Player.objects.get(username=name)
         #     for i in range(100):
         #         ticket = gen_ticket()
-        #         DailyLottoTicket.objects.create(daily_lotto=self.dl,player=pl,n1=ticket[0],n2=ticket[1],
+        #         DailyLottoTicket.objects.create(tossapp=self.dl,player=pl,n1=ticket[0],n2=ticket[1],
         #                                     n3=ticket[2],n4=ticket[3],n5=ticket[4],n6=ticket[5])
 
     def test_lotto_creation(self):

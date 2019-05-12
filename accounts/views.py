@@ -1,6 +1,4 @@
 from pprint import pprint
-
-from braces.views import AnonymousRequiredMixin
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import (
@@ -12,25 +10,15 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.core.urlresolvers import reverse_lazy
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, resolve_url
-# Create your views here.
-from django.template import RequestContext
 from django.template.response import TemplateResponse
 from django.utils.http import is_safe_url
 from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.debug import sensitive_post_parameters
-from django.views.generic import CreateView
-
-
-from accounts.admin import UserCreationForm
-from accounts.forms import ActivationForm, ChangeNumberForm, AuthForm, ForgotLoginPassForm, NewCodeForm, NewPassForm
+from accounts.forms import ActivationForm, AuthForm
 from accounts.models import Tuser
 from accounts.utils import generate_verification_code
 
-
-# @login_required
-# def index(request):
-#     return render(request,'registration/index.html')
 
 def activate(request, user):
     tuser = Tuser.objects.get(username=user)
@@ -51,94 +39,6 @@ def activate(request, user):
         form = ActivationForm()
 
     return render(request, "registration/activate.html",{'form':form,'user':tuser})
-
-
-class RegisterView(AnonymousRequiredMixin,CreateView):
-    template_name = 'registration/register.html'
-    authenticated_redirect_url = reverse_lazy("index")
-    form_class = UserCreationForm
-    # success_url=reverse_lazy('activate')
-
-    def get_initial(self):
-        return {'referrer_username': self.kwargs.get('username','')}
-
-    def get_success_url(self):
-        tuser = self.object
-        print("In register view")
-        pprint(tuser)
-        code = generate_verification_code()
-        tuser.verification_code = code
-        tuser.save()
-        print("Username: "+tuser.username)
-        print("Verification Code: "+tuser.verification_code)
-        # send_verification_sms(tuser.phone_number,tuser.verification_code)
-        return reverse_lazy('activate', kwargs={'user': tuser.username})
-
-
-def forgot_password(request):
-    context = RequestContext(request)
-    if request.method == "POST":
-        form = ForgotLoginPassForm(request.POST)
-        if form.is_valid():
-            my_dial = form.cleaned_data.get('phone_number')
-            tuser = Tuser.objects.filter(phone_number=my_dial)[0]
-            code = generate_verification_code()
-            tuser.verification_code = code
-            tuser.save()
-            # send_verification_sms(tuser.phone_number,tuser.verification_code)
-            return HttpResponseRedirect(reverse_lazy('enter_code', kwargs={'user': tuser.username}))
-    else:
-        form = ForgotLoginPassForm()
-
-    return render(request, "registration/forgot_password.html", locals(), context)
-
-
-def new_pass(request, user):
-    tuser = Tuser.objects.get(username=user)
-    if request.method == "POST":
-        form = NewPassForm(request.POST, user=tuser)
-        if form.is_valid():
-            user = Tuser.objects.get(username=tuser.username)
-            user.backend = 'accounts.backends.TauthBackend'
-            # print settings.AUTHENTICATION_BACKENDS[0]
-            if user is not None:
-                login(request, user)
-                return HttpResponseRedirect(reverse_lazy('index'))
-    else:
-        form = NewPassForm(tuser)
-
-    return render(request, "registration/set_new_password.html",{'form':form,'user':tuser})
-
-
-def enter_code(request, user):
-    tuser = Tuser.objects.get(username=user)
-    if request.method == "POST":
-        form = NewCodeForm(request.POST)
-        if form.is_valid():
-            if tuser.verification_code == form.cleaned_data['verification_code']:
-                return HttpResponseRedirect(reverse_lazy('new_pass', kwargs={'user': tuser.username}))
-    else:
-        form = NewCodeForm()
-
-    return render(request, "registration/enter_code.html",{'form':form,'user':tuser.username, 'dial':tuser.phone_number})
-
-
-def change_number(request, user):
-    tuser = Tuser.objects.get(username=user)
-    if request.method == "POST":
-        form = ChangeNumberForm(request.POST)
-        if form.is_valid():
-            # pprint(repr(form.cleaned_data))
-            tuser.phone_number = form.cleaned_data['phone_number']
-            code = generate_verification_code()
-            tuser.verification_code = code
-            tuser.save()
-            # send_verification_sms(tuser.phone_number,tuser.verification_code)
-            return HttpResponseRedirect(reverse_lazy('activate', kwargs={'user': tuser.username}))
-    else:
-        form = ChangeNumberForm()
-
-    return render(request, "registration/change_number.html",{'form':form,'user':tuser.username})
 
 
 @deprecate_current_app

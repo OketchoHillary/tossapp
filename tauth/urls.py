@@ -30,7 +30,7 @@ urlpatterns = [
     url(r'^lotto-api/v1/', include('lotto_api.urls')),
     url(r'^tossapp-api/v1/', include('tossapp_api.urls')),
     url(r'^',include('tossapp.urls')),
-    # url(r'^',include('daily_lotto.urls')),
+    # url(r'^',include('tossapp.urls')),
     # url(r'^',include('flip_coin.urls')),
     # url(r'^',include('money_slot.urls')),
     # url(r'^',include('rock_paper_scissor.urls')),
