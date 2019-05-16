@@ -25,7 +25,7 @@ class UserCreate(APIView):
     def post(self, request):
         new_user = UserSerializer(data=request.data)
         if new_user.is_valid():
-            new_user.save()
+            new_user.save(is_agreed=True)
             return Response({'code': 1, 'response': new_user.data}, status=status.HTTP_201_CREATED)
         return Response({'code': 0, 'response': new_user.errors}, status=status.HTTP_400_BAD_REQUEST)
 

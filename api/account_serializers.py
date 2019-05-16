@@ -1,6 +1,7 @@
 from django.contrib.auth import authenticate
 from django.core.exceptions import ValidationError
 from django.db.models import F
+import datetime
 from django_countries import Countries
 
 from rest_framework import serializers, exceptions
@@ -36,13 +37,15 @@ class UserSerializer(serializers.Serializer):
 
     phone_number = serializers.CharField()
     username = serializers.CharField()
+    dob = serializers.DateField(required=True)
     password = serializers.CharField()
-    referrer_share_code = serializers.CharField()
+    referrer_share_code = serializers.CharField(required=False)
     sex = serializers.ChoiceField(choices=GENDER_CHOICES)
 
     def create(self, validated_data):
         code = generate_verification_code()
         username = validated_data['username']
+        dob = validated_data['dob']
         phone_number = validated_data['phone_number']
         referrer_share_code = validated_data['referrer_share_code']
 
@@ -64,9 +67,16 @@ class UserSerializer(serializers.Serializer):
         if qn.count() > 0:
             raise exceptions.ValidationError('This Phone number is already in use.')
 
+        my_age = int((datetime.date.today() - dob).days / 365.25)
+
+        if my_age < 18:
+            raise exceptions.ValidationError('Only those above 18 years can Signup')
+
         # verifying referrer share code
         if len(Tuser.objects.filter(share_code=referrer_share_code)) == 0:
             raise exceptions.ValidationError("Please provide a valid Referral code or leave the field blank")
+        elif referrer_share_code == "":
+            sponsor_id = None
         else:
             referrer = Tuser.objects.get(share_code=validated_data["referrer_share_code"])
             sponsor_id = referrer.id
@@ -74,8 +84,8 @@ class UserSerializer(serializers.Serializer):
             # incrementing points on referee
             Tuser.objects.filter(id=sponsor_id).update(points=F("points") + 1)
 
-        user = Tuser(username=validated_data['username'], sex=validated_data['sex'], phone_number=phone_number,
-                     verification_code=code, is_active=False, referrer_id=sponsor_id)
+        user = Tuser(username=validated_data['username'], sex=validated_data['sex'], dob=dob, phone_number=phone_number,
+                     verification_code=code, is_active=False, referrer_id=sponsor_id, is_agreed=True)
         user.set_password(validated_data['password'],)
         user.save()
         return validated_data

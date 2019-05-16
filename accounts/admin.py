@@ -112,6 +112,7 @@ class UserChangeForm(forms.ModelForm):
         self.fields['country'].required = False
         self.fields['address'].required = False
         self.fields['profile_photo'].required = False
+        self.fields['dob'].required = False
 
     password = ReadOnlyPasswordHashField(label="Password",
                                          help_text=(
@@ -123,7 +124,7 @@ class UserChangeForm(forms.ModelForm):
 
     class Meta:
         model = Tuser
-        fields = ('username', 'password', 'phone_number', 'referrer', 'is_active', 'is_admin', 'share_code')
+        fields = ('username', 'password', 'phone_number', 'referrer', 'is_active', 'is_admin', 'share_code', 'dob')
 
     def clean_password(self):
         # Regardless of what the user provides, return the initial value.
@@ -150,9 +151,10 @@ class UserAdmin(BaseUserAdmin):
     # that reference specific fields on auth.User.
     list_display = ('username', 'phone_number', 'is_admin', 'timestamp', 'sex', 'balance')
     list_filter = ('is_admin', 'sex', 'last_login')
+    search_fields = ('username', )
     fieldsets = (
         (None, {'fields': ('username','phone_number','referrer', 'password',)}),
-        ('Personal info', {'fields': ('first_name','last_name','sex','country','address','profile_photo',)}),
+        ('Personal info', {'fields': ('first_name','last_name','sex','country','address','profile_photo','dob')}),
         ('Permissions', {'fields': ('is_admin',)}),
     )
     # add_fieldsets is not a standard ModelAdmin attribute. UserAdmin
@@ -163,7 +165,6 @@ class UserAdmin(BaseUserAdmin):
             'fields': ('username', 'phone_number', 'password1', 'password2', 'referrer_share_code',)}
         ),
     )
-    search_fields = ('username',)
     ordering = ('username',)
     filter_horizontal = ()
 

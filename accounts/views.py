@@ -5,9 +5,8 @@ from django.contrib.auth import (
     REDIRECT_FIELD_NAME, login as auth_login,
     login, logout)
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.views import deprecate_current_app
 from django.contrib.sites.shortcuts import get_current_site
-from django.core.urlresolvers import reverse_lazy
+from django.urls import reverse_lazy
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, resolve_url
 from django.template.response import TemplateResponse
@@ -41,7 +40,6 @@ def activate(request, user):
     return render(request, "registration/activate.html",{'form':form,'user':tuser})
 
 
-@deprecate_current_app
 @sensitive_post_parameters()
 @csrf_protect
 @never_cache

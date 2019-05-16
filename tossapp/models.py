@@ -2,8 +2,7 @@ from __future__ import unicode_literals
 
 from django.db import models
 from django.template.defaultfilters import truncatechars
-# from django.urls import reverse
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.utils import timezone
 
 from accounts.models import Tuser
@@ -34,8 +33,8 @@ class Game_stat(models.Model):
         (WIN, 'Win'),
         (PENDING, 'Pending'),
     )
-    game = models.ForeignKey(Game)
-    user = models.ForeignKey(Tuser)
+    game = models.ForeignKey(Game, on_delete=models.CASCADE)
+    user = models.ForeignKey(Tuser, on_delete=models.CASCADE)
     bet_amount = models.IntegerField()
     status = models.IntegerField(choices=STATUS_CHOICES)
     win_amount = models.FloatField(blank=True, default=0.0)
@@ -76,7 +75,7 @@ class Transaction(models.Model):
         (PENDING, 'Pending'),
         (FAILED, 'Failed'),
     )
-    user = models.ForeignKey(Tuser)
+    user = models.ForeignKey(Tuser, on_delete=models.CASCADE)
     reference_no = models.CharField(max_length=13)
     transaction_type = models.IntegerField(choices=TRANSACTION_TYPE_CHOICES)
     payment_method = models.IntegerField(choices=PAYMENT_METHOD_CHOICES)
@@ -117,7 +116,7 @@ class Notification(models.Model):
         (ERROR, 'Error'),
         (ACCOUNT, 'Account'),
     )
-    user = models.ForeignKey(Tuser, default=None)
+    user = models.ForeignKey(Tuser, on_delete=models.CASCADE, default=None)
     title = models.CharField(max_length=30)
     description = models.TextField()
     type = models.IntegerField(choices=STATUS_CHOICES, default=INFORMATION)

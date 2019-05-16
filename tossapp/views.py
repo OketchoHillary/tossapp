@@ -1,20 +1,15 @@
-from cbvtoolkit.views import MultiFormView
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.core.urlresolvers import reverse_lazy
-from django.http import HttpResponseForbidden, HttpResponseRedirect, Http404
+from django.urls import reverse_lazy
+from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import render, get_object_or_404
 # Create your views here.
 from django.template import RequestContext
 from django.views.decorators.csrf import csrf_protect
-from django.views.generic import TemplateView, ListView, UpdateView, FormView
-from django.db.models import Count
-
-from accounts.models import Tuser
-from tossapp.forms import ChangePasswordForm, ChangeUsernameForm, ContactForm, ChangeProfileForm, ChangeDpForm,\
-DepoForm
-from tossapp.models import Notification, Game, Game_stat, Transaction, Faq
+from django.views.generic import TemplateView, ListView
+from tossapp.forms import ContactForm
+from tossapp.models import Notification, Faq
 
 
 def index(request):

@@ -1,6 +1,6 @@
 from __future__ import print_function
 import random
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponse
 from daily_lotto.lotto_components import todays_lotto
 from daily_lotto.models import *
 import datetime

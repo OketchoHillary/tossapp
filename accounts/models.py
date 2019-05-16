@@ -63,6 +63,7 @@ class TuserManager(BaseUserManager):
         )
         user.is_admin = True
         user.is_active = True
+        user.is_agreed = True
         user.save(using=self._db)
         return user
 
@@ -77,10 +78,11 @@ class Tuser(AbstractBaseUser):
     phone_number = models.CharField(max_length=13, unique=True, error_messages={'unique':"A user with this phone number already exists."})
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=30)
-    sex = models.CharField(max_length=1, choices=GENDER_CHOICES)
+    sex = models.CharField(max_length=1, choices=GENDER_CHOICES, blank=True, null=True)
+    dob = models.DateField(null=True, blank=True)
     country = CountryField(null=True)
     address = models.CharField(max_length=30)
-    referrer = models.ForeignKey('self', blank=True, related_name='referrals', null=True)
+    referrer = models.ForeignKey('self', blank=True, related_name='referrals', null=True, on_delete=models.CASCADE)
     referrer_prize = models.IntegerField(editable=False, default=0)
     timestamp = models.DateTimeField(auto_now_add=True, editable=False, blank=False)
     profile_photo = models.ImageField(upload_to=content_file_name, default='default_avatar/avatar.png')
@@ -90,6 +92,7 @@ class Tuser(AbstractBaseUser):
     is_active = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
     verification_code = models.CharField(default='',blank=True, max_length=6)
+    is_agreed = models.BooleanField(default=False)
     share_code = models.CharField(max_length=6, blank=True, unique=True,
                                   validators=[RegexValidator(regex='^.{6}$',
                                                              message='Share code must not exceed 6 characters',

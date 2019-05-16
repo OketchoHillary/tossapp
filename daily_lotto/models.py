@@ -55,7 +55,7 @@ class DailyLotto(models.Model):
 
 
 class DailyQuota(models.Model):
-    daily_lotto = models.OneToOneField(DailyLotto, verbose_name="Daily Lotto")
+    daily_lotto = models.OneToOneField(DailyLotto, on_delete=models.CASCADE, verbose_name="Daily Lotto")
     house_commission = models.IntegerField(default=0)
     six_number_prize_pool = models.IntegerField(default=0)
     five_number_prize_pool = models.IntegerField(default=0)
@@ -112,7 +112,7 @@ class DailyLottoResult(models.Model):
     hits_number_prize = models.IntegerField()
     service_commission = models.IntegerField(default=25)
     prize = models.IntegerField()
-    daily_lotto_ticket = models.ForeignKey(DailyLottoTicket)
+    daily_lotto_ticket = models.ForeignKey(DailyLottoTicket, on_delete=models.CASCADE)
 
     def __str__(self):
         return '{:%Y-%m-%d %H:%M}'.format(self.draw_date)

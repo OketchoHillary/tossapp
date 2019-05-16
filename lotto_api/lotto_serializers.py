@@ -10,5 +10,8 @@ class TicketDailySerializer(serializers.Serializer):
     n4 = serializers.IntegerField()
     n5 = serializers.IntegerField()
     n6 = serializers.IntegerField()
-    quantity = serializers.IntegerField(required=False)
+
+
+class MultipleDailySerializer(serializers.Serializer):
+    quantity = serializers.IntegerField()
 

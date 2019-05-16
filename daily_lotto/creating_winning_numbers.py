@@ -10,7 +10,7 @@ def gen_winning_numbers():
     DailyLotto.objects.create(start_date=datetime.date.today())
 
     # creating winning numbers
-    number_pool = random.sample(xrange(1,51),6)
+    number_pool = random.sample(range(1,51),6)
     # listobj = number_pool
     num1, num2, num3, num4, num5, num6 = number_pool
     val1 = num1
