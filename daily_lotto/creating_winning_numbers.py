@@ -1,3 +1,4 @@
+"""
 import datetime
 import random
 from daily_lotto.models import DailyLotto, DailyLottoTicket
@@ -44,3 +45,4 @@ DailyLotto.objects.filter(pk=1).update(win1=1)
 YourModel.objects.filter(datetime_published=datetime(2008, 03, 27))
 id = Place.objects.only('id').get(name='kansas').id
 '''
+"""

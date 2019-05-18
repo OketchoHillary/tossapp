@@ -15,7 +15,7 @@ from rest_framework.views import APIView
 from rest_framework import viewsets, mixins
 from api.account_serializers import *
 from api.permissions import IsOwnerOrReadOnly
-from tossapp.models import Notification
+#from tossapp.models import Notification
 
 
 class UserCreate(APIView):

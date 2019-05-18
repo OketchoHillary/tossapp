@@ -87,9 +87,9 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'tossapp.context_processors.years_processor',
-                'tossapp.context_processors.games_processor',
-                'tossapp.context_processors.current_lotto_processor',
+                #'tossapp.context_processors.years_processor',
+                #'tossapp.context_processors.games_processor',
+                #'tossapp.context_processors.current_lotto_processor',
             ],
         },
     },
@@ -103,12 +103,8 @@ WSGI_APPLICATION = 'tauth.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'toss_app_db',
-        'USER': 'postgres',
-        'PASSWORD': 'postgres',
-        'HOST': '127.0.0.1',   # Or an IP Address that your DB is hosted on
-        'PORT': '5432',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
 

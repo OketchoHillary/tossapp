@@ -1,3 +1,4 @@
+"""
 import random
 import time
 from daily_lotto.models import *
@@ -231,3 +232,4 @@ def daily_draw():
         print(cur_ticket,":",matches_count,"", "win")
         
     print('Done')
+"""

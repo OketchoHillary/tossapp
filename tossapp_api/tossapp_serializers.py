@@ -1,3 +1,4 @@
+"""
 from rest_framework import serializers
 from tossapp.models import *
 
@@ -37,3 +38,4 @@ class WithdrawSerializer(serializers.Serializer):
 class DepositSerializer(serializers.Serializer):
     amount = serializers.IntegerField()
 
+"""

@@ -1,3 +1,4 @@
+"""
 import datetime
 
 from daily_lotto.models import DailyLottoTicket, DailyLotto
@@ -24,3 +25,4 @@ def current_lotto_processor(request):
     current_lotto = pjackpot + six_prize_pool
     return {'current_lotto':current_lotto}
 
+"""

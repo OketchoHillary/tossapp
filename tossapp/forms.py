@@ -1,3 +1,4 @@
+"""
 from django import forms
 from django.core.exceptions import ValidationError
 from django.utils.text import slugify
@@ -203,7 +204,7 @@ class Update_notice(forms.ModelForm):
         model = Notification
         fields = ['seen_status']
 
-"""
+
 class WithdrawForm(forms.Form):
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop('user', None)
@@ -220,8 +221,9 @@ class WithdrawForm(forms.Form):
         else:
             raise forms.ValidationError("wrong input")
             Payment failed
-	        """
+	      
 
 
 
 
+"""

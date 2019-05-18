@@ -1,3 +1,4 @@
+"""
 from django.conf.urls import url
 
 from tossapp.views import index, contact, faq, how_it_works, about_us, notification_status, Toc, Privacy_policy,\
@@ -15,3 +16,4 @@ urlpatterns = [
     url(r'^how-it-works', how_it_works, name='how_it_works'),
     url(r'^about-us', about_us, name='about_us'),
 ]
+"""

@@ -1,3 +1,4 @@
+"""
 from daily_lotto.models import *
 import random
 
@@ -195,3 +196,4 @@ def create_lotto():
 
 
 
+"""

@@ -1,3 +1,4 @@
+"""
 from django.contrib import admin
 from daily_lotto.models import *
 
@@ -50,3 +51,4 @@ admin.site.register(CommissionSum)
 
 
 
+"""
