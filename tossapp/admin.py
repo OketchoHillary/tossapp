@@ -1,6 +1,5 @@
-"""
 from django.contrib import admin
-from daily_lotto.admin import *
+#from daily_lotto.admin import *
 
 
 # Register your models here.
@@ -22,7 +21,6 @@ class GameAdmin(admin.ModelAdmin):
             return '<img src="%s" width="56" height="55">' % obj.display_photo.url
         return ''
     game_photo.allow_tags = True
-    
 
 
 class TransactionAdmin(admin.ModelAdmin):
@@ -42,4 +40,3 @@ admin.site.register(Game, GameAdmin)
 admin.site.register(Faq, FaqAdmin)
 admin.site.register(Contact_us, ContactUsAdmin)
 
-"""

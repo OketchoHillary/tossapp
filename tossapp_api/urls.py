@@ -1,4 +1,4 @@
-"""
+
 from django.conf.urls import url
 from tossapp_api.views import *
 
@@ -12,5 +12,3 @@ urlpatterns = [
     url(r'^transaction-history-api', TransactionHistoryView.as_view(), name='trans_hist_view'),
     url(r'^deposit-funds', TransactionView.as_view({'post': 'fund_deposit'}), name='fund_deposit_api'),
 ]
-
-"""
