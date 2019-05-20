@@ -1,4 +1,3 @@
-"""
 import datetime
 from django.db import models
 from django.dispatch import receiver
@@ -79,7 +78,7 @@ class DailyQuota(models.Model):
     class Meta:
         db_table = 'quotas'
 
-
+"""
 class DailyLottoTicket(models.Model):
     id = models.BigAutoField(primary_key=True)
     player_name = models.ForeignKey(Tuser, on_delete=models.CASCADE)
@@ -121,6 +120,8 @@ class DailyLottoResult(models.Model):
     class Meta:
         db_table = 'lotto_results'
 
+"""
+
 
 class CommissionSum(models.Model):
     dates = models.DateTimeField(null=False, auto_now_add=True)
@@ -131,4 +132,3 @@ class CommissionSum(models.Model):
 
 
 
-"""

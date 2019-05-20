@@ -27,9 +27,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'c4(e91q)de5(klm^q=!e)o&ao!bs5yzgsgs0zpmbp-r@-+11(2'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ['tossapp-api.herokuapp.com']  #['127.0.0.1', 'localhost']
+ALLOWED_HOSTS = ['tossapp-api.herokuapp.com']  # ['127.0.0.1', 'localhost']
 
 
 # Application definition
@@ -48,11 +48,11 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'api',
-    'lotto_api',
-    'tossapp_api',
-    #'mod_wsgi.server',
     'tossapp',
+    'tossapp_api',
     'daily_lotto',
+    'lotto_api',
+    #'mod_wsgi.server',
     'testapp',
     'django_ajax',
     'compound_box',
@@ -103,8 +103,12 @@ WSGI_APPLICATION = 'tauth.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'toss_app_db',
+        'USER': 'postgres',
+        'PASSWORD': 'postgres',
+        'HOST': '127.0.0.1',   # Or an IP Address that your DB is hosted on
+        'PORT': '5432',
     }
 }
 
@@ -182,7 +186,7 @@ AUTH_USER_MODEL = 'accounts.Tuser'
 LOGIN_REDIRECT_URL = '/'
 LOGIN_URL = '/login'
 
-NUMBER_RANGE = 31
+NUMBER_RANGE = 21
 
 import dj_database_url
 

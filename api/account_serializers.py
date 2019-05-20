@@ -39,11 +39,16 @@ class UserSerializer(serializers.Serializer):
     username = serializers.CharField()
     dob = serializers.DateField(required=True)
     password = serializers.CharField()
-    referrer_share_code = serializers.CharField(required=False)
+    referrer_share_code = serializers.CharField(required=False, allow_blank=True)
     sex = serializers.ChoiceField(choices=GENDER_CHOICES)
 
+    def clean_referrer(self, validated_data):
+        referrer_share_code = validated_data['referrer_share_code']
+        if len(Tuser.objects.filter(share_code=referrer_share_code)) == 0:
+            raise serializers.ValidationError("Please provide a valid username or leave the field blank")
+        return referrer_share_code
+
     def create(self, validated_data):
-        code = generate_verification_code()
         username = validated_data['username']
         dob = validated_data['dob']
         phone_number = validated_data['phone_number']
@@ -57,12 +62,7 @@ class UserSerializer(serializers.Serializer):
         # verifying phone number
         if not validate_phone_number(phone_number):
             raise exceptions.ValidationError("Please provide a valid MTN or Airtel number")
-        elif phone_number.startswith('0'):
-            phone_number = phone_number.replace('0', '256', 1)
-        elif phone_number.startswith('+256'):
-            phone_number = phone_number.replace('+256', '256', 1)
 
-        # Checking for Phone number
         qn = Tuser.objects.filter(phone_number=phone_number)
         if qn.count() > 0:
             raise exceptions.ValidationError('This Phone number is already in use.')
@@ -72,20 +72,15 @@ class UserSerializer(serializers.Serializer):
         if my_age < 18:
             raise exceptions.ValidationError('Only those above 18 years can Signup')
 
-        # verifying referrer share code
-        if len(Tuser.objects.filter(share_code=referrer_share_code)) == 0:
-            raise exceptions.ValidationError("Please provide a valid Referral code or leave the field blank")
-        elif referrer_share_code == "":
-            sponsor_id = None
-        else:
-            referrer = Tuser.objects.get(share_code=validated_data["referrer_share_code"])
-            sponsor_id = referrer.id
-
-            # incrementing points on referee
-            Tuser.objects.filter(id=sponsor_id).update(points=F("points") + 1)
+        # incrementing points on referee
 
         user = Tuser(username=validated_data['username'], sex=validated_data['sex'], dob=dob, phone_number=phone_number,
-                     verification_code=code, is_active=False, referrer_id=sponsor_id, is_agreed=True)
+                     verification_code=generate_verification_code(), is_active=False, is_agreed=True)
+        if referrer_share_code != "":
+            referrer = Tuser.objects.get(share_code=validated_data["referrer_share_code"])
+            user.referrer = referrer
+            Tuser.objects.filter(id=referrer.id).update(points=F("points") + 1)
+        user.phone_number = proper_dial(phone_number)
         user.set_password(validated_data['password'],)
         user.save()
         return validated_data
