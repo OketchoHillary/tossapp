@@ -27,7 +27,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'c4(e91q)de5(klm^q=!e)o&ao!bs5yzgsgs0zpmbp-r@-+11(2'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['tossapp-api.herokuapp.com']  # ['127.0.0.1', 'localhost']
 
