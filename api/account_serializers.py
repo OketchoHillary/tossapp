@@ -1,5 +1,4 @@
 from django.contrib.auth import authenticate
-from django.core.exceptions import ValidationError
 from django.db.models import F
 import datetime
 from django_countries import Countries
@@ -45,7 +44,7 @@ class UserSerializer(serializers.Serializer):
     def clean_referrer(self, validated_data):
         referrer_share_code = validated_data['referrer_share_code']
         if len(Tuser.objects.filter(share_code=referrer_share_code)) == 0:
-            raise serializers.ValidationError("Please provide a valid username or leave the field blank")
+            raise serializers.ValidationError("Please provide a valid share code or leave the field blank")
         return referrer_share_code
 
     def create(self, validated_data):
@@ -65,12 +64,12 @@ class UserSerializer(serializers.Serializer):
 
         qn = Tuser.objects.filter(phone_number=phone_number)
         if qn.count() > 0:
-            raise exceptions.ValidationError('This Phone number is already in use.')
+            raise serializers.ValidationError('This Phone number is already in use.')
 
         my_age = int((datetime.date.today() - dob).days / 365.25)
 
         if my_age < 18:
-            raise exceptions.ValidationError('Only those above 18 years can Signup')
+            raise serializers.ValidationError('Only those above 18 years can Signup')
 
         # incrementing points on referee
 
@@ -101,13 +100,13 @@ class LoginSerializer(serializers.Serializer):
                     data["user"] = user
                 else:
                     msg = 'account not yet activated'
-                    raise exceptions.ValidationError(msg)
+                    raise serializers.ValidationError(msg)
             else:
-                msg = 'User does not exist'
-                raise exceptions.ValidationError(msg)
+                msg = "Wrong Username or Password"
+                raise serializers.ValidationError(msg)
         else:
             msg = "Wrong Username or Password"
-            raise exceptions.ValidationError(msg)
+            raise serializers.ValidationError(msg)
         return data
 
 
@@ -134,21 +133,26 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
 class EditProfileSerializer(serializers.ModelSerializer):
     country = SerializableCountryField(allow_blank=True)
-    address = serializers.CharField(required=False)
-    first_name = serializers.CharField(required=False)
-    last_name = serializers.CharField(required=False)
+    address = serializers.CharField(required=False, allow_blank=True)
+    first_name = serializers.CharField(required=False, allow_blank=True)
+    last_name = serializers.CharField(required=False, allow_blank=True)
 
     class Meta:
         model = Tuser
-        fields = ['username', 'first_name', 'last_name', 'sex', 'phone_number', 'country', 'address']
+        fields = ['username', 'first_name', 'last_name', 'sex', 'dob', 'phone_number', 'country', 'address']
 
     def validate(self, validated_data):
-        username = validated_data['username']
         phone_number = validated_data['phone_number']
+        dob = validated_data['dob']
+
+        my_age = int((datetime.date.today() - dob).days / 365.25)
+
+        if my_age < 18:
+            raise serializers.ValidationError('Only those above 18 years can Signup')
 
         # verifying phone number
         if not validate_phone_number(phone_number):
-            raise exceptions.ValidationError("Please provide a valid MTN or Airtel number")
+            raise serializers.ValidationError("Please provide a valid MTN or Airtel number")
         proper_dial(phone_number)
 
         return validated_data

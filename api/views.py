@@ -1,21 +1,17 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
-
-import json
-
 from django.contrib import messages
 from django.contrib.auth import login as django_login, logout as django_logout
 from rest_framework import generics, permissions, status
 from rest_framework.authentication import TokenAuthentication, SessionAuthentication
 from rest_framework.authtoken.views import ObtainAuthToken
-from rest_framework.generics import get_object_or_404
 from rest_framework.parsers import FileUploadParser, MultiPartParser, FormParser
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import viewsets, mixins
 from api.account_serializers import *
 from api.permissions import IsOwnerOrReadOnly
-#from tossapp.models import Notification
+from tossapp.models import Notification
 
 
 class UserCreate(APIView):
@@ -51,12 +47,11 @@ class LogoutView(APIView):
         return Response(status=204)
 
 
-class ProfileView(viewsets.ViewSet):
-    permission_classes = [IsOwnerOrReadOnly]
+class ProfileView(generics.RetrieveAPIView, mixins.RetrieveModelMixin):
+    serializer_class = UserProfileSerializer
 
-    def get_this_profile(self, request):
-        serializer = UserProfileSerializer(request.user)
-        return Response(serializer.data)
+    def get_object(self):
+        return self.request.user
 
 
 class ProfileUpdateView(generics.RetrieveUpdateAPIView, mixins.UpdateModelMixin):
@@ -68,7 +63,6 @@ class ProfileUpdateView(generics.RetrieveUpdateAPIView, mixins.UpdateModelMixin)
 
 
 class ProfilePicViewSet(generics.RetrieveUpdateAPIView, mixins.UpdateModelMixin):
-    parser_classes = (MultiPartParser, FileUploadParser)
     queryset = Tuser.objects.all()
     serializer_class = ProfilePicSerializer
 
@@ -79,6 +73,15 @@ class ProfilePicViewSet(generics.RetrieveUpdateAPIView, mixins.UpdateModelMixin)
 class VerificationAPI(viewsets.ViewSet):
     authentication_classes = ()
     permission_classes = ()
+
+    def get_verification_code(self, request, username):
+        response = []
+        verifier = Tuser.objects.filter(username=username).values_list('verification_code')[0]
+        veri = {
+            'verification_code':verifier
+        }
+        response.append(veri)
+        return Response({'response': response}, status=status.HTTP_200_OK)
 
     def verify_user(self, request, username):
         this_user = Tuser.objects.get(username=username)
@@ -119,7 +122,7 @@ class ChangePasswordAPI(viewsets.ViewSet):
             this_user.save()
             messages.success(request, 'Successfully changed password')
             Notification.objects.create(user=self.request.user, title='Password', description='Password has been changed',
-                                    type=0)
+                                        type=0)
             return Response({'code': 1, 'response': 'Successfully changed password'})
 
 
