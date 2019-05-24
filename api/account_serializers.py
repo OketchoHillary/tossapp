@@ -118,7 +118,7 @@ class ActivateSerializer(serializers.Serializer):
     verification_code = serializers.CharField()
 
     def validate(self, data):
-        verification_code = data.get("verification_code", "")
+        verification_code = data.get("verification_code")
 
         return data
 

@@ -95,10 +95,13 @@ class VerificationAPI(viewsets.ViewSet):
             this_user.verification_code = generate_verification_code()
             this_user.save()
             token, created = Token.objects.get_or_create(user=this_user)
-            sponsor_id = this_user.referrer.id
-            Tuser.objects.filter(id=sponsor_id).update(referrer_prize=F("referrer_prize") + Tuser.REFERRAL_PRIZE,
-                                                       balance=F("balance") + Tuser.REFERRAL_PRIZE)
-            return Response({"token": token})
+            if this_user.referrer:
+                sponsor_id = this_user.referrer.id
+                Tuser.objects.filter(id=sponsor_id).update(referrer_prize=F("referrer_prize") + Tuser.REFERRAL_PRIZE,
+                                                            balance=F("balance") + Tuser.REFERRAL_PRIZE)
+            else:
+                pass
+            return Response({"token": token.key})
         else:
             return Response({"error": "Wrong Verification code"}, status=status.HTTP_400_BAD_REQUEST)
 
