@@ -20,8 +20,6 @@ from django.contrib import admin
 
 from accounts.views import user_logout
 
-admin.site.site_header = 'Administration'
-admin.site.site_title = 'TossApp. Administration'
 
 urlpatterns = [
     url(r'^admin/logout/$', user_logout, name='logout'),
@@ -29,11 +27,7 @@ urlpatterns = [
     url(r'^api/v1/auth/', include('api.urls')),
     # url(r'^lotto-api/v1/', include('lotto_api.urls')),
     url(r'^tossapp-api/v1/', include('tossapp_api.urls')),
-    url(r'^',include('tossapp.urls')),
-    # url(r'^',include('flip_coin.urls')),
-    # url(r'^',include('money_slot.urls')),
-    # url(r'^',include('rock_paper_scissor.urls')),
-    # url(r'^',include('compound_box.urls')),
+    url(r'^', include('tossapp.urls')),
     url(r'^admin/', admin.site.urls),
 ] \
               + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)\

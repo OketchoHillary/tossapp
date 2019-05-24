@@ -21,7 +21,7 @@ class Game(models.Model):
     slug = models.SlugField(max_length=230, unique=True)
     times_played = models.BigIntegerField(default=0)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 
@@ -49,6 +49,8 @@ class Game_stat(models.Model):
 
     class Meta:
         ordering = ['-timestamp']
+        verbose_name_plural = 'Game statistics'
+        verbose_name = 'Game statistic'
 
 
 class Transaction(models.Model):
@@ -162,12 +164,3 @@ class Faq(models.Model):
         verbose_name_plural = 'Faq'
         ordering = ['question']
 
-
-class Country(models.Model):
-    name = models.CharField(max_length=90)
-
-    def __str__(self):
-        return self.name
-
-    class Meta:
-        verbose_name_plural = 'Countries'

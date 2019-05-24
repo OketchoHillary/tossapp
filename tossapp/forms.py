@@ -3,10 +3,10 @@ from django.core.exceptions import ValidationError
 from django.utils.text import slugify
 
 from accounts.models import Tuser
-from tossapp.models import Faq, Contact_us, Game, Transaction, Notification
+from tossapp.models import Faq, Contact_us, Game
 from django_countries import countries
 from accounts.admin import validate_phone_number
-# import yopayments
+
 
 
 my_default_errors1 = {
@@ -183,44 +183,8 @@ class GameAdminForm(forms.ModelForm):
         return instance1
 
 
-class DepoForm(forms.Form):
-
-    def clean_details(self):
-        number = self.cleaned_data.get('number')
-        amount = self.cleaned_data.get('amount')
-        YoPay = yopayments.YoPay("90001817196", "1261050237")
-        api_url = "https://41.220.12.206/services/yopaymentsdev/task.php"
-        YoPay.set_non_blocking(False)
-        response = YoPay.ac_deposit_funds(number, amount, "reason for payment")
-        if response.get("TransactionStatus") == "SUCCEEDED":
-            print('success')
-        else:
-            raise forms.ValidationError("wrong input")
 
 
-class Update_notice(forms.ModelForm):
-    class Meta:
-        model = Notification
-        fields = ['seen_status']
-
-"""
-class WithdrawForm(forms.Form):
-    def __init__(self, *args, **kwargs):
-        self.user = kwargs.pop('user', None)
-        super(WithdrawForm, self).__init__(*args, **kwargs)
-
-    def clean_details(self):
-        number = self.cleaned_data.get('number')
-        amount = self.cleaned_data.get('amount')
-        YoPay = yopayments.YoPay(90001817196, 1261050237)
-        YoPay.set_non_blocking(True)
-        response = YoPay.ac_deposit_funds(number, amount, "reason for payment")
-        if response.get("TransactionStatus") == "SUCCEEDED":
-            print 'success'
-        else:
-            raise forms.ValidationError("wrong input")
-            Payment failed
-	        """
 
 
 

@@ -3,8 +3,6 @@ from __future__ import unicode_literals
 
 from django.db.models import Count, F
 from rest_framework import status
-
-from api.account_serializers import UserProfileSerializer
 from tossapp_api.tossapp_serializers import *
 from rest_framework.views import APIView
 from rest_framework import viewsets
@@ -65,10 +63,26 @@ class TransactionView(viewsets.ViewSet):
         depo = DepositSerializer(request.user)
         if depo.is_valid():
             amount = depo.validated_data["amount"]
-            if amount > 0:
+            if amount > 999:
                 Transaction.objects.create(user=request.user, transaction_type=0, status=1, payment_method=0,
                                            amount=amount)
                 Tuser.objects.filter(id=request.user.id).update(balance=F("balance") + amount)
+            else:
+                raise serializers.ValidationError("Cant deposit less than 999 shillings")
+        return Response(status=status.HTTP_202_ACCEPTED)
+
+    def fund_withdraw(self, request):
+        depo = WithdrawSerializer(request.user)
+        if depo.is_valid():
+            amount = depo.validated_data["amount"]
+            if amount > 999:
+                Transaction.objects.create(user=request.user, transaction_type=1, status=1, payment_method=0,
+                                           amount=amount)
+                Tuser.objects.filter(id=request.user.id).update(balance=F("balance") - amount)
+            else:
+                raise serializers.ValidationError("Cant withdraw less than 999 shillings")
+        return Response(status=status.HTTP_202_ACCEPTED)
+
 
 
 

@@ -1,7 +1,7 @@
 from django.db.models import Q
+
 from rest_framework import authentication
 from rest_framework import exceptions
-
 from accounts.models import Tuser
 
 
@@ -17,4 +17,6 @@ class TossApiAuthentication(authentication.BaseAuthentication):
             )
         except Tuser.DoesNotExist:
             raise exceptions.AuthenticationFailed('No such user')
-        return (user, None)
+        return user, None
+
+
