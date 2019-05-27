@@ -1,4 +1,3 @@
-"""
 from __future__ import print_function
 import random
 from django.http import HttpResponse
@@ -31,7 +30,7 @@ def random_tickets(tick, req):
 
     if quantity >= 1:
         for random_qunatity in range(quantity):
-            generated_numbers = random.sample(range(1, 51), 6)
+            generated_numbers = random.sample(range(1, 21), 6)
             t1,t2,t3,t4,t5,t6 = generated_numbers
             DailyLottoTicket.objects.create(player_name=req.user, daily_lotto=todays_lotto(), n1=t1, n2=t2, n3=t3, n4=t4, n5=t5, n6=t6)
 
@@ -48,5 +47,3 @@ def previous_day_APi(request):
 
 
 
-
-"""

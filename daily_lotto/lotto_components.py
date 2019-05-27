@@ -1,6 +1,4 @@
-"""
 import random
-import time
 from daily_lotto.models import *
 from tossapp.models import *
 from django.db.models import F
@@ -222,9 +220,11 @@ def daily_draw():
             Tuser.objects.filter(username=p2).update(balance=F("balance") + for6)
 
         # if ticket.hits >= 3:
-        #     Game_stat.objects.filter(user=ticket.player_name, timestamp=datetime.date.today(), game=lotto_game).update(status=Game_stat.WIN)
+        #     Game_stat.objects.filter(user=ticket.player_name, timestamp=datetime.date.today(),
+        #                              game=lotto_game).update(status=Game_stat.WIN)
         # else:
-        #     Game_stat.objects.filter(user=ticket.player_name, timestamp=datetime.date.today(), game=lotto_game).update(status=Game_stat.LOSE)
+        #     Game_stat.objects.filter(user=ticket.player_name, timestamp=datetime.date.today(),
+        #                              game=lotto_game).update(status=Game_stat.LOSE)
 
         my_backup_jackpot = backup + no3 + no4 + no5
 
@@ -232,4 +232,3 @@ def daily_draw():
         print(cur_ticket,":",matches_count,"", "win")
         
     print('Done')
-"""

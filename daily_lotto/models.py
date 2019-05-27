@@ -50,6 +50,7 @@ class DailyLotto(models.Model):
         ordering = ["-start_date"]
         db_table = 'lotto'
 
+
    # def __str__(self):
          #return '{}, {}, {}, {}, {}, {}'.format(self.win1,self.win2,self.win3,self.win4,self.win5,self.win6)
 
@@ -78,7 +79,7 @@ class DailyQuota(models.Model):
     class Meta:
         db_table = 'quotas'
 
-"""
+
 class DailyLottoTicket(models.Model):
     id = models.BigAutoField(primary_key=True)
     player_name = models.ForeignKey(Tuser, on_delete=models.CASCADE)
@@ -120,8 +121,6 @@ class DailyLottoResult(models.Model):
     class Meta:
         db_table = 'lotto_results'
 
-"""
-
 
 class CommissionSum(models.Model):
     dates = models.DateTimeField(null=False, auto_now_add=True)
@@ -130,5 +129,6 @@ class CommissionSum(models.Model):
     def __str__(self):
         return '{:%Y-%m-%d %H:%M}'.format(self.dates)
 
-
+    class Meta:
+        db_table = 'lotto_commission'
 

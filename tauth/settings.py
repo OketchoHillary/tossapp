@@ -28,7 +28,7 @@ SECRET_KEY = 'c4(e91q)de5(klm^q=!e)o&ao!bs5yzgsgs0zpmbp-r@-+11(2'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['tossapp-api.herokuapp.com']   # ['127.0.0.1', 'localhost']
+ALLOWED_HOSTS = ['tossapp-api.herokuapp.com']  # ['127.0.0.1', 'localhost']
 
 
 # Application definition
@@ -142,7 +142,6 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
-        'rest_framework.permissions.IsAdminUser',
     )
 }
 COUNTRIES_FIRST_REPEAT = True
