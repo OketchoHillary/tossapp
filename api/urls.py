@@ -14,6 +14,7 @@ urlpatterns = [
     url(r'^logout', LogoutView.as_view(), name='logoutUserApi'),
     url(r'^user-profile/$', ProfileView.as_view(), name='profileViewApi'),
     url(r'^profile-update/$', ProfileUpdateView.as_view(), name='profileUpdateApi'),
+    url(r'^username-update/$', UsernameUpdateView.as_view(), name='usernameUpdateApi'),
     url(r'^photo-update', ProfilePicViewSet.as_view(), name='profilePhotoApi'),
     url(r'^change-password/$', ChangePasswordAPI.as_view({'put': 'pass_change'}), name='pass_change_api'),
     url(r'^api-token-auth/', views.obtain_auth_token),

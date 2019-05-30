@@ -1,4 +1,3 @@
-"""
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
@@ -28,7 +27,7 @@ class TicketDailyCreate(viewsets.ViewSet):
         response = []
         bought_tickets = ticket_count
         today_lotto = {
-            'bought_tickets': bought_tickets,
+            'bought_tickets': DailyLottoTicket.objects.filter(daily_lotto=todays_lotto()).count(),
         }
         response.append(today_lotto)
         return Response({'response': today_lotto}, status=status.HTTP_200_OK)
@@ -93,7 +92,3 @@ class MultipleDailyTicket(viewsets.ViewSet):
         Game.objects.filter(name='Daily Lotto').update(times_played=F("times_played") + 1)
         return Response({'code': 1, 'response': 'Successfully bought'})
 
-
-
-
-"""

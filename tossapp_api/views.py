@@ -49,10 +49,8 @@ class TransactionHistoryView(APIView):
 class TransactionView(viewsets.ViewSet):
     def get(self, request):
         response = []
-        my_balance = Tuser.objects.filter(id=request.user.id).values_list('balance')[0]
-        balance = int(my_balance[0])
         bal = {
-            'balance': balance,
+            'balance': request.user.balance,
         }
 
         response.append(bal)
@@ -60,7 +58,7 @@ class TransactionView(viewsets.ViewSet):
         return Response({'response': bal}, status=status.HTTP_200_OK)
 
     def fund_deposit(self, request):
-        depo = DepositSerializer(request.user)
+        depo = DepositSerializer(data=request.data, user=request.user)
         if depo.is_valid():
             amount = depo.validated_data["amount"]
             if amount > 999:
@@ -72,13 +70,14 @@ class TransactionView(viewsets.ViewSet):
         return Response(status=status.HTTP_202_ACCEPTED)
 
     def fund_withdraw(self, request):
-        depo = WithdrawSerializer(request.user)
+        depo = WithdrawSerializer(data=request.data, user=request.user)
         if depo.is_valid():
-            amount = depo.validated_data["amount"]
+            amount = int(depo.validated_data["amount"])
             if amount > 999:
                 Transaction.objects.create(user=request.user, transaction_type=1, status=1, payment_method=0,
                                            amount=amount)
                 Tuser.objects.filter(id=request.user.id).update(balance=F("balance") - amount)
+
             else:
                 raise serializers.ValidationError("Cant withdraw less than 999 shillings")
         return Response(status=status.HTTP_202_ACCEPTED)

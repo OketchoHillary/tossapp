@@ -75,6 +75,7 @@ class UserSerializer(serializers.Serializer):
 
         user = Tuser(username=validated_data['username'], sex=validated_data['sex'], dob=dob, phone_number=phone_number,
                      verification_code=generate_verification_code(), is_active=False, is_agreed=True)
+        """
         if referrer_share_code != "":
             if Tuser.objects.filter(share_code=validated_data["referrer_share_code"]).count() > 0:
                 referrer = Tuser.objects.get(share_code=validated_data["referrer_share_code"])
@@ -82,6 +83,7 @@ class UserSerializer(serializers.Serializer):
                 Tuser.objects.filter(id=referrer.id).update(points=F("points") + 1)
             else:
                 raise serializers.ValidationError('Please provide a valid share code or leave the field blank')
+                """
         user.phone_number = proper_dial(phone_number)
         user.set_password(validated_data['password'],)
         user.save()
@@ -142,7 +144,7 @@ class EditProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Tuser
-        fields = ['username', 'first_name', 'last_name', 'sex', 'dob', 'phone_number', 'country', 'address']
+        fields = ['first_name', 'last_name', 'sex', 'dob', 'phone_number', 'country', 'address']
 
     def validate(self, validated_data):
         phone_number = validated_data['phone_number']
@@ -159,6 +161,14 @@ class EditProfileSerializer(serializers.ModelSerializer):
         proper_dial(phone_number)
 
         return validated_data
+
+
+class ChangeUsernameSerializer(serializers.ModelSerializer):
+    username = serializers.CharField()
+
+    class Meta:
+        model = Tuser
+        fields = ['username']
 
 
 class ChangePasswordSerializer(serializers.Serializer):

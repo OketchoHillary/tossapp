@@ -74,8 +74,10 @@ class Tuser(AbstractBaseUser):
         ('M', 'Male'),
         ('F', 'Female'),
     )
-    username = models.CharField(max_length=15, unique=True, error_messages={'unique':"A user with this username already exists."})
-    phone_number = models.CharField(max_length=13, unique=True, error_messages={'unique':"A user with this phone number already exists."})
+    username = models.CharField(max_length=15, unique=True, error_messages={'unique':"A user with this username"
+                                                                                     " already exists."})
+    phone_number = models.CharField(max_length=13, unique=True, error_messages={'unique':"A user with this phone "
+                                                                                         "number already exists."})
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=30)
     sex = models.CharField(max_length=1, choices=GENDER_CHOICES, blank=True, null=True)
@@ -86,8 +88,8 @@ class Tuser(AbstractBaseUser):
     referrer_prize = models.IntegerField(editable=False, default=0)
     timestamp = models.DateTimeField(auto_now_add=True, editable=False, blank=False)
     profile_photo = models.ImageField(upload_to=content_file_name, default='default_avatar/avatar.png')
-    points = models.IntegerField(default=0)
-    redeemed_points = models.IntegerField(default=0)
+    # points = models.IntegerField(default=0)
+    # redeemed_points = models.IntegerField(default=0)
     balance = models.IntegerField(default=0)
     is_active = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
@@ -115,7 +117,7 @@ class Tuser(AbstractBaseUser):
         return self.username
 
     def tossapp_ranking(self):
-        aggregate = Tuser.objects.filter(points__gt=self.points).aggregate(tossapp_ranking=Count('points'))
+        aggregate = Tuser.objects.filter(referrals__gt=self.referrals).aggregate(tossapp_ranking=Count('referrals'))
         return aggregate['tossapp_ranking'] + 1
 
     @property
@@ -125,7 +127,7 @@ class Tuser(AbstractBaseUser):
         referals = rTusers.filter(num_ref__gt=num_ref).aggregate(refferal_ranking=Count('num_ref'))
         return referals['refferal_ranking'] + 1
 
-    def __str__(self):             # __unicode__ on Python 2
+    def __str__(self):
         return self.username
 
     def save(self, *args, **kwargs):
@@ -155,7 +157,7 @@ class Tuser(AbstractBaseUser):
         return self.is_admin
 
     class Meta:
-        ordering = ['points']
+        ordering = ['referrals']
 
 
 @receiver(post_save, sender=Tuser)

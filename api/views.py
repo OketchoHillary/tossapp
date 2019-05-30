@@ -47,16 +47,36 @@ class LogoutView(APIView):
         return Response(status=204)
 
 
-class ProfileView(generics.RetrieveAPIView, mixins.RetrieveModelMixin):
+class ProfileView(APIView):
     serializer_class = UserProfileSerializer
+    queryset = Tuser.objects.all()
 
-    def get_object(self):
-        return self.request.user
+    def get(self, request):
+        response = []
+        ref_details = {
+            'rank': request.user.refferal_ranking,
+            'username': request.user.username,
+            'name': request.user.get_my_full_name(),
+            'gender': request.user.sex,
+            'location': request.user.address,
+            'phone_number': request.user.phone_number,
+            'balance': request.user.balance,
+        }
+        response.append(ref_details)
+        return Response({'response': response}, status=status.HTTP_200_OK)
 
 
 class ProfileUpdateView(generics.RetrieveUpdateAPIView, mixins.UpdateModelMixin):
     queryset = Tuser.objects.all()
     serializer_class = EditProfileSerializer
+
+    def get_object(self):
+        return self.request.user
+
+
+class UsernameUpdateView(generics.RetrieveUpdateAPIView, mixins.UpdateModelMixin):
+    queryset = Tuser.objects.all()
+    serializer_class = ChangeUsernameSerializer
 
     def get_object(self):
         return self.request.user
@@ -98,7 +118,7 @@ class VerificationAPI(viewsets.ViewSet):
             if this_user.referrer:
                 sponsor_id = this_user.referrer.id
                 Tuser.objects.filter(id=sponsor_id).update(referrer_prize=F("referrer_prize") + Tuser.REFERRAL_PRIZE,
-                                                            balance=F("balance") + Tuser.REFERRAL_PRIZE)
+                                                           balance=F("balance") + Tuser.REFERRAL_PRIZE)
             else:
                 pass
             return Response({"token": token.key})

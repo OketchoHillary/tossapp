@@ -1,7 +1,4 @@
-"""
-from django.db.models import F
-from rest_framework import serializers, exceptions
-from tossapp.models import Game
+from rest_framework import serializers
 
 
 class TicketDailySerializer(serializers.Serializer):
@@ -15,4 +12,3 @@ class TicketDailySerializer(serializers.Serializer):
 
 class MultipleDailySerializer(serializers.Serializer):
     quantity = serializers.IntegerField()
-"""
