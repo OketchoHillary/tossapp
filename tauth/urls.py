@@ -25,7 +25,7 @@ urlpatterns = [
     url(r'^admin/logout/$', user_logout, name='logout'),
     url(r'^', include('accounts.urls')),
     url(r'^api/v1/auth/', include('api.urls')),
-    url(r'^lotto-api/v1/', include('lotto_api.urls')),
+    # url(r'^lotto-api/v1/', include('lotto_api.urls')),
     url(r'^tossapp-api/v1/', include('tossapp_api.urls')),
     url(r'^', include('tossapp.urls')),
     url(r'^admin/', admin.site.urls),
