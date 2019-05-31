@@ -1,4 +1,3 @@
-"""
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
@@ -93,4 +92,3 @@ class MultipleDailyTicket(viewsets.ViewSet):
         Game.objects.filter(name='Daily Lotto').update(times_played=F("times_played") + 1)
         return Response({'code': 1, 'response': 'Successfully bought'})
 
-"""
