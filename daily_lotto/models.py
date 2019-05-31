@@ -122,7 +122,7 @@ class DailyLottoResult(models.Model):
     class Meta:
         db_table = 'lotto_results'
 
-
+"""
 class CommissionSum(models.Model):
     dates = models.DateTimeField(null=False, auto_now_add=True)
     commission_total = models.IntegerField()
@@ -132,4 +132,5 @@ class CommissionSum(models.Model):
 
     class Meta:
         db_table = 'lotto_commission'
+        """
 
