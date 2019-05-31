@@ -1,7 +1,7 @@
-"""
+
 from django.contrib import admin
 from daily_lotto.models import *
-
+"""
 
 class DailyLottoResultAdmin(admin.ModelAdmin):
     search_fields = ['winners']
@@ -18,24 +18,18 @@ class DailyLottoTicketAdmin(admin.ModelAdmin):
     list_per_page = 50
 
 
+
+class DailyLottoSumAdmin(admin.ModelAdmin):
+    list_display = ('date',)
+    """
+
 class DailyLottoAdmin(admin.ModelAdmin):
     list_display = ['lotto_id', 'start_date', 'end_date', 'win1', 'win2', 'win3', 'win4', 'win5', 'win6', 'jack_pot', 'backup_jackpot', ]
     list_filter = ['start_date', ]
 
-
-class PlayerAdmin(admin.ModelAdmin):
-    search_fields = ['username', ]
-    list_display = ['username', 'balance']
-
-
-class DailyLottoSumAdmin(admin.ModelAdmin):
-    list_display = ('date',)
-
-
 admin.site.register(DailyLotto, DailyLottoAdmin)
-admin.site.register(DailyLottoResult, DailyLottoResultAdmin)
+#admin.site.register(DailyLottoResult, DailyLottoResultAdmin)
 admin.site.register(DailyQuota)
-admin.site.register(DailyLottoTicket, DailyLottoTicketAdmin)
+#admin.site.register(DailyLottoTicket, DailyLottoTicketAdmin)
 admin.site.register(CommissionSum)
 
-"""
