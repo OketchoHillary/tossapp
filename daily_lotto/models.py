@@ -106,7 +106,6 @@ class DailyLottoTicket(models.Model):
         ordering = ['-purchased_time', ]
 
 
-
 class DailyLottoResult(models.Model):
     daily_lotto = models.ForeignKey(DailyLotto, on_delete=models.CASCADE)
     draw_date = models.DateTimeField(auto_now_add=True, null=False, editable=False)

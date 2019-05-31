@@ -1,4 +1,3 @@
-"""
 import random
 from daily_lotto.models import *
 from tossapp.models import *
@@ -233,4 +232,3 @@ def daily_draw():
         print(cur_ticket,":",matches_count,"", "win")
         
     print('Done')
-"""
