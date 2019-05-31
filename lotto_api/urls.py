@@ -1,3 +1,4 @@
+"""
 from django.conf.urls import url
 from lotto_api.views import TicketDailyCreate, MultipleDailyTicket
 
@@ -9,3 +10,4 @@ urlpatterns = [
 
 
 
+"""
