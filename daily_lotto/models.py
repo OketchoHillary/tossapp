@@ -79,7 +79,7 @@ class DailyQuota(models.Model):
     class Meta:
         db_table = 'quotas'
 
-"""
+
 class DailyLottoTicket(models.Model):
     id = models.BigAutoField(primary_key=True)
     player_name = models.ForeignKey(Tuser, on_delete=models.CASCADE)
@@ -104,9 +104,9 @@ class DailyLottoTicket(models.Model):
         verbose_name_plural = "Daily Lotto Tickets"
         db_table = 'lotto_tickets'
         ordering = ['-purchased_time', ]
-        """
 
-"""
+
+
 class DailyLottoResult(models.Model):
     daily_lotto = models.ForeignKey(DailyLotto, on_delete=models.CASCADE)
     draw_date = models.DateTimeField(auto_now_add=True, null=False, editable=False)
@@ -121,7 +121,7 @@ class DailyLottoResult(models.Model):
 
     class Meta:
         db_table = 'lotto_results'
-"""
+
 
 class CommissionSum(models.Model):
     dates = models.DateTimeField(null=False, auto_now_add=True)
