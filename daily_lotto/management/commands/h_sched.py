@@ -10,10 +10,10 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
 
-        # schedule.every(1).minutes.do(create_daily_lotto())
-        # schedule.every(1).minutes.do(daily_draw)
-        schedule.every().day.at("23:55").do(daily_draw)
-        schedule.every().day.at("00:00").do(create_daily_lotto)
+        schedule.every(60).minutes.do(create_daily_lotto())
+        schedule.every(55).minutes.do(daily_draw)
+        # schedule.every().day.at("23:55").do(daily_draw)
+        # schedule.every().day.at("00:00").do(create_daily_lotto)
 
         # schedule.every().hour.do(draw)
         # schedule.every().monday.do(job)

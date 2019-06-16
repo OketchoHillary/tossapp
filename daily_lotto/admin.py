@@ -4,7 +4,7 @@ from daily_lotto.models import *
 
 
 class DailyLottoAdmin(admin.ModelAdmin):
-    list_display = ['lotto_id', 'start_date', 'end_date', 'win1', 'win2', 'win3', 'win4', 'win5', 'win6', 'jack_pot', 'backup_jackpot', ]
+    list_display = ['lotto_id', 'start_date', 'start_time', 'end_date', 'end_time', 'win1', 'win2', 'win3', 'win4', 'win5', 'win6', 'jack_pot', 'backup_jackpot', ]
     list_filter = ['start_date', 'lotto_type']
 
 

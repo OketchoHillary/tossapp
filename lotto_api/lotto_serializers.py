@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from daily_lotto.models import *
 
 
 class TicketDailySerializer(serializers.Serializer):
@@ -12,3 +13,10 @@ class TicketDailySerializer(serializers.Serializer):
 
 class MultipleDailySerializer(serializers.Serializer):
     quantity = serializers.IntegerField()
+
+
+class AlltimeSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = DailyLottoResult
+        exclude = ['id']

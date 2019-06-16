@@ -12,10 +12,9 @@ class Command(BaseCommand):
 
         # schedule.every(1).minutes.do(create_daily_lotto())
         # schedule.every(1).minutes.do(daily_draw)
-        schedule.every().day.at("23:55").do(daily_draw)
-        schedule.every().day.at("00:00").do(create_daily_lotto)
-
-        # schedule.every().hour.do(draw)
+        # schedule.every().day.at("23:55").do(daily_draw)
+        # schedule.every().day.at("00:00").do(create_daily_lotto)
+        schedule.every(6).hour.do(create_daily_lotto())
         # schedule.every().monday.do(job)
         # schedule.every().wednesday.at("13:15").do(job)
 

@@ -81,7 +81,8 @@ def lotto_jackpot():
 
 
 def create_daily_lotto():
-    lotto = DailyLotto.objects.create(start_date=datetime.date.today(), lotto_type='D')
+    lotto = DailyLotto.objects.create(start_date=datetime.now(), start_time=datetime.now() + now_plus_1(),
+                                      lotto_type='D', )
     return lotto
 
 

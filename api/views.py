@@ -11,6 +11,7 @@ from rest_framework.views import APIView
 from rest_framework import viewsets, mixins
 from api.account_serializers import *
 from api.permissions import IsOwnerOrReadOnly
+import africastalking
 from tossapp.models import Notification
 
 
@@ -40,8 +41,6 @@ class LoginView(APIView):
 
 
 class LogoutView(APIView):
-    authentication_classes = (TokenAuthentication, SessionAuthentication)
-
     def post(self, request):
         django_logout(request)
         return Response(status=204)
@@ -127,7 +126,6 @@ class VerificationAPI(viewsets.ViewSet):
 
 
 class ChangePasswordAPI(viewsets.ViewSet):
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly)
 
     def pass_change(self, request):
         this_user = request.user
@@ -144,8 +142,8 @@ class ChangePasswordAPI(viewsets.ViewSet):
             this_user.set_password(new_password1)
             this_user.save()
             messages.success(request, 'Successfully changed password')
-            Notification.objects.create(user=self.request.user, title='Password', description='Password has been changed',
-                                        type=0)
+            Notification.objects.create(user=self.request.user, title='Password',
+                                        description='Password has been changed',type=0)
             return Response({'code': 1, 'response': 'Successfully changed password'})
 
 
