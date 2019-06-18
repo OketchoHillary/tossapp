@@ -33,7 +33,7 @@ class ReferralAPI(APIView):
             'ref_prize': request.user.referrer_prize,
         }
         response.append(ref_details)
-        return Response({'response': response}, status=status.HTTP_200_OK)
+        return Response({'response': response, 'players': players}, status=status.HTTP_200_OK)
 
 
 class GameStatView(APIView):

@@ -124,5 +124,7 @@ class PreviousLottoAPI(viewsets.ViewSet):
             'number3Winners': DailyLottoTicket.objects.filter(daily_lotto=previous_daily_lotto, hits=3).count(),
         }
         response.append(details)
-        return Response({'response': response, 'winners': AlltimeSerializer(DailyLottoResult.objects.filter(daily_lotto=previous_daily_lotto), many=True).data}, status=status.HTTP_200_OK)
+        return Response({'response': response, 'winners': AlltimeSerializer(DailyLottoResult.objects.filter
+                                                                            (daily_lotto=previous_daily_lotto),
+                                                                            many=True).data}, status=status.HTTP_200_OK)
 
