@@ -1,3 +1,4 @@
+"""
 from __future__ import print_function
 import random
 from django.http import HttpResponse
@@ -46,3 +47,4 @@ def previous_day_APi(request):
 
 
 
+"""

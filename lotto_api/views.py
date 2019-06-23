@@ -1,3 +1,4 @@
+"""
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
@@ -128,3 +129,4 @@ class PreviousLottoAPI(viewsets.ViewSet):
                                                                             (daily_lotto=previous_daily_lotto),
                                                                             many=True).data}, status=status.HTTP_200_OK)
 
+"""

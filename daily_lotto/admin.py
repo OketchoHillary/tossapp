@@ -1,4 +1,4 @@
-
+"""
 from django.contrib import admin
 from daily_lotto.models import *
 
@@ -33,3 +33,4 @@ admin.site.register(DailyQuota)
 admin.site.register(DailyLottoTicket, DailyLottoTicketAdmin)
 admin.site.register(CommissionSum)
 
+"""
