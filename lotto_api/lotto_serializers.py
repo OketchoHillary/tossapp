@@ -1,4 +1,3 @@
-"""
 from rest_framework import serializers
 from daily_lotto.models import *
 
@@ -21,4 +20,3 @@ class AlltimeSerializer(serializers.ModelSerializer):
     class Meta:
         model = DailyLottoResult
         exclude = ['id']
-"""

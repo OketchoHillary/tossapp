@@ -1,4 +1,3 @@
-"""
 import datetime
 import random
 from daily_lotto.models import DailyLotto, DailyLottoTicket
@@ -37,4 +36,3 @@ def gen_winning_numbers():
     matches = list(set(winning_numbers).intersection(set(drawn_tickets)))
 
 
-"""
