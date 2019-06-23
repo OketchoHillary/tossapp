@@ -1,3 +1,4 @@
+from django.utils import timezone
 import random
 from daily_lotto.models import *
 from tossapp.models import *
@@ -81,8 +82,8 @@ def lotto_jackpot():
 
 
 def create_daily_lotto():
-    lotto = DailyLotto.objects.create(start_date=datetime.now(), start_time=datetime.now() + now_plus_1(),
-                                      lotto_type='D', )
+    lotto = DailyLotto.objects.create(start_date=timezone.now().isoformat(),
+                                      end_date=timezone.now() + now_plus_1(), lotto_type='D', )
     return lotto
 
 

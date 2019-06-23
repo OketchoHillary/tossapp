@@ -3,7 +3,6 @@ from django.db import models
 from django.dispatch import receiver
 from django.db.models.signals import post_save
 from accounts.models import Tuser
-from django.utils import timezone
 from tauth.settings import NUMBER_RANGE
 
 
@@ -33,15 +32,13 @@ class DailyLotto(models.Model):
     LOTTO_TYPE = (
         ('D', 'Daily'),
         ('H', 'Hourly'),
-        ('S', 'Quarterly'),
+        ('Q', 'Quarterly'),
     )
 
     lotto_id = models.AutoField(primary_key=True)
     lotto_type = models.CharField(max_length=1, choices=LOTTO_TYPE)
-    start_date = models.DateField(auto_now_add=True, null=False)
-    start_time = models.TimeField(auto_now_add=True, null=False)
-    end_date = models.DateField(editable=False, null=False)
-    end_time = models.TimeField(editable=False, null=False)
+    start_date = models.DateTimeField(auto_now_add=True)
+    end_date = models.DateTimeField(editable=False, null=True)
     win1 = models.IntegerField(default=0)
     win2 = models.IntegerField(default=0)
     win3 = models.IntegerField(default=0)
@@ -54,19 +51,9 @@ class DailyLotto(models.Model):
     def __str__(self):
         return '{:%Y-%m-%d %H:%M}'.format(self.start_date)
 
-    def save(self, *args, **kwargs):
-        if not self.lotto_id:
-            self.end_date = datetime.now() + now_plus_1()
-            self.end_time = datetime.now() + now_plus_1()
-        return super(DailyLotto, self).save(*args, **kwargs)
-
     class Meta:
         ordering = ["-start_date"]
         db_table = 'lotto'
-
-
-   # def __str__(self):
-         #return '{}, {}, {}, {}, {}, {}'.format(self.win1,self.win2,self.win3,self.win4,self.win5,self.win6)
 
 
 class DailyQuota(models.Model):
