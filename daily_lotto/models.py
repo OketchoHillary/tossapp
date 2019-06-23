@@ -38,7 +38,7 @@ class DailyLotto(models.Model):
     lotto_id = models.AutoField(primary_key=True)
     lotto_type = models.CharField(max_length=1, choices=LOTTO_TYPE)
     start_date = models.DateTimeField(auto_now_add=True)
-    end_date = models.DateTimeField(editable=False, null=True)
+    end_date = models.DateTimeField(auto_now_add=True)
     win1 = models.IntegerField(default=0)
     win2 = models.IntegerField(default=0)
     win3 = models.IntegerField(default=0)
