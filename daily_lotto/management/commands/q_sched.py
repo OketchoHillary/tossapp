@@ -1,7 +1,9 @@
 from django.core.management.base import BaseCommand
-from daily_lotto.lotto_components import *
+from daily_lotto.daily_l import *
 import schedule
 import time
+
+from daily_lotto.quaterly_lotto import create_quaterly_lotto, quaterly_draw
 
 
 class Command(BaseCommand):
@@ -12,11 +14,8 @@ class Command(BaseCommand):
 
         # schedule.every(1).minutes.do(create_daily_lotto())
         # schedule.every(1).minutes.do(daily_draw)
-        # schedule.every().day.at("23:55").do(daily_draw)
-        # schedule.every().day.at("00:00").do(create_daily_lotto)
-        schedule.every(6).hour.do(create_daily_lotto())
-        # schedule.every().monday.do(job)
-        # schedule.every().wednesday.at("13:15").do(job)
+        schedule.every(6).hour.do(create_quaterly_lotto())
+        schedule.every(295).minutes.do(quaterly_draw)
 
         while True:
             schedule.run_pending()

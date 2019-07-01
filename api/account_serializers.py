@@ -8,13 +8,14 @@ from rest_framework import serializers, exceptions
 from accounts.admin import validate_phone_number
 from accounts.models import *
 from accounts.utils import generate_verification_code
+from tossapp.sms_setting import sms
 
 
 def proper_dial(phone):
     if phone.startswith('0'):
-        phone = phone.replace('0', '256', 1)
-    elif phone.startswith('+256'):
-        phone = phone.replace('+256', '256', 1)
+        phone = phone.replace('0', '+256', 1)
+    elif phone.startswith('256'):
+        phone = phone.replace('256', '+256', 1)
     return phone
 
 
@@ -87,6 +88,7 @@ class UserSerializer(serializers.Serializer):
         user.phone_number = proper_dial(phone_number)
         user.set_password(validated_data['password'],)
         user.save()
+        # sms.send("Tossapp verification code: "+str(user.verification_code), [phone_number])
         return validated_data
 
 

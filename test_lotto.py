@@ -2,7 +2,7 @@ import os
 import sys
 
 from accounts.models import *
-from daily_lotto.lotto_components import *
+from daily_lotto.daily_l import *
 from tauth.settings import NUMBER_RANGE
 
 def test_lotto_draw():

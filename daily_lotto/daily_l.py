@@ -1,4 +1,3 @@
-from django.utils import timezone
 import random
 from daily_lotto.models import *
 from tossapp.models import *
@@ -65,7 +64,7 @@ def commission():
 def lotto_jackpot():
 
     # previous jackpot
-    my_p = DailyLotto.objects.all().values_list('jack_pot').order_by('-start_date')[1]
+    my_p = DailyLotto.objects.filter(lotto_type='D').values_list('jack_pot').order_by('-start_date')[1]
     pjackpot = int(my_p[0])
 
     # retrieving today's six_prize pool quota
@@ -123,7 +122,7 @@ def daily_draw():
 
         # creating winners
         DailyLottoResult.objects.create(daily_lotto=toss_lotto, hits_number_prize=matches_count, prize=0,
-                                            daily_lotto_ticket=c2, winners=p2)
+                                        daily_lotto_ticket=c2, winners=p2)
 
         # Commissions
         a = DailyLottoTicket.objects.filter(daily_lotto=toss_lotto, hits=3).count()
@@ -132,10 +131,10 @@ def daily_draw():
         d = DailyLottoTicket.objects.filter(daily_lotto=toss_lotto, hits=6).count()
 
         # backupJackpot
-        bp = DailyLotto.objects.all().values_list('backup_jackpot').order_by('-lotto_id')[1]
+        bp = DailyLotto.objects.filter(lotto_type='D').values_list('backup_jackpot').order_by('-lotto_id')[1]
         backup = int(bp[0])
 
-        p6 = DailyLotto.objects.all().values_list('jack_pot').order_by('-lotto_id')[0]
+        p6 = DailyLotto.objects.filter(lotto_type='D').values_list('jack_pot').order_by('-lotto_id')[0]
         pool6 = int(p6[0])
 
         pool5 = DailyQuota.objects.filter(daily_lotto=toss_lotto).values_list('five_number_prize_pool')
@@ -231,6 +230,6 @@ def daily_draw():
         my_backup_jackpot = backup + no3 + no4 + no5
 
         DailyLotto.objects.filter(lotto_id=lottoid).update(backup_jackpot=my_backup_jackpot)
-        print(cur_ticket,":",matches_count,"", "win")
+        print(cur_ticket, ":", matches_count, " win")
         
     print('Done')

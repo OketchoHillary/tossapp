@@ -1,13 +1,8 @@
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm, SetPasswordForm
-from django.urls import reverse_lazy
 from django.db.models import F
-from django.http import HttpResponseRedirect
-
 from accounts.admin import validate_phone_number
 from accounts.models import Tuser
-# from accounts.sendSms import send_verification_sms
-from accounts.utils import generate_verification_code
 #from tossapp.models import Notification
 from tossapp.models import Notification
 
@@ -25,7 +20,7 @@ class ForgotLoginPassForm(forms.Form):
         if not validate_phone_number(phone_number):
             raise forms.ValidationError("Please provide a valid MTN or Airtel number")
         if phone_number.startswith('0'):
-            phone_number = phone_number.replace('0','256',1)
+            phone_number = phone_number.replace('0','+256',1)
         if len(Tuser.objects.filter(phone_number=phone_number)) == 0:
             raise forms.ValidationError("We cannot find an account associated with this phone number")
         return phone_number
@@ -89,7 +84,7 @@ class ChangeNumberForm(forms.Form):
         if not validate_phone_number(phone_number):
             raise forms.ValidationError("Please provide a valid MTN or Airtel number")
         if phone_number.startswith('0'):
-            phone_number = phone_number.replace('0','256',1)
+            phone_number = phone_number.replace('0', '+256', 1)
         if len(Tuser.objects.filter(phone_number=phone_number)) != 0:
             raise forms.ValidationError("This phone number is already registered with another user.")
         return phone_number

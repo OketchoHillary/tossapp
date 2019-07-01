@@ -17,6 +17,7 @@ from django.views.decorators.debug import sensitive_post_parameters
 from accounts.forms import ActivationForm, AuthForm
 from accounts.models import Tuser
 from accounts.utils import generate_verification_code
+from tossapp.sms_setting import sms
 
 
 def activate(request, user):
@@ -75,7 +76,7 @@ def tlogin(request, template_name='registration/login.html',
                     code = generate_verification_code()
                     tuser.verification_code = code
                     tuser.save()
-                    # send_verification_sms(tuser.phone_number,tuser.verification_code)
+                    sms.send("Tossapp verification code: " + str(tuser.verification_code), [tuser.phone_number])
                     return HttpResponseRedirect(reverse_lazy('activate', kwargs={'user': tuser.username}))
     else:
         form = authentication_form(request)

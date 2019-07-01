@@ -1,7 +1,7 @@
 from __future__ import print_function
 import random
 from django.http import HttpResponse
-from daily_lotto.lotto_components import todays_lotto
+from daily_lotto.daily_l import todays_lotto
 from daily_lotto.models import *
 import datetime
 from django.core import serializers
@@ -35,12 +35,6 @@ def random_tickets(tick, req):
             DailyLottoTicket.objects.create(player_name=req.user, daily_lotto=todays_lotto(), n1=t1, n2=t2, n3=t3, n4=t4, n5=t5, n6=t6)
 
 
-def previous_day_APi(request):
-    my_s = DailyLotto.objects.filter(start_date=datetime.datetime.now()-datetime.timedelta(days=1))
-    json_s = json.loads(serializers.serialize("json", my_s))
-    for i, my_lotto in enumerate(my_s):
-        json_s[i]['fields']['end_date'] = my_lotto.end_date
-    return HttpResponse(json.dumps(json_s))
 
 
 

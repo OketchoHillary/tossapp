@@ -3,14 +3,13 @@ from __future__ import unicode_literals
 from django.contrib import messages
 from django.contrib.auth import login as django_login, logout as django_logout
 from rest_framework import generics, permissions, status
-from rest_framework.authentication import TokenAuthentication, SessionAuthentication
+from django.core import serializers
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.parsers import FileUploadParser, MultiPartParser, FormParser
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import viewsets, mixins
 from api.account_serializers import *
-from api.permissions import IsOwnerOrReadOnly
 import africastalking
 from tossapp.models import Notification
 
@@ -51,18 +50,18 @@ class ProfileView(APIView):
     queryset = Tuser.objects.all()
 
     def get(self, request):
-        response = []
         ref_details = {
             'rank': request.user.refferal_ranking,
             'username': request.user.username,
             'name': request.user.get_my_full_name(),
             'gender': request.user.sex,
             'location': request.user.address,
+            # 'country': serializers.serialize(request.user.country),
             'phone_number': request.user.phone_number,
             'balance': request.user.balance,
         }
-        response.append(ref_details)
-        return Response({'response': response}, status=status.HTTP_200_OK)
+
+        return Response({'response': ref_details}, status=status.HTTP_200_OK)
 
 
 class ProfileUpdateView(generics.RetrieveUpdateAPIView, mixins.UpdateModelMixin):
