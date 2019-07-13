@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+from django.contrib.auth.hashers import check_password
 from django.db.models import Count, F
 from rest_framework import status
 from tossapp_api.tossapp_serializers import *
@@ -61,25 +62,35 @@ class TransactionView(viewsets.ViewSet):
         depo = DepositSerializer(data=request.data, user=request.user)
         if depo.is_valid():
             amount = depo.validated_data["amount"]
-            if amount > 999:
-                Transaction.objects.create(user=request.user, transaction_type=0, status=1, payment_method=0,
-                                           amount=amount)
-                Tuser.objects.filter(id=request.user.id).update(balance=F("balance") + amount)
+            password = depo.validated_data["password"]
+            valid_password = check_password(password, request.user.password)
+            if valid_password:
+                if 1000 <= amount <= 10000:
+                    Transaction.objects.create(user=request.user, transaction_type=0, status=1, payment_method=0,
+                                               amount=amount)
+                    Tuser.objects.filter(id=request.user.id).update(balance=F("balance") + amount)
+                else:
+                    raise serializers.ValidationError("Deposits should range between 1000 to 10000")
             else:
-                raise serializers.ValidationError("Cant deposit less than 999 shillings")
+                raise serializers.ValidationError("wrong password")
         return Response(status=status.HTTP_202_ACCEPTED)
 
     def fund_withdraw(self, request):
-        depo = WithdrawSerializer(data=request.data, user=request.user)
-        if depo.is_valid():
-            amount = int(depo.validated_data["amount"])
-            if amount > 999:
-                Transaction.objects.create(user=request.user, transaction_type=1, status=1, payment_method=0,
-                                           amount=amount)
-                Tuser.objects.filter(id=request.user.id).update(balance=F("balance") - amount)
+        withdraw = WithdrawSerializer(data=request.data, user=request.user)
+        if withdraw.is_valid():
+            amount = withdraw.validated_data["amount"]
+            password = withdraw.validated_data["password"]
+            valid_password = check_password(password, request.user.password)
+            if valid_password:
+                if 1000 <= amount <= 10000:
+                    Transaction.objects.create(user=request.user, transaction_type=1, status=1, payment_method=0,
+                                               amount=amount)
+                    Tuser.objects.filter(id=request.user.id).update(balance=F("balance") - amount)
 
+                else:
+                    raise serializers.ValidationError("Withdrawals should range between 1000 to 10000")
             else:
-                raise serializers.ValidationError("Cant withdraw less than 999 shillings")
+                raise serializers.ValidationError("wrong password")
         return Response(status=status.HTTP_202_ACCEPTED)
 
 

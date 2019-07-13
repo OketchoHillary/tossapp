@@ -144,7 +144,7 @@ class PreviousLottoAPI(viewsets.ViewSet):
                                                                             (daily_lotto=previous_daily_lotto),
                                                                             many=True).data}, status=status.HTTP_200_OK)
 
-
+"""
 class TicketQuaterlyCreate(viewsets.ViewSet):
 
     def get(self):
@@ -279,6 +279,7 @@ class TicketHourlyCreate(viewsets.ViewSet):
         return Response({'code': 1, 'response': 'Successfully bought'})
 
 
+
 class MultipleHourlyTicket(viewsets.ViewSet):
     def get(self):
         response = []
@@ -325,4 +326,5 @@ class MultipleHourlyTicket(viewsets.ViewSet):
             raise serializers.ValidationError("Time has ended. Next lotto starts in 5 minutes time")
 
         return Response({'code': 1, 'response': 'Successfully bought'})
+        """
 

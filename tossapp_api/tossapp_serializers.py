@@ -36,18 +36,16 @@ class WithdrawSerializer(serializers.Serializer):
         self.user = kwargs.pop('user', None)
         super(WithdrawSerializer, self).__init__(*args, **kwargs)
 
-    amount = serializers.CharField()
+    amount = serializers.IntegerField()
     password = serializers.CharField()
-
-    def validate(self, validated_data):
-        password = self.validated_data.get("password", None)
-        if not self.user.check_password(password):
-            raise serializers.ValidationError('Incorrect password.')
-        return password
-        # return user if user.check_password(password) else None
 
 
 class DepositSerializer(serializers.Serializer):
+
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop('user', None)
+        super(DepositSerializer, self).__init__(*args, **kwargs)
+
     amount = serializers.IntegerField()
     password = serializers.CharField()
 
