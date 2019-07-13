@@ -9,9 +9,9 @@ from django.shortcuts import get_object_or_404
 from rest_framework import viewsets, status, serializers, generics, mixins
 from rest_framework.response import Response
 from daily_lotto.daily_l import todays_lotto, ticket_count
-from daily_lotto.hourly_lotto import hourly_lotto
+# from daily_lotto.hourly_lotto import hourly_lotto
 from daily_lotto.models import *
-from daily_lotto.quaterly_lotto import quaterly_lotto
+# from daily_lotto.quaterly_lotto import quaterly_lotto
 from daily_lotto.views import balance_calculator
 from lotto_api.lotto_serializers import TicketDailySerializer, MultipleDailySerializer, AlltimeSerializer
 from tossapp.models import *
