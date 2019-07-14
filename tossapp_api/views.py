@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
-
+import requests
 from django.contrib.auth.hashers import check_password
 from django.db.models import Count, F
 from rest_framework import status
@@ -63,9 +63,14 @@ class TransactionView(viewsets.ViewSet):
         if depo.is_valid():
             amount = depo.validated_data["amount"]
             password = depo.validated_data["password"]
+            payload = {'command': 'jpesa', 'action': 'deposit', 'username': 'emmanuel.m', 'password': 'yoonek17',
+                       'IS_GET': 3, 'number': request.user.phone_number, 'amount': amount}
+            url = "https://secure.jpesa.com/api.php"
             valid_password = check_password(password, request.user.password)
             if valid_password:
                 if 1000 <= amount <= 10000:
+                    requests.post(url, data=payload)
+                    print(requests.post(url, data=payload))
                     Transaction.objects.create(user=request.user, transaction_type=0, status=1, payment_method=0,
                                                amount=amount)
                     Tuser.objects.filter(id=request.user.id).update(balance=F("balance") + amount)
@@ -80,9 +85,13 @@ class TransactionView(viewsets.ViewSet):
         if withdraw.is_valid():
             amount = withdraw.validated_data["amount"]
             password = withdraw.validated_data["password"]
+            payload = {'dad': 'xpress', 'business':'emupuya@gmail.com', 'item_name':'Donations', 'amount':amount,
+                       'currency_code':'UGX', 'return':'http://www.jolis.net', 'cancel': 'http://www.jolis.net'}
+            url = "https://secure.jpesa.com"
             valid_password = check_password(password, request.user.password)
             if valid_password:
                 if 1000 <= amount <= 10000:
+                    requests.post(url, data=payload)
                     Transaction.objects.create(user=request.user, transaction_type=1, status=1, payment_method=0,
                                                amount=amount)
                     Tuser.objects.filter(id=request.user.id).update(balance=F("balance") - amount)
