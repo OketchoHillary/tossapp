@@ -124,6 +124,8 @@ class PreviousLottoAPI(viewsets.ViewSet):
     def get_previous_lottos(self, request, lotto_date):
         response = []
         previous_daily_lotto = get_object_or_404(DailyLotto, start_date=lotto_date, lotto_type='D')
+        previous_lotto = DailyLotto.objects.filter(lotto_type='D')[1]
+        pl = previous_lotto.end_date
 
         details = {
             'draw_date': previous_daily_lotto.end_date,
@@ -140,7 +142,7 @@ class PreviousLottoAPI(viewsets.ViewSet):
             'number3Winners': DailyLottoTicket.objects.filter(daily_lotto=previous_daily_lotto, hits=3).count(),
         }
         response.append(details)
-        return Response({'response': response, 'winners': AlltimeSerializer(DailyLottoResult.objects.filter
+        return Response({'response': response, 'previous_lotto': pl, 'winners': AlltimeSerializer(DailyLottoResult.objects.filter
                                                                             (daily_lotto=previous_daily_lotto),
                                                                             many=True).data}, status=status.HTTP_200_OK)
 
