@@ -8,6 +8,8 @@ from django.db.models import F
 from django.shortcuts import get_object_or_404
 from rest_framework import viewsets, status, serializers, generics, mixins
 from rest_framework.response import Response
+from rest_framework.views import APIView
+
 from daily_lotto.daily_l import todays_lotto, ticket_count
 from daily_lotto.hourly_lotto import hourly_lotto
 from daily_lotto.models import *
@@ -15,7 +17,7 @@ from daily_lotto.quaterly_lotto import quaterly_lotto
 from daily_lotto.views import balance_calculator
 from lotto_api.lotto_serializers import TicketDailySerializer, MultipleDailySerializer, AlltimeSerializer
 from tossapp.models import *
-
+from tossapp_api.tossapp_serializers import GamesHistorySerializer
 
 lotto_game = Game.objects.get(name='Daily Lotto')
 # lotto fee
@@ -328,3 +330,7 @@ class MultipleHourlyTicket(viewsets.ViewSet):
 
         return Response({'code': 1, 'response': 'Successfully bought'})
 
+
+class LottoStatView(APIView):
+    def get(self, request):
+        return Response(GamesHistorySerializer(Game_stat.objects.filter(user=request.user, game=lotto_game), many=True).data)

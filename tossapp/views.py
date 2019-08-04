@@ -1,10 +1,8 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import render, get_object_or_404
-# Create your views here.
 from django.template import RequestContext
 from django.views.decorators.csrf import csrf_protect
 from django.views.generic import TemplateView, ListView

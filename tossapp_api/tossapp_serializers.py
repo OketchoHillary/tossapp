@@ -47,5 +47,4 @@ class DepositSerializer(serializers.Serializer):
         super(DepositSerializer, self).__init__(*args, **kwargs)
 
     amount = serializers.IntegerField()
-    password = serializers.CharField()
 

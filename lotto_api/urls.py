@@ -12,6 +12,7 @@ urlpatterns = [
         name='other_hourly_tickets'),
     url(r'^all-time-winners', AllTimeWinnersAPI.as_view(), name='AllTimeWinnersAPI'),
     url(r'^(?P<lotto_date>.*)/$', PreviousLottoAPI.as_view({'get':'get_previous_lottos'}), name='PreviousLottoAPI'),
+    url(r'^lotto-stats$', LottoStatView.as_view(), name='lotto_stat'),
 ]
 
 

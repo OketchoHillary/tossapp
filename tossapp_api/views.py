@@ -62,22 +62,20 @@ class TransactionView(viewsets.ViewSet):
         depo = DepositSerializer(data=request.data, user=request.user)
         if depo.is_valid():
             amount = depo.validated_data["amount"]
-            password = depo.validated_data["password"]
+
             payload = {'command': 'jpesa', 'action': 'deposit', 'username': 'emmanuel.m', 'password': 'yoonek17',
                        'IS_GET': 3, 'number': request.user.phone_number, 'amount': amount}
             url = "https://secure.jpesa.com/api.php"
-            valid_password = check_password(password, request.user.password)
-            if valid_password:
-                if 1000 <= amount <= 10000:
-                    sent = requests.post(url, data=payload)
-                    print(sent.text)
-                    Transaction.objects.create(user=request.user, transaction_type=0, status=1, payment_method=0,
-                                               amount=amount)
-                    Tuser.objects.filter(id=request.user.id).update(balance=F("balance") + amount)
-                else:
-                    raise serializers.ValidationError("Deposits should range between 1000 to 10000")
+
+            if 1000 <= amount <= 10000:
+                sent = requests.post(url, data=payload)
+                print(sent.text)
+                Transaction.objects.create(user=request.user, transaction_type=0, status=1, payment_method=0,
+                                           amount=amount)
+                Tuser.objects.filter(id=request.user.id).update(balance=F("balance") + amount)
             else:
-                raise serializers.ValidationError("wrong password")
+                raise serializers.ValidationError("Deposits should range between 1000 to 10000")
+
         return Response(status=status.HTTP_202_ACCEPTED)
 
     def fund_withdraw(self, request):
