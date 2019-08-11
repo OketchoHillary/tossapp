@@ -66,10 +66,16 @@ class TransactionView(viewsets.ViewSet):
             payload = {'command': 'jpesa', 'action': 'deposit', 'username': 'emmanuel.m', 'password': 'yoonek17',
                        'IS_GET': 3, 'number': request.user.phone_number, 'amount': amount}
             url = "https://secure.jpesa.com/api.php"
+            # jpesa url
 
             if 1000 <= amount <= 10000:
                 sent = requests.post(url, data=payload)
                 print(sent.text)
+                playload1 = {'command': 'jpesa', 'action': 'info', 'username': 'emmanuel.m', 'password': 'yoonek17',
+                            'IS_GET': 3, 'tid': '0DBE1DBE3DEEAF0A66A910FB76374E33'}
+                info = requests.post(url, data=playload1)
+                print(info.text)
+
                 Transaction.objects.create(user=request.user, transaction_type=0, status=1, payment_method=0,
                                            amount=amount)
                 Tuser.objects.filter(id=request.user.id).update(balance=F("balance") + amount)
