@@ -82,7 +82,7 @@ class TransactionView(viewsets.ViewSet):
             else:
                 raise serializers.ValidationError("Deposits should range between 1000 to 10000")
 
-        return Response(status=status.HTTP_202_ACCEPTED)
+        return Response({'response': 'Successfully deposited'}, status=status.HTTP_202_ACCEPTED)
 
     def fund_withdraw(self, request):
         withdraw = WithdrawSerializer(data=request.data, user=request.user)
@@ -105,7 +105,7 @@ class TransactionView(viewsets.ViewSet):
                     raise serializers.ValidationError("Withdrawals should range between 1000 to 10000")
             else:
                 raise serializers.ValidationError("wrong password")
-        return Response(status=status.HTTP_202_ACCEPTED)
+        return Response({'response': 'Successfully withdrawn'}, status=status.HTTP_202_ACCEPTED)
 
 
 

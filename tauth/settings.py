@@ -34,7 +34,6 @@ ALLOWED_HOSTS = ['tossapp-api.herokuapp.com', '*']
 # Application definition
 
 INSTALLED_APPS = [
-    'accounts',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -46,6 +45,7 @@ INSTALLED_APPS = [
     'django_countries',
     'rest_framework',
     'rest_framework.authtoken',
+    'accounts',
     'api',
     'tossapp',
     'tossapp_api',
@@ -58,7 +58,7 @@ INSTALLED_APPS = [
     'flip_coin',
     'money_slot',
     'rock_paper_scissor',
-    'django'
+
 ]
 
 MIDDLEWARE = [
@@ -129,9 +129,9 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-AUTHENTICATION_BACKENDS = (
-    'accounts.backends.TauthBackend',
-)
+# AUTHENTICATION_BACKENDS = (
+#     'accounts.backends.TauthBackend',
+# )
 
 
 REST_FRAMEWORK = {

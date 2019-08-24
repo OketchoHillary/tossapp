@@ -14,21 +14,22 @@ Including another URLconf
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
 from django.conf import settings
-from django.conf.urls import url, include
+from django.conf.urls import re_path, include
 from django.conf.urls.static import static
 from django.contrib import admin
+from django.urls import path
 
 from accounts.views import user_logout
 
 
 urlpatterns = [
-    url(r'^admin/logout/$', user_logout, name='logout'),
-    url(r'^', include('accounts.urls')),
-    url(r'^api/v1/auth/', include('api.urls')),
-    url(r'^lotto-api/v1/', include('lotto_api.urls')),
-    url(r'^tossapp-api/v1/', include('tossapp_api.urls')),
-    url(r'^', include('tossapp.urls')),
-    url(r'^admin/', admin.site.urls),
+    path('admin/logout/', user_logout, name='logout'),
+    path('', include('accounts.urls')),
+    path('api/v1/auth/', include('api.urls')),
+    path('lotto-api/v1/', include('lotto_api.urls')),
+    path('tossapp-api/v1/', include('tossapp_api.urls')),
+    path('', include('tossapp.urls')),
+    path('admin/', admin.site.urls),
 ] \
               + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)\
               + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
