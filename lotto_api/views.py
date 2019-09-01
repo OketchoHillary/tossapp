@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+ # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
 # Create your views here.
@@ -6,17 +6,18 @@ import random
 
 from django.db.models import F
 from django.shortcuts import get_object_or_404
+from django.utils import timezone
 from rest_framework import viewsets, status, serializers, generics, mixins
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from daily_lotto.daily_l import todays_lotto, ticket_count
-from daily_lotto.hourly_lotto import hourly_lotto
-from daily_lotto.models import *
-from daily_lotto.quaterly_lotto import quaterly_lotto
-from daily_lotto.views import balance_calculator
+from lotto_api.daily_l import todays_lotto
+from lotto_api.hourly_lotto import hourly_lotto
+from lotto_api.models import DailyLotto, DailyLottoTicket, DailyLottoResult
+from lotto_api.quaterly_lotto import quaterly_lotto
 from lotto_api.lotto_serializers import TicketDailySerializer, MultipleDailySerializer, AlltimeSerializer
 from tossapp.models import *
+from tossapp_api.models import Game, Game_stat
 from tossapp_api.tossapp_serializers import GamesHistorySerializer
 
 lotto_game = Game.objects.get(name='Daily Lotto')
@@ -24,48 +25,66 @@ lotto_game = Game.objects.get(name='Daily Lotto')
 fee = DailyLotto.TICKET_PRICE * DailyLotto.HOUSE_COMMISSION_RATE
 
 
+def total(single_form, multiple_tickets_form):
+    return single_form + multiple_tickets_form
+
+
+def balance_calculator(lar, ry):
+    return lar - ry
+
+
+def random_tickets(tick, req):
+    my_quantity = tick.cleaned_data
+    quantity = my_quantity.get('quantity')
+
+    if quantity >= 1:
+         for random_qunatity in range(quantity):
+             generated_numbers = random.sample(range(1, 21), 6)
+             t1,t2,t3,t4,t5,t6 = generated_numbers
+             DailyLottoTicket.objects.create(player_name=req.user, daily_lotto=todays_lotto(), n1=t1, n2=t2, n3=t3,
+                                             n4=t4, n5=t5, n6=t6)
+
+
 class TicketDailyCreate(viewsets.ViewSet):
+     def get(self, request):
+         response = []
+         today_lotto = {
+             'bought_tickets': DailyLottoTicket.objects.filter(daily_lotto=todays_lotto()).count(),
+         }
+         response.append(today_lotto)
+         return Response({'response': today_lotto}, status=status.HTTP_200_OK)
 
-    def get(self, request):
-        response = []
-        today_lotto = {
-            'bought_tickets': DailyLottoTicket.objects.filter(daily_lotto=todays_lotto()).count(),
-        }
-        response.append(today_lotto)
-        return Response({'response': today_lotto}, status=status.HTTP_200_OK)
+     def my_tickets(self, request):
+         current_lotto = todays_lotto()
+         ends = current_lotto.end_date
 
-    def my_tickets(self, request):
-        current_lotto = todays_lotto()
-        ends = current_lotto.end_date
+         my_daily_tickets = TicketDailySerializer(data=request.data)
+         my_daily_tickets.is_valid(raise_exception=True)
+         n1 = my_daily_tickets.validated_data["n1"]
+         n2 = my_daily_tickets.validated_data["n2"]
+         n3 = my_daily_tickets.validated_data["n3"]
+         n4 = my_daily_tickets.validated_data["n4"]
+         n5 = my_daily_tickets.validated_data["n5"]
+         n6 = my_daily_tickets.validated_data["n6"]
+         ticket_cost = DailyLotto.TICKET_PRICE
 
-        my_daily_tickets = TicketDailySerializer(data=request.data)
-        my_daily_tickets.is_valid(raise_exception=True)
-        n1 = my_daily_tickets.validated_data["n1"]
-        n2 = my_daily_tickets.validated_data["n2"]
-        n3 = my_daily_tickets.validated_data["n3"]
-        n4 = my_daily_tickets.validated_data["n4"]
-        n5 = my_daily_tickets.validated_data["n5"]
-        n6 = my_daily_tickets.validated_data["n6"]
-        ticket_cost = DailyLotto.TICKET_PRICE
+         if timezone.now() < ends:
+             if ticket_cost < self.request.user.balance:
 
-        if timezone.now() < ends:
-            if ticket_cost < self.request.user.balance:
+                 DailyLottoTicket.objects.create(daily_lotto=todays_lotto(), player_name=self.request.user, n1=n1, n2=n2, n3=n3,
+                                                 n4=n4, n5=n5, n6=n6)
+                 # calculating users balance
+                 new_balance = balance_calculator(request.user.balance, ticket_cost)
+                 Tuser.objects.filter(username=self.request.user.username).update(balance=new_balance)
+                 Game_stat.objects.create(user=self.request.user, game=lotto_game, bet_amount=ticket_cost, status=Game_stat.PENDING,
+                                          service_fee=fee)
+                 Game.objects.filter(name='Daily Lotto').update(times_played=F("times_played") + 1)
+             else:
+                 raise serializers.ValidationError("Insufficient balance")
+         else:
+             raise serializers.ValidationError("Time has ended. Next lotto starts at midnight")
 
-                DailyLottoTicket.objects.create(daily_lotto=todays_lotto(), player_name=self.request.user, n1=n1, n2=n2, n3=n3,
-                                                n4=n4, n5=n5, n6=n6)
-
-                # calculating users balance
-                new_balance = balance_calculator(request.user.balance, ticket_cost)
-                Tuser.objects.filter(username=self.request.user.username).update(balance=new_balance)
-                Game_stat.objects.create(user=self.request.user, game=lotto_game, bet_amount=ticket_cost, status=Game_stat.PENDING,
-                                         service_fee=fee)
-                Game.objects.filter(name='Daily Lotto').update(times_played=F("times_played") + 1)
-            else:
-                raise serializers.ValidationError("Insufficient balance")
-        else:
-            raise serializers.ValidationError("Time has ended. Next lotto starts at midnight")
-
-        return Response({'code': 1, 'response': 'Successfully bought'})
+         return Response({'code': 1, 'response': 'Successfully bought'})
 
 
 class MultipleDailyTicket(viewsets.ViewSet):
@@ -103,8 +122,8 @@ class MultipleDailyTicket(viewsets.ViewSet):
                     new_balance = balance_calculator(request.user.balance, ticket_cost)
                     Tuser.objects.filter(username=self.request.user.username).update(balance=new_balance)
                     Game_stat.objects.create(user=self.request.user, game=lotto_game, bet_amount=ticket_cost,
-                                             status=Game_stat.PENDING,
-                                             service_fee=multiple_ticket_service_fee)
+                                            status=Game_stat.PENDING,
+                                            service_fee=multiple_ticket_service_fee)
                     Game.objects.filter(name='Daily Lotto').update(times_played=F("times_played") + 1)
                 else:
                     raise serializers.ValidationError("Ticket number should be greater than zero")
@@ -183,7 +202,7 @@ class TicketQuaterlyCreate(viewsets.ViewSet):
                 new_balance = balance_calculator(request.user.balance, ticket_cost)
                 Tuser.objects.filter(username=self.request.user.username).update(balance=new_balance)
                 Game_stat.objects.create(user=self.request.user, game=lotto_game, bet_amount=ticket_cost,
-                                         status=Game_stat.PENDING, service_fee=fee)
+                                        status=Game_stat.PENDING, service_fee=fee)
                 Game.objects.filter(name='Daily Lotto').update(times_played=F("times_played") + 1)
             else:
                 raise serializers.ValidationError("Insufficient balance")
@@ -227,8 +246,8 @@ class MultipleQuaterlyTicket(viewsets.ViewSet):
                     new_balance = balance_calculator(request.user.balance, ticket_cost)
                     Tuser.objects.filter(username=self.request.user.username).update(balance=new_balance)
                     Game_stat.objects.create(user=self.request.user, game=lotto_game, bet_amount=ticket_cost,
-                                             status=Game_stat.PENDING,
-                                             service_fee=multiple_ticket_service_fee)
+                                            status=Game_stat.PENDING,
+                                            service_fee=multiple_ticket_service_fee)
                     Game.objects.filter(name='Daily Lotto').update(times_played=F("times_played") + 1)
                 else:
                     raise serializers.ValidationError("Ticket number should be greater than zero")
@@ -274,7 +293,7 @@ class TicketHourlyCreate(viewsets.ViewSet):
                 new_balance = balance_calculator(request.user.balance, ticket_cost)
                 Tuser.objects.filter(username=self.request.user.username).update(balance=new_balance)
                 Game_stat.objects.create(user=self.request.user, game=lotto_game, bet_amount=ticket_cost,
-                                         status=Game_stat.PENDING, service_fee=fee)
+                                        status=Game_stat.PENDING, service_fee=fee)
                 Game.objects.filter(name='Daily Lotto').update(times_played=F("times_played") + 1)
             else:
                 raise serializers.ValidationError("Insufficient balance")

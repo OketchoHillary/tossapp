@@ -28,7 +28,7 @@ SECRET_KEY = 'c4(e91q)de5(klm^q=!e)o&ao!bs5yzgsgs0zpmbp-r@-+11(2'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['tossapp-api.herokuapp.com', '*']
+ALLOWED_HOSTS = ['tossapp-accounts_api.herokuapp.com', '*']
 
 
 # Application definition
@@ -45,19 +45,16 @@ INSTALLED_APPS = [
     'django_countries',
     'rest_framework',
     'rest_framework.authtoken',
-    'accounts',
-    'api',
+    'accounts_api',
     'tossapp',
     'tossapp_api',
-    'daily_lotto',
     'lotto_api',
-    #'mod_wsgi.server',
-    'testapp',
+    'askapp',
     'django_ajax',
-    'compound_box',
-    'flip_coin',
-    'money_slot',
-    'rock_paper_scissor',
+    'sky_box_api',
+    'fc_api',
+    'ms_api',
+    'rps_api',
 
 ]
 
@@ -130,7 +127,7 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 # AUTHENTICATION_BACKENDS = (
-#     'accounts.backends.TauthBackend',
+#     'accounts_api.backends.TauthBackend',
 # )
 
 
@@ -138,7 +135,7 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.TokenAuthentication',
         'rest_framework.authentication.SessionAuthentication',
-        # 'api.authentication.TossApiAuthentication',
+        # 'accounts_api.authentication.TossApiAuthentication',
     ),
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
@@ -180,7 +177,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 
-AUTH_USER_MODEL = 'accounts.Tuser'
+AUTH_USER_MODEL = 'accounts_api.Tuser'
 LOGIN_REDIRECT_URL = '/'
 LOGIN_URL = '/login'
 

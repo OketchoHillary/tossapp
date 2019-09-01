@@ -880,7 +880,7 @@ var has = Object.prototype.hasOwnProperty;
  *
  * @param {String} query The query string that needs to be parsed.
  * @returns {Object}
- * @api public
+ * @accounts_api public
  */
 function querystring(query) {
   var parser = /([^=?&]+)=?([^&]*)/g
@@ -906,7 +906,7 @@ function querystring(query) {
  * @param {Object} obj Object that should be transformed.
  * @param {String} prefix Optional prefix.
  * @returns {String}
- * @api public
+ * @accounts_api public
  */
 function querystringify(obj, prefix) {
   prefix = prefix || '';
@@ -943,7 +943,7 @@ exports.parse = querystring;
  * @param {Number|String} port Port number we need to check
  * @param {String} protocol Protocol we need to check against.
  * @returns {Boolean} Is it a default port for the given protocol
- * @api private
+ * @accounts_api private
  */
 module.exports = function required(port, protocol) {
   protocol = protocol.split(':')[0];
@@ -1016,7 +1016,7 @@ var rules = [
  *
  * @param {String} address URL we want to extract from.
  * @return {ProtocolExtract} Extracted information.
- * @api private
+ * @accounts_api private
  */
 function extractProtocol(address) {
   var match = protocolre.exec(address);
@@ -1034,7 +1034,7 @@ function extractProtocol(address) {
  * @param {String} relative Pathname of the relative URL.
  * @param {String} base Pathname of the base URL.
  * @return {String} Resolved pathname.
- * @api private
+ * @accounts_api private
  */
 function resolve(relative, base) {
   var path = (base || '/').split('/').slice(0, -1).concat(relative.split('/'))
@@ -1071,7 +1071,7 @@ function resolve(relative, base) {
  * @param {String} address URL we want to parse.
  * @param {Object|String} location Location defaults for relative paths.
  * @param {Boolean|Function} parser Parser for the query string.
- * @api public
+ * @accounts_api public
  */
 function URL(address, location, parser) {
   if (!(this instanceof URL)) {
@@ -1088,7 +1088,7 @@ function URL(address, location, parser) {
   // The following if statements allows this module two have compatibility with
   // 2 different API:
   //
-  // 1. Node.js's `url.parse` api which accepts a URL, boolean as arguments
+  // 1. Node.js's `url.parse` accounts_api which accepts a URL, boolean as arguments
   //    where the boolean indicates that the query string should also be parsed.
   //
   // 2. The `URL` interface of the browser which accepts a URL, object as
@@ -1212,7 +1212,7 @@ function URL(address, location, parser) {
  *                               When setting the protocol, double slash will be
  *                               removed from the final url if it is true.
  * @returns {URL}
- * @api public
+ * @accounts_api public
  */
 URL.prototype.set = function set(part, value, fn) {
   var url = this;
@@ -1293,7 +1293,7 @@ URL.prototype.set = function set(part, value, fn) {
  *
  * @param {Function} stringify Optional query stringify function.
  * @returns {String}
- * @api public
+ * @accounts_api public
  */
 URL.prototype.toString = function toString(stringify) {
   if (!stringify || 'function' !== typeof stringify) stringify = qs.stringify;
@@ -1359,7 +1359,7 @@ var ignore = { hash: 1, query: 1 }
  *
  * @param {Object|String} loc Optional default location object.
  * @returns {Object} lolcation object.
- * @api public
+ * @accounts_api public
  */
 module.exports = function lolcation(loc) {
   loc = loc || global.location || {};

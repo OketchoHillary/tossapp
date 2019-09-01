@@ -89,7 +89,7 @@ $(function () {
   })
 
   // API Explorer
-  $('form.api-interaction').submit(function (event) {
+  $('form.accounts_api-interaction').submit(function (event) {
     event.preventDefault()
 
     var $form = $(this).closest('form')

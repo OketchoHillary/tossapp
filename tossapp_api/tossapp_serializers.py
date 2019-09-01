@@ -1,5 +1,6 @@
 from rest_framework import serializers
-from tossapp.models import *
+
+from tossapp_api.models import Notification, Game, Game_stat, Transaction
 
 
 class NotificationsSerializer(serializers.ModelSerializer):

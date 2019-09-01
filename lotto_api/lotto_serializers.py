@@ -1,5 +1,6 @@
 from rest_framework import serializers
-from daily_lotto.models import *
+
+from lotto_api.models import DailyLottoResult
 
 
 class TicketDailySerializer(serializers.Serializer):

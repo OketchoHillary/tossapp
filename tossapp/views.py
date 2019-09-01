@@ -1,13 +1,12 @@
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required
 from django.urls import reverse_lazy
-from django.http import HttpResponseRedirect, Http404
-from django.shortcuts import render, get_object_or_404
+from django.http import HttpResponseRedirect
+from django.shortcuts import render
 from django.template import RequestContext
 from django.views.decorators.csrf import csrf_protect
 from django.views.generic import TemplateView, ListView
-from tossapp.forms import ContactForm
-from tossapp.models import Notification, Faq
+from tossapp_api.forms import ContactForm
+from tossapp.models import Faq
 
 
 def index(request):
@@ -55,17 +54,6 @@ def about_us(request):
     page_title = 'About Us | Tossapp'
     page_intro = 'About Us'
     return render(request, 'tossapp/abouts_us.html', locals(), context)
-
-
-@login_required
-def notification_status(request, n_id):
-    if request.user.is_authenticated:
-        n_s = get_object_or_404(Notification, pk=n_id)
-        n_s.seen_status = True
-        n_s.save()
-        return HttpResponseRedirect(reverse_lazy('dashboard_notifications'))
-    else:
-        raise Http404
 
 
 class Latest_events(TemplateView):

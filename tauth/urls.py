@@ -14,19 +14,18 @@ Including another URLconf
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
 from django.conf import settings
-from django.conf.urls import re_path, include
+from django.conf.urls import include
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path
 
-from accounts.views import user_logout
+from accounts_api.views import user_logout
 
 
 urlpatterns = [
     path('admin/logout/', user_logout, name='logout'),
-    path('', include('accounts.urls')),
-    path('api/v1/auth/', include('api.urls')),
-    path('lotto-api/v1/', include('lotto_api.urls')),
+    path('accounts/v1/auth/', include('accounts_api.urls')),
+    # path('lotto-api/v1/', include('lotto_api.urls')),
     path('tossapp-api/v1/', include('tossapp_api.urls')),
     path('', include('tossapp.urls')),
     path('admin/', admin.site.urls),

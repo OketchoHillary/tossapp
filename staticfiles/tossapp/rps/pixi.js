@@ -910,7 +910,7 @@
              * An `Events` instance is a plain object whose properties are event names.
              *
              * @constructor
-             * @api private
+             * @accounts_api private
              */
             function Events() {}
 
@@ -938,7 +938,7 @@
              * @param {Mixed} context The context to invoke the listener with.
              * @param {Boolean} [once=false] Specify if the listener is a one-time listener.
              * @constructor
-             * @api private
+             * @accounts_api private
              */
             function EE(fn, context, once) {
                 this.fn = fn;
@@ -951,7 +951,7 @@
              * `EventEmitter` interface.
              *
              * @constructor
-             * @api public
+             * @accounts_api public
              */
             function EventEmitter() {
                 this._events = new Events();
@@ -963,7 +963,7 @@
              * listeners.
              *
              * @returns {Array}
-             * @api public
+             * @accounts_api public
              */
             EventEmitter.prototype.eventNames = function eventNames() {
                 var names = [],
@@ -988,7 +988,7 @@
              * @param {String|Symbol} event The event name.
              * @param {Boolean} exists Only check if there are listeners.
              * @returns {Array|Boolean}
-             * @api public
+             * @accounts_api public
              */
             EventEmitter.prototype.listeners = function listeners(event, exists) {
                 var evt = prefix ? prefix + event : event,
@@ -1010,7 +1010,7 @@
              *
              * @param {String|Symbol} event The event name.
              * @returns {Boolean} `true` if the event had listeners, else `false`.
-             * @api public
+             * @accounts_api public
              */
             EventEmitter.prototype.emit = function emit(event, a1, a2, a3, a4, a5) {
                 var evt = prefix ? prefix + event : event;
@@ -1085,7 +1085,7 @@
              * @param {Function} fn The listener function.
              * @param {Mixed} [context=this] The context to invoke the listener with.
              * @returns {EventEmitter} `this`.
-             * @api public
+             * @accounts_api public
              */
             EventEmitter.prototype.on = function on(event, fn, context) {
                 var listener = new EE(fn, context || this),
@@ -1105,7 +1105,7 @@
              * @param {Function} fn The listener function.
              * @param {Mixed} [context=this] The context to invoke the listener with.
              * @returns {EventEmitter} `this`.
-             * @api public
+             * @accounts_api public
              */
             EventEmitter.prototype.once = function once(event, fn, context) {
                 var listener = new EE(fn, context || this, true),
@@ -1126,7 +1126,7 @@
              * @param {Mixed} context Only remove the listeners that have this context.
              * @param {Boolean} once Only remove one-time listeners.
              * @returns {EventEmitter} `this`.
-             * @api public
+             * @accounts_api public
              */
             EventEmitter.prototype.removeListener = function removeListener(event, fn, context, once) {
                 var evt = prefix ? prefix + event : event;
@@ -1172,7 +1172,7 @@
              *
              * @param {String|Symbol} [event] The event name.
              * @returns {EventEmitter} `this`.
-             * @api public
+             * @accounts_api public
              */
             EventEmitter.prototype.removeAllListeners = function removeAllListeners(event) {
                 var evt;
@@ -23034,7 +23034,7 @@
                         style = new _TextStyle2.default(style);
                     }
 
-                    // build canvas api font setting from individual components. Convert a numeric style.fontSize to px
+                    // build canvas accounts_api font setting from individual components. Convert a numeric style.fontSize to px
                     var fontSizeString = typeof style.fontSize === 'number' ? style.fontSize + 'px' : style.fontSize;
 
                     // Clean-up fontFamily property by quoting each font name
