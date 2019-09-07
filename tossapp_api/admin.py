@@ -1,6 +1,6 @@
 from django.contrib import admin
 from tossapp_api.forms import *
-from tossapp_api.models import Notification, Game_stat, Transaction, Game
+from tossapp_api.models import Notification, Game_stat, Transaction, Game, System_info
 from tossapp.models import Faq, Contact_us
 
 
@@ -44,4 +44,5 @@ admin.site.register(Game, GameAdmin)
 admin.site.register(Game_stat, Game_statAdmin)
 admin.site.register(Faq, FaqAdmin)
 admin.site.register(Contact_us, ContactUsAdmin)
+admin.site.register(System_info)
 

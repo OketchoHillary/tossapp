@@ -17,7 +17,7 @@ def content_file_name(instance, filename):
 
 class Game(models.Model):
     name = models.CharField(max_length=30, unique=True)
-    display_photo = models.ImageField(upload_to=content_file_name, default=None)
+    display_photo = models.ImageField(upload_to=content_file_name, default='games/Daily_lotto.jpg')
     slug = models.SlugField(max_length=230, unique=True)
     times_played = models.BigIntegerField(default=0)
 
@@ -135,4 +135,11 @@ class Notification(models.Model):
 #     timestamp = models.DateTimeField(auto_now_add=True, editable=False, null=False, blank=False)
 
 
+class System_info(models.Model):
+    domain = models.URLField()
 
+    def __unicode__(self):
+        return self.domain
+
+    class Meta:
+        db_table = 'system_info'

@@ -199,3 +199,8 @@ class ForgotPassSerializer(serializers.Serializer):
 
 class EnterResetSerializer(serializers.Serializer):
     reset_code = serializers.CharField(required=True)
+
+
+class RestePassword(serializers.Serializer):
+    password = serializers.CharField()
+    confirm_password = serializers.CharField()

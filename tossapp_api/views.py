@@ -40,6 +40,7 @@ class ReferralAPI(APIView):
 
 
 class GameStatView(APIView):
+
     def get(self, request):
         return Response(GamesHistorySerializer(Game_stat.objects.filter(user=request.user), many=True).data)
 
@@ -52,13 +53,14 @@ class TransactionHistoryView(APIView):
 class TransactionView(viewsets.ViewSet):
     def get(self, request):
         response = []
-        bal = {
+        info = {
+            'phone_number': request.user.phone_number,
             'balance': request.user.balance,
         }
 
-        response.append(bal)
+        response.append(info)
 
-        return Response({'response': bal}, status=status.HTTP_200_OK)
+        return Response({'response': info}, status=status.HTTP_200_OK)
 
     def fund_deposit(self, request):
         depo = DepositSerializer(data=request.data, user=request.user)
@@ -67,16 +69,16 @@ class TransactionView(viewsets.ViewSet):
 
             payload = {'command': 'jpesa', 'action': 'deposit', 'username': 'emmanuel.m', 'password': 'yoonek17',
                        'IS_GET': 3, 'number': request.user.phone_number, 'amount': amount}
-            url = "https://secure.jpesa.com/accounts_api.php"
             # jpesa url
+            url = "https://secure.jpesa.com/api.php"
 
             if 1000 <= amount <= 10000:
                 sent = requests.post(url, data=payload)
                 print(sent.text)
-                playload1 = {'command': 'jpesa', 'action': 'info', 'username': 'emmanuel.m', 'password': 'yoonek17',
-                             'IS_GET': 3, 'tid': '0DBE1DBE3DEEAF0A66A910FB76374E33'}
-                info = requests.post(url, data=playload1)
-                print(info.text)
+                # playload1 = {'command': 'jpesa', 'action': 'info', 'username': 'emmanuel.m', 'password': 'yoonek17',
+                #              'IS_GET': 3, 'tid': '0DBE1DBE3DEEAF0A66A910FB76374E33'}
+                # info = requests.post(url, data=playload1)
+                # print(info.text)
 
                 Transaction.objects.create(user=request.user, transaction_type=0, status=1, payment_method=0,
                                            amount=amount)
@@ -91,9 +93,9 @@ class TransactionView(viewsets.ViewSet):
         if withdraw.is_valid():
             amount = withdraw.validated_data["amount"]
             password = withdraw.validated_data["password"]
+            url = "https://secure.jpesa.com/api.php"
             payload = {'command': 'jpesa', 'action': 'withdraw', 'username': 'emmanuel.m', 'password': 'yoonek17',
                        'IS_GET': 3, 'number': request.user.phone_number, 'amount': amount}
-            url = "https://secure.jpesa.com/accounts_api.php"
             valid_password = check_password(password, request.user.password)
             if valid_password:
                 if 1000 <= amount <= 10000:
@@ -108,7 +110,4 @@ class TransactionView(viewsets.ViewSet):
             else:
                 raise serializers.ValidationError("wrong password")
         return Response({'response': 'Successfully withdrawn'}, status=status.HTTP_202_ACCEPTED)
-
-
-
 
