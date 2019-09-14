@@ -202,5 +202,6 @@ class EnterResetSerializer(serializers.Serializer):
 
 
 class RestePassword(serializers.Serializer):
+    code = serializers.CharField()
     password = serializers.CharField()
     confirm_password = serializers.CharField()

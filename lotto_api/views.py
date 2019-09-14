@@ -20,7 +20,7 @@ from tossapp.models import *
 from tossapp_api.models import Game, Game_stat
 from tossapp_api.tossapp_serializers import GamesHistorySerializer
 
-lotto_game = Game.objects.get_or_create(name='Daily Lotto')
+lotto_game = Game.objects.get(name='Daily Lotto')
 # lotto fee
 fee = DailyLotto.TICKET_PRICE * DailyLotto.HOUSE_COMMISSION_RATE
 
@@ -38,11 +38,11 @@ def random_tickets(tick, req):
     quantity = my_quantity.get('quantity')
 
     if quantity >= 1:
-         for random_qunatity in range(quantity):
-             generated_numbers = random.sample(range(1, 21), 6)
-             t1,t2,t3,t4,t5,t6 = generated_numbers
-             DailyLottoTicket.objects.create(player_name=req.user, daily_lotto=todays_lotto(), n1=t1, n2=t2, n3=t3,
-                                             n4=t4, n5=t5, n6=t6)
+        for random_qunatity in range(quantity):
+            generated_numbers = random.sample(range(1, 21), 6)
+            t1,t2,t3,t4,t5,t6 = generated_numbers
+            DailyLottoTicket.objects.create(player_name=req.user, daily_lotto=todays_lotto(), n1=t1, n2=t2, n3=t3,
+                                            n4=t4, n5=t5, n6=t6)
 
 
 class TicketDailyCreate(viewsets.ViewSet):
@@ -123,8 +123,8 @@ class MultipleDailyTicket(viewsets.ViewSet):
                     new_balance = balance_calculator(request.user.balance, ticket_cost)
                     Tuser.objects.filter(username=self.request.user.username).update(balance=new_balance)
                     Game_stat.objects.create(user=self.request.user, game=lotto_game, bet_amount=ticket_cost,
-                                            status=Game_stat.PENDING,
-                                            service_fee=multiple_ticket_service_fee)
+                                             status=Game_stat.PENDING,
+                                             service_fee=multiple_ticket_service_fee)
                     Game.objects.filter(name='Daily Lotto').update(times_played=F("times_played") + 1)
                 else:
                     raise serializers.ValidationError("Ticket number should be greater than zero")
@@ -144,10 +144,19 @@ class AllTimeWinnersAPI(generics.ListAPIView, mixins.ListModelMixin):
 class PreviousLottoAPI(viewsets.ViewSet):
 
     def get_previous_lottos(self, request, lotto_date):
-        response = []
-        previous_daily_lotto = get_object_or_404(DailyLotto, start_date=lotto_date, lotto_type='D')
-        previous_lotto = DailyLotto.objects.filter(lotto_type='D')[1]
-        pl = previous_lotto.end_date
+
+        this_lotto1 = DailyLotto.objects.filter(lotto_type='D').latest('end_date')
+        this_lotto = DailyLotto.objects.filter(lotto_type='D')[1]
+
+        if not lotto_date:
+            current = this_lotto1.end_date
+        else:
+            current = this_lotto.end_date
+
+        # next = current.next()
+        # previous = current.previous()
+        print(current)
+        previous_daily_lotto = get_object_or_404(DailyLotto, end_date=lotto_date, lotto_type='D')
 
         details = {
             'draw_date': previous_daily_lotto.end_date,
@@ -163,10 +172,10 @@ class PreviousLottoAPI(viewsets.ViewSet):
             'number4Winners': DailyLottoTicket.objects.filter(daily_lotto=previous_daily_lotto, hits=4).count(),
             'number3Winners': DailyLottoTicket.objects.filter(daily_lotto=previous_daily_lotto, hits=3).count(),
         }
-        response.append(details)
-        return Response({'response': response, 'previous_lotto': pl, 'winners': AlltimeSerializer(DailyLottoResult.objects.filter
-                                                                            (daily_lotto=previous_daily_lotto),
-                                                                            many=True).data}, status=status.HTTP_200_OK)
+
+        return Response({'response': details, 'lotto': current, 'winners': AlltimeSerializer(
+            DailyLottoResult.objects.filter(daily_lotto__end_date=previous_daily_lotto.end_date),
+            many=True).data}, status=status.HTTP_200_OK)
 
 
 class TicketQuaterlyCreate(viewsets.ViewSet):

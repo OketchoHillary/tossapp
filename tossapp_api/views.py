@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 import requests
 from django.contrib.auth.hashers import check_password
@@ -26,17 +25,18 @@ class GameAPIView(APIView):
 class ReferralAPI(APIView):
 
     def get(self, request):
-        response = []
-        t_user_count = Tuser.objects.filter(referrer=request.user).count()
+
+        my_referrals = Tuser.objects.filter(referrer=request.user).annotate(num_refferals=Count('referrals')).order_by('-num_refferals')
         players = Tuser.objects.all().annotate(num_refferals=Count('referrals')).order_by('-num_refferals')[:10]
+
         ref_details = {
             'rank': request.user.refferal_ranking,
-            'count': t_user_count,
-            'points': request.user.points,
+            'count': my_referrals.count(),
             'ref_prize': request.user.referrer_prize,
         }
-        response.append(ref_details)
-        return Response({'response': response, 'players': players}, status=status.HTTP_200_OK)
+
+        return Response({'response': ref_details, 'players': PlayerSerializer(players, many=True).data,
+                         'my_refs': PlayerSerializer(my_referrals, many=True).data}, status=status.HTTP_200_OK)
 
 
 class GameStatView(APIView):
@@ -52,13 +52,11 @@ class TransactionHistoryView(APIView):
 
 class TransactionView(viewsets.ViewSet):
     def get(self, request):
-        response = []
+
         info = {
             'phone_number': request.user.phone_number,
             'balance': request.user.balance,
         }
-
-        response.append(info)
 
         return Response({'response': info}, status=status.HTTP_200_OK)
 
@@ -67,18 +65,14 @@ class TransactionView(viewsets.ViewSet):
         if depo.is_valid():
             amount = depo.validated_data["amount"]
 
-            payload = {'command': 'jpesa', 'action': 'deposit', 'username': 'emmanuel.m', 'password': 'yoonek17',
-                       'IS_GET': 3, 'number': request.user.phone_number, 'amount': amount}
             # jpesa url
             url = "https://secure.jpesa.com/api.php"
+            payload = {'command': 'jpesa', 'action': 'deposit', 'username': 'emmanuel.m', 'password': 'yoonek17',
+                       'IS_GET': 3, 'number': request.user.phone_number, 'amount': amount}
 
             if 1000 <= amount <= 10000:
                 sent = requests.post(url, data=payload)
-                print(sent.text)
-                # playload1 = {'command': 'jpesa', 'action': 'info', 'username': 'emmanuel.m', 'password': 'yoonek17',
-                #              'IS_GET': 3, 'tid': '0DBE1DBE3DEEAF0A66A910FB76374E33'}
-                # info = requests.post(url, data=playload1)
-                # print(info.text)
+                print(sent.status_code)
 
                 Transaction.objects.create(user=request.user, transaction_type=0, status=1, payment_method=0,
                                            amount=amount)

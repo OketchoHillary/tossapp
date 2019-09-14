@@ -169,25 +169,6 @@ class Tuser(AbstractBaseUser):
         ordering = ['referrals']
 
 
-# @receiver(post_save, sender=Tuser)
-# def create_auth_token(sender, created, instance, **kwargs):
-#         if created:
-#             token = Token(user=instance)
-#             token.save()
-
-
-"""
-        def restore_objects(self, attrs, instance=None):
-            if instance is not None:
-                instance.tuser.username = attrs.get('user.username', instance.tuser.username)
-                instance.tuser.phone_number = attrs.get('user.phone_number', instance.tuser.phone_number)
-                instance.tuser.sex = attrs.get('user.sex', instance.tuser.sex)
-                instance.tuser.password = attrs.get('user.password', instance.tuser.password)
-            user = Tuser.objects.create(username=attrs.get('user.username'), phone_number=attrs.get('user.phone_number'), sex=attrs.get('user.sex'), password=attrs.get('user.password'))
-            return Tuser(user=user)
-"""
-
-
 class Reset_password(models.Model):
     user = models.ForeignKey(Tuser, on_delete=models.CASCADE)
     password_reset = models.CharField(max_length=8, blank=True, null=True)

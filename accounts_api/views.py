@@ -165,7 +165,7 @@ class ForgotPassword(APIView):
                 Reset_password.objects.create(user=user)
             else:
                 Reset_password.objects.update(user=user, password_reset=pass_res_code())
-            sms.send("Tossapp Password reset code: " + str(pass_res_code()), [proper_dial(mobile)])
+            # sms.send("Tossapp Password reset code: " + str(pass_res_code()), [proper_dial(mobile)])
             return Response({'code': 1, 'response': password_rese.data}, status=status.HTTP_200_OK)
         return Response({'code': 0, 'response': password_rese.errors}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -177,16 +177,24 @@ class ResetCode(viewsets.ViewSet):
     def post_code(self, request, username):
         this_user = Tuser.objects.get(username=username)
         code = EnterResetSerializer(data=request.data)
+        my_code = Reset_password.objects.filter(user=this_user)[0]
+        user_code = my_code.password_reset
         if code.is_valid():
             reset_code = code.validated_data['reset_code']
-            print(reset_code)
-            return Response({'code': 1, 'response': code.data}, status=status.HTTP_200_OK)
+            if user_code == reset_code:
+                return Response({'code': 1, 'response': code.data}, status=status.HTTP_200_OK)
         return Response({'code': 0, 'response': code.errors}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class PasswordReset(viewsets.ViewSet):
     authentication_classes = ()
     permission_classes = ()
+
+    def get_code(self, request, username):
+        this_user = Tuser.objects.get(username=username)
+        my_code = Reset_password.objects.filter(user=this_user)[0]
+        user_code = my_code.password_reset
+        return Response({'reset_code': user_code}, status.HTTP_200_OK)
 
     def reset_pass(self, request, username):
         this_user = Tuser.objects.get(username=username)
@@ -196,7 +204,7 @@ class PasswordReset(viewsets.ViewSet):
             confirm_password = pass_reset.validated_data['confirm_password']
             print(password)
             return Response({'code': 1, 'response': pass_reset.data}, status=status.HTTP_200_OK)
-        return Response({'code': 0, 'response': pass_reset.errors}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({'code': 0}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class ResendCode(viewsets.ViewSet):
@@ -205,6 +213,6 @@ class ResendCode(viewsets.ViewSet):
 
     def resend_code(self, request, username):
         this_user = Tuser.objects.get(username=username)
-        Tuser.objects.filter(username=username).update(verification_code=generate_verification_code())
-        # sms.send("Tossapp Verification code: " + str(this_user.verification_code), [this_user.phone_number])
+        Tuser.objects.filter(username=this_user.username).update(verification_code=generate_verification_code())
+        sms.send("Tossapp Verification code: " + str(this_user.verification_code), [this_user.phone_number])
         return Response({'code': 1}, status=status.HTTP_200_OK)

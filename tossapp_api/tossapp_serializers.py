@@ -1,5 +1,6 @@
 from rest_framework import serializers
 
+from accounts_api.models import Tuser
 from tossapp_api.models import Notification, Game, Game_stat, Transaction
 
 
@@ -8,6 +9,12 @@ class NotificationsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Notification
         fields = '__all__'
+
+
+class PlayerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Tuser
+        fields = ['id', 'username']
 
 
 class GamesSerializer(serializers.ModelSerializer):

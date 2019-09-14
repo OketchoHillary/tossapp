@@ -9,8 +9,6 @@ urlpatterns = [
     path('create-user/', UserCreate.as_view(), name='createUserApi'),
     path('login/', LoginView.as_view(), name='loginUserApi'),
     path('activate-user/<str:username>/', VerificationAPI.as_view({'post': 'verify_user'}), name='verify_user_api'),
-    path('view-verification/<str:username>', VerificationAPI.as_view({'get': 'get_verification_code'}),
-         name='get_verification_code_api'),
     path('logout', LogoutView.as_view(), name='logoutUserApi'),
     path('user-profile/', ProfileView.as_view(), name='profileViewApi'),
     path('profile-update/', ProfileUpdateView.as_view(), name='profileUpdateApi'),
