@@ -3,8 +3,6 @@ import requests
 from django.contrib.auth.hashers import check_password
 from django.db.models import Count, F
 from rest_framework import status
-
-from accounts_api.models import Tuser
 from tossapp_api.tossapp_serializers import *
 from rest_framework.views import APIView
 from rest_framework import viewsets

@@ -25,8 +25,8 @@ from accounts_api.views import user_logout
 urlpatterns = [
     path('admin/logout/', user_logout, name='logout'),
     path('accounts/v1/auth/', include('accounts_api.urls')),
-    path('lotto-api/v1/', include('lotto_api.urls')),
-    path('tossapp-api/v1/', include('tossapp_api.urls')),
+    # path('lotto-api/v1/', include('lotto_api.urls')),
+    # path('tossapp-api/v1/', include('tossapp_api.urls')),
     path('', include('tossapp.urls')),
     path('admin/', admin.site.urls),
 ] \
