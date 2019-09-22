@@ -46,13 +46,14 @@ def random_tickets(tick, req):
 
 
 class TicketDailyCreate(viewsets.ViewSet):
-    def get(self, request):
+    def get_daily(self, request):
 
-        response = []
         today_lotto = {
             'bought_tickets': DailyLottoTicket.objects.filter(daily_lotto=todays_lotto()).count(),
+            'start_date': todays_lotto().start_date,
+            'end_date': todays_lotto().end_date
         }
-        response.append(today_lotto)
+
         return Response({'response': today_lotto}, status=status.HTTP_200_OK)
 
     def my_tickets(self, request):
@@ -90,11 +91,13 @@ class TicketDailyCreate(viewsets.ViewSet):
 
 class MultipleDailyTicket(viewsets.ViewSet):
     def get(self):
-        response = []
+
         today_lotto = {
             'bought_tickets': DailyLottoTicket.objects.filter(daily_lotto=todays_lotto()).count(),
+            'start_date': todays_lotto().start_date,
+            'end_date': todays_lotto().end_date
         }
-        response.append(today_lotto)
+
         return Response({'response': today_lotto}, status=status.HTTP_200_OK)
 
     def other_tickets(self, request):
@@ -181,11 +184,13 @@ class PreviousLottoAPI(viewsets.ViewSet):
 class TicketQuaterlyCreate(viewsets.ViewSet):
 
     def get(self):
-        response = []
+
         today_lotto = {
             'bought_tickets': DailyLottoTicket.objects.filter(daily_lotto=quaterly_lotto()).count(),
+            'start_date': quaterly_lotto().start_date,
+            'end_date': quaterly_lotto().end_date
         }
-        response.append(today_lotto)
+
         return Response({'response': today_lotto}, status=status.HTTP_200_OK)
 
     def my_tickets(self, request):
@@ -223,11 +228,13 @@ class TicketQuaterlyCreate(viewsets.ViewSet):
 
 class MultipleQuaterlyTicket(viewsets.ViewSet):
     def get(self):
-        response = []
+
         today_lotto = {
             'bought_tickets': DailyLottoTicket.objects.filter(daily_lotto=quaterly_lotto()).count(),
+            'start_date': quaterly_lotto().start_date,
+            'end_date': quaterly_lotto().end_date
         }
-        response.append(today_lotto)
+
         return Response({'response': today_lotto}, status=status.HTTP_200_OK)
 
     def other_tickets(self, request):
@@ -275,6 +282,8 @@ class TicketHourlyCreate(viewsets.ViewSet):
         response = []
         today_lotto = {
             'bought_tickets': DailyLottoTicket.objects.filter(daily_lotto=hourly_lotto()).count(),
+            'start_date': hourly_lotto().start_date,
+            'end_date': hourly_lotto().end_date
         }
         response.append(today_lotto)
         return Response({'response': today_lotto}, status=status.HTTP_200_OK)
@@ -314,11 +323,13 @@ class TicketHourlyCreate(viewsets.ViewSet):
 
 class MultipleHourlyTicket(viewsets.ViewSet):
     def get(self):
-        response = []
+
         today_lotto = {
             'bought_tickets': DailyLottoTicket.objects.filter(daily_lotto=hourly_lotto()).count(),
+            'start_date': hourly_lotto().start_date,
+            'end_date': hourly_lotto().end_date
         }
-        response.append(today_lotto)
+
         return Response({'response': today_lotto}, status=status.HTTP_200_OK)
 
     def other_tickets(self, request):

@@ -28,6 +28,7 @@ class ReferralAPI(APIView):
         players = Tuser.objects.all().annotate(num_refferals=Count('referrals')).order_by('-num_refferals')[:10]
 
         ref_details = {
+            'share_code': request.user.share_code,
             'rank': request.user.refferal_ranking,
             'count': my_referrals.count(),
             'ref_prize': request.user.referrer_prize,
@@ -70,11 +71,12 @@ class TransactionView(viewsets.ViewSet):
 
             if 1000 <= amount <= 10000:
                 sent = requests.post(url, data=payload)
-                print(sent.status_code)
-
-                Transaction.objects.create(user=request.user, transaction_type=0, status=1, payment_method=0,
-                                           amount=amount)
-                Tuser.objects.filter(id=request.user.id).update(balance=F("balance") + amount)
+                if sent.status_code == 200:
+                    Transaction.objects.create(user=request.user, transaction_type=0, status=1, payment_method=0,
+                                               amount=amount)
+                    Tuser.objects.filter(id=request.user.id).update(balance=F("balance") + amount)
+                else:
+                    print('bad request')
             else:
                 raise serializers.ValidationError("Deposits should range between 1000 to 10000")
 
@@ -92,10 +94,10 @@ class TransactionView(viewsets.ViewSet):
             if valid_password:
                 if 1000 <= amount <= 10000:
                     received = requests.post(url, data=payload)
-                    print(received.text)
-                    Transaction.objects.create(user=request.user, transaction_type=1, status=1, payment_method=0,
-                                               amount=amount)
-                    Tuser.objects.filter(id=request.user.id).update(balance=F("balance") - amount)
+                    if received.status_code == 200:
+                        Transaction.objects.create(user=request.user, transaction_type=0, status=1, payment_method=0,
+                                                   amount=amount)
+                        Tuser.objects.filter(id=request.user.id).update(balance=F("balance") - amount)
 
                 else:
                     raise serializers.ValidationError("Withdrawals should range between 1000 to 10000")

@@ -200,9 +200,9 @@ class PasswordReset(viewsets.ViewSet):
         this_user = Tuser.objects.get(username=username)
         pass_reset = RestePassword(data=request.data)
         if pass_reset.is_valid():
-            password = pass_reset.validated_data['password']
-            confirm_password = pass_reset.validated_data['confirm_password']
-            print(password)
+            new_password = pass_reset.validated_data['password']
+            new_password_confirm = pass_reset.validated_data['confirm_password']
+            print(new_password)
             return Response({'code': 1, 'response': pass_reset.data}, status=status.HTTP_200_OK)
         return Response({'code': 0}, status=status.HTTP_400_BAD_REQUEST)
 
