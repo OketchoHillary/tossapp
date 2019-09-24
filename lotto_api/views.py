@@ -45,8 +45,8 @@ def random_tickets(tick, req):
                                             n4=t4, n5=t5, n6=t6)
 
 
-class TicketDailyCreate(viewsets.ViewSet):
-    def get_daily(self, request):
+class TicketDailyCreate(APIView):
+    def get(self, request):
 
         today_lotto = {
             'bought_tickets': DailyLottoTicket.objects.filter(daily_lotto=todays_lotto()).count(),
@@ -56,7 +56,7 @@ class TicketDailyCreate(viewsets.ViewSet):
 
         return Response({'response': today_lotto}, status=status.HTTP_200_OK)
 
-    def my_tickets(self, request):
+    def post(self, request):
         current_lotto = todays_lotto()
         ends = current_lotto.end_date
 
@@ -89,9 +89,9 @@ class TicketDailyCreate(viewsets.ViewSet):
         return Response({'code': 1, 'response': 'Successfully bought'})
 
 
-class MultipleDailyTicket(viewsets.ViewSet):
-    def get(self):
+class MultipleDailyTicket(APIView):
 
+    def get(self, request):
         today_lotto = {
             'bought_tickets': DailyLottoTicket.objects.filter(daily_lotto=todays_lotto()).count(),
             'start_date': todays_lotto().start_date,
@@ -100,7 +100,7 @@ class MultipleDailyTicket(viewsets.ViewSet):
 
         return Response({'response': today_lotto}, status=status.HTTP_200_OK)
 
-    def other_tickets(self, request):
+    def post(self, request):
         current_lotto = todays_lotto()
         ends = current_lotto.end_date
         my_daily_tickets = MultipleDailySerializer(data=request.data)
@@ -181,9 +181,9 @@ class PreviousLottoAPI(viewsets.ViewSet):
             many=True).data}, status=status.HTTP_200_OK)
 
 
-class TicketQuaterlyCreate(viewsets.ViewSet):
+class TicketQuaterlyCreate(APIView):
 
-    def get(self):
+    def get(self, request):
 
         today_lotto = {
             'bought_tickets': DailyLottoTicket.objects.filter(daily_lotto=quaterly_lotto()).count(),
@@ -193,7 +193,7 @@ class TicketQuaterlyCreate(viewsets.ViewSet):
 
         return Response({'response': today_lotto}, status=status.HTTP_200_OK)
 
-    def my_tickets(self, request):
+    def post(self, request):
         current_lotto = quaterly_lotto()
         ends = current_lotto.end_date
 
@@ -226,8 +226,8 @@ class TicketQuaterlyCreate(viewsets.ViewSet):
         return Response({'code': 1, 'response': 'Successfully bought'})
 
 
-class MultipleQuaterlyTicket(viewsets.ViewSet):
-    def get(self):
+class MultipleQuaterlyTicket(APIView):
+    def get(self, request):
 
         today_lotto = {
             'bought_tickets': DailyLottoTicket.objects.filter(daily_lotto=quaterly_lotto()).count(),
@@ -237,7 +237,7 @@ class MultipleQuaterlyTicket(viewsets.ViewSet):
 
         return Response({'response': today_lotto}, status=status.HTTP_200_OK)
 
-    def other_tickets(self, request):
+    def post(self, request):
         current_lotto = quaterly_lotto()
         ends = current_lotto.end_date
         my_daily_tickets = MultipleDailySerializer(data=request.data)
@@ -276,19 +276,17 @@ class MultipleQuaterlyTicket(viewsets.ViewSet):
         return Response({'code': 1, 'response': 'Successfully bought'})
 
 
-class TicketHourlyCreate(viewsets.ViewSet):
+class TicketHourlyCreate(APIView):
 
-    def get(self):
-        response = []
+    def get(self, request):
         today_lotto = {
             'bought_tickets': DailyLottoTicket.objects.filter(daily_lotto=hourly_lotto()).count(),
             'start_date': hourly_lotto().start_date,
             'end_date': hourly_lotto().end_date
         }
-        response.append(today_lotto)
         return Response({'response': today_lotto}, status=status.HTTP_200_OK)
 
-    def my_tickets(self, request):
+    def post(self, request):
         current_lotto = hourly_lotto()
         ends = current_lotto.end_date
 
@@ -321,8 +319,8 @@ class TicketHourlyCreate(viewsets.ViewSet):
         return Response({'code': 1, 'response': 'Successfully bought'})
 
 
-class MultipleHourlyTicket(viewsets.ViewSet):
-    def get(self):
+class MultipleHourlyTicket(APIView):
+    def get(self, request):
 
         today_lotto = {
             'bought_tickets': DailyLottoTicket.objects.filter(daily_lotto=hourly_lotto()).count(),
@@ -332,7 +330,7 @@ class MultipleHourlyTicket(viewsets.ViewSet):
 
         return Response({'response': today_lotto}, status=status.HTTP_200_OK)
 
-    def other_tickets(self, request):
+    def post(self, request):
         current_lotto = hourly_lotto()
         ends = current_lotto.end_date
         my_daily_tickets = MultipleDailySerializer(data=request.data)
