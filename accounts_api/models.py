@@ -166,7 +166,7 @@ class Tuser(AbstractBaseUser):
     class Meta:
         db_table = 'users'
         verbose_name_plural = 'users'
-        ordering = ['referrals']
+        # ordering = ['referrals']
 
 
 class Reset_password(models.Model):

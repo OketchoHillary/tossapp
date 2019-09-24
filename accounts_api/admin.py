@@ -162,7 +162,7 @@ class UserAdmin(BaseUserAdmin):
             'fields': ('username', 'phone_number', 'password1', 'password2', 'referrer_share_code',)}
         ),
     )
-    ordering = ('username',)
+    ordering = ('id',)
     filter_horizontal = ()
 
 # Now register the new UserAdmin...
