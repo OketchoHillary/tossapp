@@ -10,10 +10,8 @@ from django.contrib.auth.models import (
 
 # Create your models here.
 from django.db.models import Count
-from django.db.models.signals import post_save
-from django.dispatch import receiver
 from django.utils import timezone
-from django_countries.fields import Country, CountryField
+from django_countries.fields import CountryField
 from rest_framework.authtoken.models import Token
 # from django.utils import timezone
 

@@ -1,18 +1,24 @@
 from __future__ import unicode_literals
 import requests
+from django.conf import settings
 from django.contrib.auth.hashers import check_password
 from django.db.models import Count, F
-from rest_framework import status
+from rest_framework import status, generics
+from rest_framework.pagination import LimitOffsetPagination, PageNumberPagination
+
 from tossapp_api.tossapp_serializers import *
 from rest_framework.views import APIView
 from rest_framework import viewsets
 from rest_framework.response import Response
 
 
-class NotificationView(APIView):
+class NotificationView(viewsets.ModelViewSet):
+    pagination_class = PageNumberPagination
+    queryset = Notification.objects.all()
+    serializer_class = NotificationsSerializer
 
-    def get(self, request):
-        return Response(NotificationsSerializer(Notification.objects.filter(user=request.user), many=True).data)
+    def list_not(self, request):
+        return Response(NotificationsSerializer(Notification.objects.filter(user=self.request.user), many=True).data)
 
 
 class GameAPIView(APIView):

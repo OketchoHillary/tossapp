@@ -13,7 +13,7 @@ urlpatterns = [
     path('hourly-multiple-tickets', MultipleHourlyTicket.as_view(),
          name='other_hourly_tickets'),
     path('all-time-winners', AllTimeWinnersAPI.as_view(), name='AllTimeWinnersAPI'),
-    path('<str:lotto_date>/', PreviousLottoAPI.as_view({'get': 'get_previous_lottos'}), name='PreviousLottoAPI'),
+    # path('<str:lotto_date>/', PreviousLottoAPI.as_view({'get': 'get_previous_lottos'}), name='PreviousLottoAPI'),
     path('lotto-stats', LottoStatView.as_view(), name='lotto_stat'),
  ]
 

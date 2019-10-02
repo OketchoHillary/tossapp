@@ -5,7 +5,7 @@ from tossapp_api.views import *
 
 urlpatterns = [
     # tossap account APIs
-    path('notifications-api', NotificationView.as_view(), name='notificationApi'),
+    path('notifications-api', NotificationView.as_view({'get': 'list_not'}), name='notificationApi'),
     path('games-api', GameAPIView.as_view(), name='gameAPIView'),
     path('user-referrals', ReferralAPI.as_view(), name='referralAPI'),
     path('game-history-api', GameStatView.as_view(), name='game_stat_view'),
