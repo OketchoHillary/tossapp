@@ -138,21 +138,15 @@ class EditProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Tuser
-        fields = ['first_name', 'last_name', 'sex', 'dob', 'phone_number', 'country', 'address']
+        fields = ['first_name', 'last_name', 'sex', 'dob', 'country', 'address']
 
     def validate(self, validated_data):
-        phone_number = validated_data['phone_number']
         dob = validated_data['dob']
 
         my_age = int((datetime.date.today() - dob).days / 365.25)
 
         if my_age < 18:
             raise serializers.ValidationError('Only those above 18 years can Signup')
-
-        # verifying phone number
-        if not validate_phone_number(phone_number):
-            raise serializers.ValidationError("Please provide a valid MTN or Airtel number")
-        proper_dial(phone_number)
 
         return validated_data
 
@@ -163,6 +157,24 @@ class ChangeUsernameSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tuser
         fields = ['username']
+
+
+class ChangePhoneNumberSerializer(serializers.ModelSerializer):
+    phone_number = serializers.CharField()
+
+    class Meta:
+        model = Tuser
+        fields = ['phone_number']
+
+    def validate(self, validated_data):
+        phone_number = validated_data['phone_number']
+
+        # verifying phone number
+        if not validate_phone_number(phone_number):
+            raise serializers.ValidationError("Please provide a valid MTN or Airtel number")
+        proper_dial(phone_number)
+
+        return validated_data
 
 
 class ChangePasswordSerializer(serializers.Serializer):

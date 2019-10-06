@@ -188,3 +188,5 @@ NUMBER_RANGE = 21
 
 prod_db = dj_database_url.config(conn_max_age=500)
 DATABASES['default'].update(prod_db)
+
+CELERY_BROKER_URL = 'amqp://localhost'

@@ -13,6 +13,7 @@ urlpatterns = [
     path('user-profile/', ProfileView.as_view(), name='profileViewApi'),
     path('profile-update/', ProfileUpdateView.as_view(), name='profileUpdateApi'),
     path('username-update/', UsernameUpdateView.as_view(), name='usernameUpdateApi'),
+    path('phone-number-update/', PhoneNumberUpdateView.as_view(), name='phoneNoUpdateApi'),
     path('photo-update/', ProfilePicViewSet.as_view(), name='profilePhotoApi'),
     path('change-password/', ChangePasswordAPI.as_view({'put': 'pass_change'}), name='pass_change_api'),
     path('forgot-password/', ForgotPassword.as_view(), name='forgot_password'),

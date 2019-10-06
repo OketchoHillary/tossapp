@@ -80,6 +80,14 @@ class UsernameUpdateView(generics.RetrieveUpdateAPIView, mixins.UpdateModelMixin
         return self.request.user
 
 
+class PhoneNumberUpdateView(generics.RetrieveUpdateAPIView, mixins.UpdateModelMixin):
+    queryset = Tuser.objects.all()
+    serializer_class = ChangePhoneNumberSerializer
+
+    def get_object(self):
+        return self.request.user
+
+
 class ProfilePicViewSet(generics.RetrieveUpdateAPIView, mixins.UpdateModelMixin):
     queryset = Tuser.objects.all()
     serializer_class = ProfilePicSerializer

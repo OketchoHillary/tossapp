@@ -16,6 +16,7 @@ from lotto_api.hourly_lotto import hourly_lotto
 from lotto_api.models import DailyLotto, DailyLottoTicket, DailyLottoResult
 from lotto_api.quaterly_lotto import quaterly_lotto
 from lotto_api.lotto_serializers import TicketDailySerializer, MultipleDailySerializer, AlltimeSerializer
+from tauth.task import create_random_tickets
 from tossapp.models import *
 from tossapp_api.models import Game, Game_stat
 from tossapp_api.tossapp_serializers import GamesHistorySerializer
@@ -115,12 +116,7 @@ class MultipleDailyTicket(APIView):
         if timezone.now() < ends:
             if ticket_cost < self.request.user.balance:
                 if ticketno > 0:
-                    for random_qunatity in range(ticketno):
-                        generated_numbers = random.sample(range(1, 20), 6)
-                        t1, t2, t3, t4, t5, t6 = generated_numbers
-                        DailyLottoTicket.objects.create(player_name=self.request.user, daily_lotto=daily,
-                                                        n1=t1, n2=t2, n3=t3, n4=t4, n5=t5, n6=t6)
-                    # calculating ticket cost
+                    create_random_tickets.delay(ticketno, daily.lotto_id, self.request.user.id)
                     multiple_ticket_service_fee = fee * ticketno
                     # calculating users balance
                     new_balance = balance_calculator(request.user.balance, ticket_cost)
@@ -345,11 +341,7 @@ class MultipleHourlyTicket(APIView):
         if timezone.now() < ends:
             if ticket_cost < self.request.user.balance:
                 if ticketno > 0:
-                    for random_qunatity in range(ticketno):
-                        generated_numbers = random.sample(range(1, 20), 6)
-                        t1, t2, t3, t4, t5, t6 = generated_numbers
-                        DailyLottoTicket.objects.create(player_name=self.request.user, daily_lotto=hourly_lotto(),
-                                                        n1=t1, n2=t2, n3=t3, n4=t4, n5=t5, n6=t6)
+                    create_random_tickets.delay(ticketno, hourly_lotto(), self.request.user)
                     # calculating ticket cost
                     multiple_ticket_service_fee = fee * ticketno
                     # calculating users balance
