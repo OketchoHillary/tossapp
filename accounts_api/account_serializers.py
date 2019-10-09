@@ -74,7 +74,7 @@ class UserSerializer(serializers.Serializer):
 
         # incrementing points on referee
 
-        user = Tuser(username=validated_data['username'], sex=validated_data['sex'], dob=dob, phone_number=phone_number,
+        user = Tuser(username=username, sex=validated_data['sex'], dob=dob,
                      verification_code=generate_verification_code(), is_active=False, is_agreed=True)
 
         user.phone_number = proper_dial(phone_number)
@@ -152,7 +152,8 @@ class EditProfileSerializer(serializers.ModelSerializer):
 
 
 class ChangeUsernameSerializer(serializers.ModelSerializer):
-    username = serializers.CharField()
+    old_username = serializers.CharField()
+    new_username = serializers.CharField()
 
     class Meta:
         model = Tuser
