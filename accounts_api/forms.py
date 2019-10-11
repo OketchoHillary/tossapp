@@ -89,20 +89,4 @@ class ChangeNumberForm(forms.Form):
         return phone_number
 
 
-# class TactivationForm(AuthenticationForm):
-#     def confirm_login_allowed(self, user):
-#         if not user.is_active:
-#             tuser = user
-#             code = generate_verification_code()
-#             tuser.verification_code = code
-#             tuser.save()
-#             # send_verification_sms(tuser.phone_number,tuser.verification_code)
-#             HttpResponseRedirect(reverse_lazy('activate', kwargs={'user': tuser.username}))
-#             # return HttpResponseRedirect(reverse_lazy('activate', kwargs={'user': tuser.username}))
-#             # raise forms.ValidationError(
-#             #     _("Your account has expired. \
-#             #     Please click the renew subscription link below"),
-#             #     code='inactive',
-#             # )
-
 

@@ -151,31 +151,20 @@ class EditProfileSerializer(serializers.ModelSerializer):
         return validated_data
 
 
-class ChangeUsernameSerializer(serializers.ModelSerializer):
+class ChangeUsernameSerializer(serializers.Serializer):
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop('user', None)
+        super(ChangeUsernameSerializer, self).__init__(*args, **kwargs)
     old_username = serializers.CharField()
     new_username = serializers.CharField()
 
-    class Meta:
-        model = Tuser
-        fields = ['username']
 
-
-class ChangePhoneNumberSerializer(serializers.ModelSerializer):
-    phone_number = serializers.CharField()
-
-    class Meta:
-        model = Tuser
-        fields = ['phone_number']
-
-    def validate(self, validated_data):
-        phone_number = validated_data['phone_number']
-
-        # verifying phone number
-        if not validate_phone_number(phone_number):
-            raise serializers.ValidationError("Please provide a valid MTN or Airtel number")
-        proper_dial(phone_number)
-
-        return validated_data
+class ChangePhoneNumberSerializer(serializers.Serializer):
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop('user', None)
+        super(ChangePhoneNumberSerializer, self).__init__(*args, **kwargs)
+    old_phone_number = serializers.CharField()
+    new_phone_number = serializers.CharField()
 
 
 class ChangePasswordSerializer(serializers.Serializer):

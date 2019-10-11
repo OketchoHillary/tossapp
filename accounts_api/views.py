@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 from django.contrib import messages
-from django.contrib.auth import login as django_login, logout as django_logout, logout
+from django.contrib.auth import login as django_login, logout
 from django.contrib.auth.decorators import login_required
 from django.db.models import F
 from django.http import HttpResponseRedirect
+from django.shortcuts import get_object_or_404
 from rest_framework import generics, status
 from django.core import serializers
 from rest_framework.response import Response
@@ -72,20 +73,61 @@ class ProfileUpdateView(generics.RetrieveUpdateAPIView, mixins.UpdateModelMixin)
         return self.request.user
 
 
-class UsernameUpdateView(generics.RetrieveUpdateAPIView, mixins.UpdateModelMixin):
-    queryset = Tuser.objects.all()
-    serializer_class = ChangeUsernameSerializer
+class UsernameUpdateView(viewsets.ViewSet):
 
-    def get_object(self):
-        return self.request.user
+    def get_username(self, request):
+        user = get_object_or_404(Tuser, id=request.user.id)
+        myusername = user.username
+        return Response({'username': myusername}, status=status.HTTP_200_OK)
+
+    def username_change(self, request):
+        this_user = request.user
+        my_username = ChangeUsernameSerializer(data=request.data, user=this_user)
+        my_username.is_valid()
+        old_username = my_username.validated_data["old_username"]
+        new_username = my_username.validated_data["new_username"]
+
+        if old_username != this_user.username:
+            raise serializers.ValidationError('Wrong Username.')
+        elif Tuser.objects.filter(username=new_username).count() > 0:
+            raise serializers.ValidationError('This username is already in use.')
+        elif old_username == new_username:
+            raise serializers.ValidationError("Old username and new username can't be the same")
+        else:
+            this_user.username = new_username
+            this_user.save()
+            messages.success(request, 'Successfully Updated your username')
+            Notification.objects.create(user=self.request.user, title='Username update',
+                                        description='Username has been changed', type=0)
+            return Response({'code': 1, 'response': 'Successfully changed username'})
 
 
-class PhoneNumberUpdateView(generics.RetrieveUpdateAPIView, mixins.UpdateModelMixin):
-    queryset = Tuser.objects.all()
-    serializer_class = ChangePhoneNumberSerializer
+class PhoneNumberUpdateView(viewsets.ViewSet):
+    def get_phone_no(self, request):
+        user = get_object_or_404(Tuser, id=request.user.id)
+        mynumber = user.phone_number
+        return Response({'phone_number': mynumber}, status=status.HTTP_200_OK)
 
-    def get_object(self):
-        return self.request.user
+    def phone_change(self, request):
+        this_user = request.user
+        my_number = ChangePhoneNumberSerializer(data=request.data, user=this_user)
+        my_number.is_valid()
+        old_phone_number = proper_dial(my_number.validated_data["old_phone_number"])
+        new_phone_number = proper_dial(my_number.validated_data["new_phone_number"])
+
+        if old_phone_number != this_user.phone_number:
+            raise serializers.ValidationError('Wrong Phone_number.')
+        elif Tuser.objects.filter(phone_number=new_phone_number).count() > 0:
+            raise serializers.ValidationError('This Phone number is already in use.')
+        elif old_phone_number == new_phone_number:
+            raise serializers.ValidationError("Old number and new number can't be the same")
+        else:
+            this_user.phone_number = new_phone_number
+            this_user.save()
+            messages.success(request, 'Successfully Changed your Phone number')
+            Notification.objects.create(user=self.request.user, title='Phone number updated',
+                                        description='Phone number has been changed', type=0)
+            return Response({'code': 1, 'response': 'Successfully changed Phone number'})
 
 
 class ProfilePicViewSet(generics.RetrieveUpdateAPIView, mixins.UpdateModelMixin):
