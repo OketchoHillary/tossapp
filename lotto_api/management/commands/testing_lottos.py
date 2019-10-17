@@ -15,7 +15,7 @@ class Command(BaseCommand):
         ticket_num = 500
         players = Tuser.objects.filter(is_active=True)
         # daily lotto
-        daily = DailyLotto.objects.filter(lotto_type='H')[0]
+        daily = DailyLotto.objects.filter(lotto_type='Q')[0]
         for p in players:
             for x in range(ticket_num):
                 num1, num2, num3, num4, num5, num6 = random.sample(range(1, NUMBER_RANGE), 6)
