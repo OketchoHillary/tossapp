@@ -52,7 +52,7 @@ class DailyLotto(models.Model):
         return '{:%Y-%m-%d %H:%M}'.format(self.start_date)
 
     class Meta:
-        ordering = ["-start_date"]
+        ordering = ["-lotto_id"]
         db_table = 'lotto'
 
 
@@ -97,6 +97,7 @@ class DailyLottoTicket(models.Model):
     ticket_prize = models.IntegerField(default=0)
     hits = models.IntegerField(default=0)
     tax = models.IntegerField(default=0)
+    ticket_no = models.CharField(max_length=100, blank=True, null=True)
 
     def __str__(self):
         return '{}, {}, {}, {}, {}, {}'.format(self.n1,self.n2,self.n3,self.n4,self.n5,self.n6)

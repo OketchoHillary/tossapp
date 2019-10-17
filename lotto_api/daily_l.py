@@ -9,41 +9,37 @@ from tauth.settings import NUMBER_RANGE
 
 
 def create_daily_lotto():
-    lotto = DailyLotto.objects.create(start_date=timezone.now().isoformat(),
-                                      end_date=timezone.now() + now_plus_1(), lotto_type='D', )
+    lotto = DailyLotto.objects.create(start_date=timezone.now().isoformat(), end_date=timezone.now() + now_plus_1(),
+                                      lotto_type='D')
+    print(lotto)
     return lotto
 
-# daily lotto
-daily = DailyLotto.objects.filter(lotto_type='D')[0]
-
-# daily lotto
-daily_previous = DailyLotto.objects.filter(lotto_type='D')[1]
-
-ticket_count = DailyLottoTicket.objects.filter(daily_lotto=daily).count()
-
-
-# daily revenue
-daily_revenue = DailyLotto.TICKET_PRICE * ticket_count
-
-# house share
-house_pool = DailyLotto.HOUSE_COMMISSION_RATE * daily_revenue
-
-# Six share
-six_prize_pool = DailyLotto.JACKPOT_SHARE_RATE * daily_revenue
-
-# Five share
-five_prize_pool = DailyLotto.FIVE_SHARE_RATE * daily_revenue
-
-# Four share
-four_prize_pool = DailyLotto.FOUR_SHARE_RATE * daily_revenue
-
-# Three share
-three_prize_pool = DailyLotto.THREE_SHARE_RATE * daily_revenue
 
 # calculating ticket purchase commission
 
-
 def commission():
+    # daily lotto
+    daily = DailyLotto.objects.filter(lotto_type='D')[0]
+    daily_previous = DailyLotto.objects.filter(lotto_type='D')[1]
+    ticket_count = DailyLottoTicket.objects.filter(daily_lotto=daily).count()
+
+    # daily revenue
+    daily_revenue = DailyLotto.TICKET_PRICE * ticket_count
+
+    # house share
+    house_pool = DailyLotto.HOUSE_COMMISSION_RATE * daily_revenue
+
+    # Six share
+    six_prize_pool = DailyLotto.JACKPOT_SHARE_RATE * daily_revenue
+
+    # Five share
+    five_prize_pool = DailyLotto.FIVE_SHARE_RATE * daily_revenue
+
+    # Four share
+    four_prize_pool = DailyLotto.FOUR_SHARE_RATE * daily_revenue
+
+    # Three share
+    three_prize_pool = DailyLotto.THREE_SHARE_RATE * daily_revenue
 
     DailyQuota.objects.filter(daily_lotto=daily).update(house_commission=house_pool,
                                                         six_number_prize_pool=six_prize_pool,
@@ -65,6 +61,9 @@ def commission():
 
 # managing jackpot
 def lotto_jackpot():
+    # daily lotto
+    daily = DailyLotto.objects.filter(lotto_type='D')[0]
+    daily_previous = DailyLotto.objects.filter(lotto_type='D')[1]
 
     # previous jackpot
     pjackpot = daily_previous.jack_pot
@@ -78,11 +77,11 @@ def lotto_jackpot():
     jackpot = pjackpot + current_quota
 
     # updating current jackpot
-    DailyLotto.objects.filter(lotto_id=daily.lotto_id).update(jack_pot=jackpot)
-    return
+    return DailyLotto.objects.filter(lotto_id=daily.lotto_id).update(jack_pot=jackpot)
 
 
 def daily_draw():
+    daily = DailyLotto.objects.filter(lotto_type='D')[0]
     # lotto commission function
     commission()
 
@@ -113,7 +112,7 @@ def daily_draw():
         ticket.save(update_fields=["hits"])
 
         if matches_count < 3:
-            print(cur_ticket,':', "Less than 3 hits, no win")
+            print(cur_ticket, ':', "Less than 3 hits, no win")
             continue
 
         # creating winners
@@ -195,13 +194,6 @@ def daily_draw():
             DailyLotto.objects.filter(lotto_id=daily).update(jack_pot=backup, backup_jackpot=0)
             DailyLottoTicket.objects.filter(daily_lotto=daily, hits=6).update(ticket_prize=for6)
             Tuser.objects.filter(username=p2).update(balance=F("balance") + for6)
-
-        # if ticket.hits >= 3:
-        #     Game_stat.objects.filter(user=ticket.player_name, timestamp=datetime.date.today(),
-        #                              game=lotto_game).update(status=Game_stat.WIN)
-        # else:
-        #     Game_stat.objects.filter(user=ticket.player_name, timestamp=datetime.date.today(),
-        #                              game=lotto_game).update(status=Game_stat.LOSE)
 
         my_backup_jackpot = backup + no3 + no4 + no5
 

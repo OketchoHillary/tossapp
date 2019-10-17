@@ -11,8 +11,6 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
 
-        # schedule.every(1).minutes.do(create_daily_lotto())
-        # schedule.every(1).minutes.do(daily_draw)
         schedule.every(6).hour.do(create_quaterly_lotto())
         schedule.every(295).minutes.do(quaterly_draw)
 

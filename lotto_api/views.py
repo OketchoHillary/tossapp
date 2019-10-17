@@ -2,27 +2,24 @@
 from __future__ import unicode_literals
 
 # Create your views here.
+import datetime
 import random
 
 from django.db.models import F
-from django.shortcuts import get_object_or_404
 from django.utils import timezone
-from rest_framework import viewsets, status, serializers, generics, mixins
+from rest_framework import status, serializers, generics, mixins
 from rest_framework.response import Response
 from rest_framework.views import APIView
-
-from lotto_api.daily_l import daily
-from lotto_api.hourly_lotto import hourly_lotto
 from lotto_api.models import DailyLotto, DailyLottoTicket, DailyLottoResult
-from lotto_api.quaterly_lotto import quaterly_lotto
 from lotto_api.lotto_serializers import TicketDailySerializer, MultipleDailySerializer, AlltimeSerializer
 from tauth.task import create_random_tickets
 from tossapp.models import *
 from tossapp_api.models import Game, Game_stat
 from tossapp_api.tossapp_serializers import GamesHistorySerializer
 
+
 lotto_game = Game.objects.get(name='Daily Lotto')
-# lotto fee
+
 fee = DailyLotto.TICKET_PRICE * DailyLotto.HOUSE_COMMISSION_RATE
 
 
@@ -35,6 +32,7 @@ def balance_calculator(lar, ry):
 
 
 def random_tickets(tick, req):
+    latest_daily = DailyLotto.objects.filter(lotto_type='D')[0]
     my_quantity = tick.cleaned_data
     quantity = my_quantity.get('quantity')
 
@@ -42,24 +40,27 @@ def random_tickets(tick, req):
         for random_qunatity in range(quantity):
             generated_numbers = random.sample(range(1, 21), 6)
             t1,t2,t3,t4,t5,t6 = generated_numbers
-            DailyLottoTicket.objects.create(player_name=req.user, daily_lotto=daily, n1=t1, n2=t2, n3=t3,
+            DailyLottoTicket.objects.create(player_name=req.user, daily_lotto=latest_daily, n1=t1, n2=t2, n3=t3,
                                             n4=t4, n5=t5, n6=t6)
 
 
 class TicketDailyCreate(APIView):
     def get(self, request):
+        latest_daily = DailyLotto.objects.filter(lotto_type='D')[0]
+        x = latest_daily.end_date - timezone.now()
 
         today_lotto = {
-            'bought_tickets': DailyLottoTicket.objects.filter(daily_lotto=daily).count(),
-            'start_date':daily.start_date,
-            'end_date': daily.end_date
+            'bought_tickets': DailyLottoTicket.objects.filter(daily_lotto=latest_daily).count(),
+            'start_date': latest_daily.start_date,
+            'count_down': x
         }
 
         return Response({'response': today_lotto}, status=status.HTTP_200_OK)
 
     def post(self, request):
-        current_lotto = daily
-        ends = current_lotto.end_date
+        latest_daily = DailyLotto.objects.filter(lotto_type='D')[0]
+
+        ends = latest_daily.end_date
 
         my_daily_tickets = TicketDailySerializer(data=request.data)
         my_daily_tickets.is_valid(raise_exception=True)
@@ -74,7 +75,7 @@ class TicketDailyCreate(APIView):
         if timezone.now() < ends:
             if ticket_cost < self.request.user.balance:
 
-                DailyLottoTicket.objects.create(daily_lotto=daily, player_name=self.request.user, n1=n1, n2=n2, n3=n3,
+                DailyLottoTicket.objects.create(daily_lotto=latest_daily, player_name=self.request.user, n1=n1, n2=n2, n3=n3,
                                                 n4=n4, n5=n5, n6=n6)
                 # calculating users balance
                 new_balance = balance_calculator(request.user.balance, ticket_cost)
@@ -93,20 +94,22 @@ class TicketDailyCreate(APIView):
 class MultipleDailyTicket(APIView):
 
     def get(self, request):
+        latest_daily = DailyLotto.objects.filter(lotto_type='D')[0]
         today_lotto = {
-            'bought_tickets': DailyLottoTicket.objects.filter(daily_lotto=daily).count(),
-            'start_date': daily.start_date,
-            'end_date': daily.end_date
+            'bought_tickets': DailyLottoTicket.objects.filter(daily_lotto=latest_daily).count(),
+            'start_date': latest_daily.start_date,
+            'count_down': latest_daily.end_date - timezone.now()
         }
 
         return Response({'response': today_lotto}, status=status.HTTP_200_OK)
 
     def post(self, request):
-        current_lotto = daily
-        ends = current_lotto.end_date
+        latest_daily = DailyLotto.objects.filter(lotto_type='D')[0]
+        ends = latest_daily.end_date
         my_daily_tickets = MultipleDailySerializer(data=request.data)
         my_daily_tickets.is_valid(raise_exception=True)
         ticketno = my_daily_tickets.validated_data["quantity"]
+
         if ticketno is None:
             ticketno = 0
         else:
@@ -116,7 +119,7 @@ class MultipleDailyTicket(APIView):
         if timezone.now() < ends:
             if ticket_cost < self.request.user.balance:
                 if ticketno > 0:
-                    create_random_tickets.delay(ticketno, daily.lotto_id, self.request.user.id)
+                    create_random_tickets.delay(ticketno, latest_daily.lotto_id, self.request.user.id)
                     multiple_ticket_service_fee = fee * ticketno
                     # calculating users balance
                     new_balance = balance_calculator(request.user.balance, ticket_cost)
@@ -181,17 +184,21 @@ class TicketQuaterlyCreate(APIView):
 
     def get(self, request):
 
+        latest_quaterly = DailyLotto.objects.filter(lotto_type='Q')[0]
+        x = latest_quaterly.end_date - timezone.now()
+
         today_lotto = {
-            'bought_tickets': DailyLottoTicket.objects.filter(daily_lotto=quaterly_lotto()).count(),
-            'start_date': quaterly_lotto().start_date,
-            'end_date': quaterly_lotto().end_date
+            'bought_tickets': DailyLottoTicket.objects.filter(daily_lotto=latest_quaterly).count(),
+            'start_date': latest_quaterly.start_date,
+            'count_down': x
         }
 
         return Response({'response': today_lotto}, status=status.HTTP_200_OK)
 
     def post(self, request):
-        current_lotto = quaterly_lotto()
-        ends = current_lotto.end_date
+        latest_quaterly = DailyLotto.objects.filter(lotto_type='Q')[0]
+
+        ends = latest_quaterly.end_date
 
         my_daily_tickets = TicketDailySerializer(data=request.data)
         my_daily_tickets.is_valid(raise_exception=True)
@@ -206,7 +213,7 @@ class TicketQuaterlyCreate(APIView):
         if timezone.now() < ends:
             if ticket_cost < self.request.user.balance:
 
-                DailyLottoTicket.objects.create(daily_lotto=quaterly_lotto(), player_name=self.request.user, n1=n1,
+                DailyLottoTicket.objects.create(daily_lotto=latest_quaterly, player_name=self.request.user, n1=n1,
                                                 n2=n2, n3=n3, n4=n4, n5=n5, n6=n6)
 
                 # calculating users balance
@@ -225,20 +232,25 @@ class TicketQuaterlyCreate(APIView):
 class MultipleQuaterlyTicket(APIView):
     def get(self, request):
 
+        latest_quaterly = DailyLotto.objects.filter(lotto_type='Q')[0]
+        x = latest_quaterly.end_date - timezone.now()
+
         today_lotto = {
-            'bought_tickets': DailyLottoTicket.objects.filter(daily_lotto=quaterly_lotto()).count(),
-            'start_date': quaterly_lotto().start_date,
-            'end_date': quaterly_lotto().end_date
+            'bought_tickets': DailyLottoTicket.objects.filter(daily_lotto=latest_quaterly).count(),
+            'start_date': latest_quaterly.start_date,
+            'count_down': x
         }
 
         return Response({'response': today_lotto}, status=status.HTTP_200_OK)
 
     def post(self, request):
-        current_lotto = quaterly_lotto()
-        ends = current_lotto.end_date
+        latest_quaterly = DailyLotto.objects.filter(lotto_type='Q')[0]
+
+        ends = latest_quaterly.end_date
         my_daily_tickets = MultipleDailySerializer(data=request.data)
         my_daily_tickets.is_valid(raise_exception=True)
         ticketno = my_daily_tickets.validated_data["quantity"]
+
         if ticketno is None:
             ticketno = 0
         else:
@@ -248,26 +260,21 @@ class MultipleQuaterlyTicket(APIView):
         if timezone.now() < ends:
             if ticket_cost < self.request.user.balance:
                 if ticketno > 0:
-                    for random_qunatity in range(ticketno):
-                        generated_numbers = random.sample(range(1, 20), 6)
-                        t1, t2, t3, t4, t5, t6 = generated_numbers
-                        DailyLottoTicket.objects.create(player_name=self.request.user, daily_lotto=quaterly_lotto(),
-                                                        n1=t1, n2=t2, n3=t3, n4=t4, n5=t5, n6=t6)
-                    # calculating ticket cost
+                    create_random_tickets.delay(ticketno, latest_quaterly.lotto_id, self.request.user.id)
                     multiple_ticket_service_fee = fee * ticketno
                     # calculating users balance
                     new_balance = balance_calculator(request.user.balance, ticket_cost)
                     Tuser.objects.filter(username=self.request.user.username).update(balance=new_balance)
                     Game_stat.objects.create(user=self.request.user, game=lotto_game, bet_amount=ticket_cost,
-                                            status=Game_stat.PENDING,
-                                            service_fee=multiple_ticket_service_fee)
+                                             status=Game_stat.PENDING,
+                                             service_fee=multiple_ticket_service_fee)
                     Game.objects.filter(name='Daily Lotto').update(times_played=F("times_played") + 1)
                 else:
                     raise serializers.ValidationError("Ticket number should be greater than zero")
             else:
                 raise serializers.ValidationError("Insufficient balance")
         else:
-            raise serializers.ValidationError("Time has ended. Next lotto starts in 5 minutes time")
+            raise serializers.ValidationError("Time has ended. Next lotto starts at midnight")
 
         return Response({'code': 1, 'response': 'Successfully bought'})
 
@@ -275,16 +282,19 @@ class MultipleQuaterlyTicket(APIView):
 class TicketHourlyCreate(APIView):
 
     def get(self, request):
-        today_lotto = {
-            'bought_tickets': DailyLottoTicket.objects.filter(daily_lotto=hourly_lotto()).count(),
-            'start_date': hourly_lotto().start_date,
-            'end_date': hourly_lotto().end_date
+        latest_hourly = DailyLotto.objects.filter(lotto_type='H')[0]
+
+        hourly_lotto = {
+            'bought_tickets': DailyLottoTicket.objects.filter(daily_lotto=latest_hourly).count(),
+            'start_date': latest_hourly.start_date,
+            'count_down': latest_hourly.end_date - timezone.now()
         }
-        return Response({'response': today_lotto}, status=status.HTTP_200_OK)
+
+        return Response({'response': hourly_lotto}, status=status.HTTP_200_OK)
 
     def post(self, request):
-        current_lotto = hourly_lotto()
-        ends = current_lotto.end_date
+        latest_hourly = DailyLotto.objects.filter(lotto_type='H')[0]
+        ends = latest_hourly.end_date
 
         my_daily_tickets = TicketDailySerializer(data=request.data)
         my_daily_tickets.is_valid(raise_exception=True)
@@ -299,14 +309,14 @@ class TicketHourlyCreate(APIView):
         if timezone.now() < ends:
             if ticket_cost < self.request.user.balance:
 
-                DailyLottoTicket.objects.create(daily_lotto=hourly_lotto(), player_name=self.request.user, n1=n1,
+                DailyLottoTicket.objects.create(daily_lotto=latest_hourly, player_name=self.request.user, n1=n1,
                                                 n2=n2, n3=n3, n4=n4, n5=n5, n6=n6)
 
                 # calculating users balance
                 new_balance = balance_calculator(request.user.balance, ticket_cost)
                 Tuser.objects.filter(username=self.request.user.username).update(balance=new_balance)
                 Game_stat.objects.create(user=self.request.user, game=lotto_game, bet_amount=ticket_cost,
-                                        status=Game_stat.PENDING, service_fee=fee)
+                                         status=Game_stat.PENDING, service_fee=fee)
                 Game.objects.filter(name='Daily Lotto').update(times_played=F("times_played") + 1)
             else:
                 raise serializers.ValidationError("Insufficient balance")
@@ -317,21 +327,23 @@ class TicketHourlyCreate(APIView):
 
 class MultipleHourlyTicket(APIView):
     def get(self, request):
+        latest_hourly = DailyLotto.objects.filter(lotto_type='H')[0]
 
-        today_lotto = {
-            'bought_tickets': DailyLottoTicket.objects.filter(daily_lotto=hourly_lotto()).count(),
-            'start_date': hourly_lotto().start_date,
-            'end_date': hourly_lotto().end_date
+        hourly_lotto = {
+            'bought_tickets': DailyLottoTicket.objects.filter(daily_lotto=latest_hourly).count(),
+            'start_date': latest_hourly.start_date,
+            'count_down': latest_hourly.end_date - timezone.now()
         }
 
-        return Response({'response': today_lotto}, status=status.HTTP_200_OK)
+        return Response({'response': hourly_lotto}, status=status.HTTP_200_OK)
 
     def post(self, request):
-        current_lotto = hourly_lotto()
-        ends = current_lotto.end_date
+        latest_hourly = DailyLotto.objects.filter(lotto_type='H')[0]
+        ends = latest_hourly.end_date
         my_daily_tickets = MultipleDailySerializer(data=request.data)
         my_daily_tickets.is_valid(raise_exception=True)
         ticketno = my_daily_tickets.validated_data["quantity"]
+
         if ticketno is None:
             ticketno = 0
         else:
@@ -341,8 +353,7 @@ class MultipleHourlyTicket(APIView):
         if timezone.now() < ends:
             if ticket_cost < self.request.user.balance:
                 if ticketno > 0:
-                    create_random_tickets.delay(ticketno, hourly_lotto(), self.request.user)
-                    # calculating ticket cost
+                    create_random_tickets.delay(ticketno, latest_hourly.lotto_id, self.request.user.id)
                     multiple_ticket_service_fee = fee * ticketno
                     # calculating users balance
                     new_balance = balance_calculator(request.user.balance, ticket_cost)
@@ -356,7 +367,7 @@ class MultipleHourlyTicket(APIView):
             else:
                 raise serializers.ValidationError("Insufficient balance")
         else:
-            raise serializers.ValidationError("Time has ended. Next lotto starts in 5 minutes time")
+            raise serializers.ValidationError("Time has ended. Next lotto starts at midnight")
 
         return Response({'code': 1, 'response': 'Successfully bought'})
 
