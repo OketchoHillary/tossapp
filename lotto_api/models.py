@@ -1,4 +1,5 @@
 from datetime import *
+from django.utils import timezone
 from django.db import models
 from django.dispatch import receiver
 from django.db.models.signals import post_save
@@ -37,7 +38,7 @@ class DailyLotto(models.Model):
 
     lotto_id = models.AutoField(primary_key=True)
     lotto_type = models.CharField(max_length=1, choices=LOTTO_TYPE)
-    start_date = models.DateTimeField(auto_now_add=True)
+    start_date = models.DateTimeField()
     end_date = models.DateTimeField()
     win1 = models.IntegerField(default=0)
     win2 = models.IntegerField(default=0)
@@ -54,6 +55,12 @@ class DailyLotto(models.Model):
     class Meta:
         ordering = ["-lotto_id"]
         db_table = 'lotto'
+
+    def save(self, *args, **kwargs):
+
+        if not self.lotto_id:
+            self.start_date = timezone.now()
+        return super(DailyLotto, self).save(*args, **kwargs)
 
 
 class DailyQuota(models.Model):

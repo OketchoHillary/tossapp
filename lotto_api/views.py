@@ -4,7 +4,6 @@ from __future__ import unicode_literals
 # Create your views here.
 import datetime
 import random
-
 from django.db.models import F
 from django.utils import timezone
 from rest_framework import status, serializers, generics, mixins
@@ -27,6 +26,18 @@ def total(single_form, multiple_tickets_form):
     return single_form + multiple_tickets_form
 
 
+def hours_minutes_seconds(td):
+    return td.seconds//3600, (td.seconds//60)%60, td.seconds % 60
+
+
+def convert_timedelta(duration):
+    days, seconds = duration.days, duration.seconds
+    hours = days * 24 + seconds // 3600
+    minutes = (seconds % 3600) // 60
+    seconds = (seconds % 60)
+    return '{} hours, {} minutes, {} seconds'.format(hours, minutes, seconds)
+
+
 def balance_calculator(lar, ry):
     return lar - ry
 
@@ -47,12 +58,19 @@ def random_tickets(tick, req):
 class TicketDailyCreate(APIView):
     def get(self, request):
         latest_daily = DailyLotto.objects.filter(lotto_type='D')[0]
+        # getting difference in time delta
         x = latest_daily.end_date - timezone.now()
+        z = latest_daily.start_date
+        datetime_str = z
+        # old_format = '%Y-%m-%dT%H:%M:%S.%fZ'
+        # new_format = '%d-%m-%Y %H:%M:%S'
+        #
+        # new_datetime_str = datetime.datetime.strptime(datetime_str, old_format).strftime(new_format)
 
         today_lotto = {
             'bought_tickets': DailyLottoTicket.objects.filter(daily_lotto=latest_daily).count(),
-            'start_date': latest_daily.start_date,
-            'count_down': x
+            'start_date': z,
+            'count_down': convert_timedelta(x)
         }
 
         return Response({'response': today_lotto}, status=status.HTTP_200_OK)

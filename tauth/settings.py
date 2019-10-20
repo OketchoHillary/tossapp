@@ -184,6 +184,8 @@ AUTH_USER_MODEL = 'accounts_api.Tuser'
 LOGIN_REDIRECT_URL = '/'
 LOGIN_URL = '/login'
 
+DATETIME_FORMAT = '%Y-%m-%d %H:%m'
+
 NUMBER_RANGE = 21
 
 prod_db = dj_database_url.config(conn_max_age=500)
