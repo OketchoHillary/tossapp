@@ -12,6 +12,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import viewsets, mixins
 from accounts_api.account_serializers import *
+from accounts_api.utils import reset_code
 from tossapp_api.models import Notification
 
 
@@ -22,7 +23,8 @@ class UserCreate(APIView):
     def post(self, request):
         new_user = UserSerializer(data=request.data)
         if new_user.is_valid():
-            new_user.save(is_agreed=True)
+            x = new_user.save(is_agreed=True)
+            request.session['tusername'] = x['username']
             return Response({'code': 1, 'response': new_user.data}, status=status.HTTP_201_CREATED)
         return Response({'code': 0, 'response': new_user.errors}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -142,16 +144,9 @@ class VerificationAPI(viewsets.ViewSet):
     authentication_classes = ()
     permission_classes = ()
 
-    def get_verification_code(self, request, username):
-        response = []
-        verifier = Tuser.objects.filter(username=username).values_list('verification_code')[0]
-        veri = {
-            'verification_code':verifier
-        }
-        response.append(veri)
-        return Response({'response': response}, status=status.HTTP_200_OK)
+    def verify_user(self, request):
 
-    def verify_user(self, request, username):
+        username = request.session['tusername']
         this_user = Tuser.objects.get(username=username)
         activate_me = ActivateSerializer(data=request.data, user=this_user)
         activate_me.is_valid()
@@ -174,9 +169,9 @@ class VerificationAPI(viewsets.ViewSet):
             return Response({"error": "Wrong Verification code"}, status=status.HTTP_400_BAD_REQUEST)
 
 
-class ChangePasswordAPI(viewsets.ViewSet):
+class ChangePasswordAPI(APIView):
 
-    def pass_change(self, request):
+    def put(self, request):
         this_user = request.user
         my_pass = ChangePasswordSerializer(data=request.data, user=this_user)
         my_pass.is_valid()
@@ -191,8 +186,6 @@ class ChangePasswordAPI(viewsets.ViewSet):
             this_user.set_password(new_password1)
             this_user.save()
             messages.success(request, 'Successfully changed password')
-            Notification.objects.create(user=self.request.user, title='Password',
-                                        description='Password has been changed',type=0)
             return Response({'code': 1, 'response': 'Successfully changed password'})
 
 
@@ -210,50 +203,58 @@ class ForgotPassword(APIView):
         password_rese = ForgotPassSerializer(data=request.data)
         if password_rese.is_valid():
             mobile = password_rese.validated_data["phone_number"]
-            user = Tuser.objects.get(phone_number=mobile)
-            if Reset_password.objects.filter(user=user).count() == 0:
-                Reset_password.objects.create(user=user)
-            else:
-                Reset_password.objects.update(user=user, password_reset=pass_res_code())
-            # sms.send("Tossapp Password reset code: " + str(pass_res_code()), [proper_dial(mobile)])
+            try:
+                this_user = Tuser.objects.get(phone_number=proper_dial(mobile))
+            except Tuser.DoesNotExist:
+                this_user = None
+
+            if this_user is not None:
+                if Reset_password.objects.filter(user=this_user).exists():
+                    x = Reset_password.objects.filter(user=this_user).update(reset_code=reset_code(),
+                                                                        expiry=timezone.now() + expiry_date())
+                else:
+                    x = Reset_password.objects.create(user=this_user, reset_code=reset_code(),
+                                                 expiry=timezone.now() + expiry_date())
+                request.session['u_id'] = this_user.id
+                sms.send("Reset password code: " + str(x.reset_code), [proper_dial(mobile)])
+                messages.info(request, 'enter code sent to ' + this_user.mobile)
             return Response({'code': 1, 'response': password_rese.data}, status=status.HTTP_200_OK)
         return Response({'code': 0, 'response': password_rese.errors}, status=status.HTTP_400_BAD_REQUEST)
 
 
-class ResetCode(viewsets.ViewSet):
+class ResetCode(APIView):
     authentication_classes = ()
     permission_classes = ()
 
-    def post_code(self, request, username):
-        this_user = Tuser.objects.get(username=username)
+    def post_code(self, request):
+        user_id = request.session['u_id']
+        this_user = Tuser.objects.get(id=user_id)
+        my_reset_code = get_object_or_404(Reset_password, user=this_user)
         code = EnterResetSerializer(data=request.data)
-        my_code = Reset_password.objects.filter(user=this_user)[0]
-        user_code = my_code.password_reset
+
         if code.is_valid():
             reset_code = code.validated_data['reset_code']
-            if user_code == reset_code:
-                return Response({'code': 1, 'response': code.data}, status=status.HTTP_200_OK)
+            if my_reset_code.expiry > timezone.now():
+                if reset_code == my_reset_code.reset_code:
+                    return Response({'code': 1, 'response': code.data}, status=status.HTTP_200_OK)
         return Response({'code': 0, 'response': code.errors}, status=status.HTTP_400_BAD_REQUEST)
 
 
-class PasswordReset(viewsets.ViewSet):
+class PasswordReset(APIView):
     authentication_classes = ()
     permission_classes = ()
 
-    def get_code(self, request, username):
-        this_user = Tuser.objects.get(username=username)
-        my_code = Reset_password.objects.filter(user=this_user)[0]
-        user_code = my_code.password_reset
-        return Response({'reset_code': user_code}, status.HTTP_200_OK)
-
-    def reset_pass(self, request, username):
-        this_user = Tuser.objects.get(username=username)
+    def reset_pass(self, request):
+        user_id = request.session['u_id']
+        user = get_object_or_404(Tuser, id=user_id)
         pass_reset = RestePassword(data=request.data)
         if pass_reset.is_valid():
             new_password = pass_reset.validated_data['password']
             new_password_confirm = pass_reset.validated_data['confirm_password']
-            print(new_password)
-            return Response({'code': 1, 'response': pass_reset.data}, status=status.HTTP_200_OK)
+            if new_password == new_password_confirm:
+                if len(new_password) > 8 and len(new_password_confirm) > 8:
+                    user.set_password(new_password)
+                    return Response({'code': 1, 'response': pass_reset.data}, status=status.HTTP_200_OK)
         return Response({'code': 0}, status=status.HTTP_400_BAD_REQUEST)
 
 

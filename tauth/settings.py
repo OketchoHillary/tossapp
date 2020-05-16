@@ -45,13 +45,13 @@ INSTALLED_APPS = [
     'django.contrib.humanize',
     'django_countries',
     'rest_framework',
+    'corsheaders',
     'rest_framework.authtoken',
     'accounts_api',
     'tossapp',
     'tossapp_api',
     'lotto_api',
     'askapp',
-    'django_ajax',
     'sky_box_api',
     'fc_api',
     'ms_api',
@@ -69,6 +69,8 @@ MIDDLEWARE = [
     # 'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
 ]
 
 ROOT_URLCONF = 'tauth.urls'
@@ -93,7 +95,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'tauth.wsgi.application'
-
+CORS_ORIGIN_ALLOW_ALL = True
 
 # Database
 # https://docs.djangoproject.com/en/1.9/ref/settings/#databases

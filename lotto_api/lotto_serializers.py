@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from lotto_api.models import DailyLottoResult
+from lotto_api.models import DailyLottoResult, DailyLottoTicket
 
 
 class TicketDailySerializer(serializers.Serializer):
@@ -21,3 +21,9 @@ class AlltimeSerializer(serializers.ModelSerializer):
     class Meta:
         model = DailyLottoResult
         exclude = ['id']
+
+class PastSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = DailyLottoTicket
+        fields = ['ticket_no', 'hits']

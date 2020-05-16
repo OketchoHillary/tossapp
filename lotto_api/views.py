@@ -3,12 +3,15 @@ from __future__ import unicode_literals
 
 # Create your views here.
 import datetime
+import dateutil.parser as parser
 import random
 from django.db.models import F
 from django.utils import timezone
+from next_prev import next_in_order, prev_in_order
 from rest_framework import status, serializers, generics, mixins
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework import viewsets
 from lotto_api.models import DailyLotto, DailyLottoTicket, DailyLottoResult
 from lotto_api.lotto_serializers import TicketDailySerializer, MultipleDailySerializer, AlltimeSerializer
 from tauth.task import create_random_tickets
@@ -17,7 +20,10 @@ from tossapp_api.models import Game, Game_stat
 from tossapp_api.tossapp_serializers import GamesHistorySerializer
 
 
-lotto_game = Game.objects.get(name='Daily Lotto')
+try:
+    lotto_game = Game.objects.get(name='Daily Lotto')
+except Game.DoesNotExist:
+    lotto_game = 'Daily Lotto'
 
 fee = DailyLotto.TICKET_PRICE * DailyLotto.HOUSE_COMMISSION_RATE
 
@@ -27,7 +33,7 @@ def total(single_form, multiple_tickets_form):
 
 
 def hours_minutes_seconds(td):
-    return td.seconds//3600, (td.seconds//60)%60, td.seconds % 60
+    return td.seconds//3600, (td.seconds//60) % 60, td.seconds % 60
 
 
 def convert_timedelta(duration):
@@ -35,7 +41,7 @@ def convert_timedelta(duration):
     hours = days * 24 + seconds // 3600
     minutes = (seconds % 3600) // 60
     seconds = (seconds % 60)
-    return '{} hours, {} minutes, {} seconds'.format(hours, minutes, seconds)
+    return '{}:{}:{}'.format(hours, minutes, seconds)
 
 
 def balance_calculator(lar, ry):
@@ -58,19 +64,22 @@ def random_tickets(tick, req):
 class TicketDailyCreate(APIView):
     def get(self, request):
         latest_daily = DailyLotto.objects.filter(lotto_type='D')[0]
+        previous_daily = DailyLotto.objects.filter(lotto_type='D')[1].jack_pot
+        tickets = DailyLottoTicket.objects.filter(daily_lotto=latest_daily).count()
+        daily_revenue = DailyLotto.TICKET_PRICE * tickets
+        six_prize = DailyLotto.JACKPOT_SHARE_RATE * daily_revenue
         # getting difference in time delta
         x = latest_daily.end_date - timezone.now()
-        z = latest_daily.start_date
-        datetime_str = z
-        # old_format = '%Y-%m-%dT%H:%M:%S.%fZ'
-        # new_format = '%d-%m-%Y %H:%M:%S'
-        #
-        # new_datetime_str = datetime.datetime.strptime(datetime_str, old_format).strftime(new_format)
+        ender = latest_daily.end_date
+        dato = parser.parse(str(ender))
+        current_time = datetime.datetime.now()
 
         today_lotto = {
-            'bought_tickets': DailyLottoTicket.objects.filter(daily_lotto=latest_daily).count(),
-            'start_date': z,
-            'count_down': convert_timedelta(x)
+            'bought_tickets': tickets,
+            'end_date':dato.isoformat(),
+            'current_time': current_time.isoformat(),
+            'count_down': convert_timedelta(x),
+            'jackpot': previous_daily + six_prize
         }
 
         return Response({'response': today_lotto}, status=status.HTTP_200_OK)
@@ -102,9 +111,9 @@ class TicketDailyCreate(APIView):
                                          status=Game_stat.PENDING, service_fee=fee)
                 Game.objects.filter(name='Daily Lotto').update(times_played=F("times_played") + 1)
             else:
-                raise serializers.ValidationError("Insufficient balance")
+                raise serializers.ValidationError({'response':"Insufficient balance"})
         else:
-            raise serializers.ValidationError("Time has ended. Next lotto starts at midnight")
+            raise serializers.ValidationError({'response':"Time has ended. Next lotto starts at midnight"})
 
         return Response({'code': 1, 'response': 'Successfully bought'})
 
@@ -113,10 +122,22 @@ class MultipleDailyTicket(APIView):
 
     def get(self, request):
         latest_daily = DailyLotto.objects.filter(lotto_type='D')[0]
+        previous_daily = DailyLotto.objects.filter(lotto_type='D')[1].jack_pot
+        tickets = DailyLottoTicket.objects.filter(daily_lotto=latest_daily).count()
+        daily_revenue = DailyLotto.TICKET_PRICE * tickets
+        six_prize = DailyLotto.JACKPOT_SHARE_RATE * daily_revenue
+        # getting difference in time delta
+        x = latest_daily.end_date - timezone.now()
+        ender = latest_daily.end_date
+        dato = parser.parse(str(ender))
+        current_time = datetime.datetime.now()
+
         today_lotto = {
-            'bought_tickets': DailyLottoTicket.objects.filter(daily_lotto=latest_daily).count(),
-            'start_date': latest_daily.start_date,
-            'count_down': latest_daily.end_date - timezone.now()
+            'bought_tickets': tickets,
+            'end_date': dato.isoformat(),
+            'current_time': current_time.isoformat(),
+            'count_down': convert_timedelta(x),
+            'jackpot': previous_daily + six_prize
         }
 
         return Response({'response': today_lotto}, status=status.HTTP_200_OK)
@@ -161,54 +182,26 @@ class AllTimeWinnersAPI(generics.ListAPIView, mixins.ListModelMixin):
     serializer_class = AlltimeSerializer
 
 
-# class PreviousLottoAPI(viewsets.ViewSet):
-#
-#     def get_previous_lottos(self, request, lotto_date):
-#
-#         this_lotto1 = DailyLotto.objects.filter(lotto_type='D').latest('end_date')
-#         this_lotto = DailyLotto.objects.filter(lotto_type='D')[1]
-#
-#         if not lotto_date:
-#             current = this_lotto1.end_date
-#         else:
-#             current = this_lotto.end_date
-#
-#         # next = current.next()
-#         # previous = current.previous()
-#         print(current)
-#         previous_daily_lotto = get_object_or_404(DailyLotto, end_date=lotto_date, lotto_type='D')
-#
-#         details = {
-#             'draw_date': previous_daily_lotto.end_date,
-#             'win1': previous_daily_lotto.win1,
-#             'win2': previous_daily_lotto.win2,
-#             'win3': previous_daily_lotto.win3,
-#             'win4': previous_daily_lotto.win4,
-#             'win5': previous_daily_lotto.win5,
-#             'win6': previous_daily_lotto.win6,
-#             'jackpot': previous_daily_lotto.jack_pot,
-#             'number6Winners': DailyLottoTicket.objects.filter(daily_lotto=previous_daily_lotto, hits=6).count(),
-#             'number5Winners': DailyLottoTicket.objects.filter(daily_lotto=previous_daily_lotto, hits=5).count(),
-#             'number4Winners': DailyLottoTicket.objects.filter(daily_lotto=previous_daily_lotto, hits=4).count(),
-#             'number3Winners': DailyLottoTicket.objects.filter(daily_lotto=previous_daily_lotto, hits=3).count(),
-#         }
-#
-#         return Response({'response': details, 'lotto': current, 'winners': AlltimeSerializer(
-#             DailyLottoResult.objects.filter(daily_lotto__end_date=previous_daily_lotto.end_date),
-#             many=True).data}, status=status.HTTP_200_OK)
-
-
 class TicketQuaterlyCreate(APIView):
 
     def get(self, request):
-
         latest_quaterly = DailyLotto.objects.filter(lotto_type='Q')[0]
+        previous_daily = DailyLotto.objects.filter(lotto_type='Q')[1].jack_pot
+        tickets = DailyLottoTicket.objects.filter(daily_lotto=latest_quaterly).count()
+        daily_revenue = DailyLotto.TICKET_PRICE * tickets
+        six_prize = DailyLotto.JACKPOT_SHARE_RATE * daily_revenue
+        # getting difference in time delta
         x = latest_quaterly.end_date - timezone.now()
+        ender = latest_quaterly.end_date
+        dato = parser.parse(str(ender))
+        current_time = datetime.datetime.now()
 
         today_lotto = {
-            'bought_tickets': DailyLottoTicket.objects.filter(daily_lotto=latest_quaterly).count(),
-            'start_date': latest_quaterly.start_date,
-            'count_down': x
+            'bought_tickets': tickets,
+            'end_date': dato.isoformat(),
+            'current_time': current_time.isoformat(),
+            'count_down': convert_timedelta(x),
+            'jackpot': previous_daily + six_prize
         }
 
         return Response({'response': today_lotto}, status=status.HTTP_200_OK)
@@ -249,14 +242,23 @@ class TicketQuaterlyCreate(APIView):
 
 class MultipleQuaterlyTicket(APIView):
     def get(self, request):
-
         latest_quaterly = DailyLotto.objects.filter(lotto_type='Q')[0]
+        previous_daily = DailyLotto.objects.filter(lotto_type='Q')[1].jack_pot
+        tickets = DailyLottoTicket.objects.filter(daily_lotto=latest_quaterly).count()
+        daily_revenue = DailyLotto.TICKET_PRICE * tickets
+        six_prize = DailyLotto.JACKPOT_SHARE_RATE * daily_revenue
+        # getting difference in time delta
         x = latest_quaterly.end_date - timezone.now()
+        ender = latest_quaterly.end_date
+        dato = parser.parse(str(ender))
+        current_time = datetime.datetime.now()
 
         today_lotto = {
-            'bought_tickets': DailyLottoTicket.objects.filter(daily_lotto=latest_quaterly).count(),
-            'start_date': latest_quaterly.start_date,
-            'count_down': x
+            'bought_tickets': tickets,
+            'end_date': dato.isoformat(),
+            'current_time': current_time.isoformat(),
+            'count_down': convert_timedelta(x),
+            'jackpot': previous_daily + six_prize
         }
 
         return Response({'response': today_lotto}, status=status.HTTP_200_OK)
@@ -298,17 +300,28 @@ class MultipleQuaterlyTicket(APIView):
 
 
 class TicketHourlyCreate(APIView):
-
     def get(self, request):
-        latest_hourly = DailyLotto.objects.filter(lotto_type='H')[0]
 
-        hourly_lotto = {
-            'bought_tickets': DailyLottoTicket.objects.filter(daily_lotto=latest_hourly).count(),
-            'start_date': latest_hourly.start_date,
-            'count_down': latest_hourly.end_date - timezone.now()
+        latest_hourly = DailyLotto.objects.filter(lotto_type='H')[0]
+        previous_daily = DailyLotto.objects.filter(lotto_type='H')[1].jack_pot
+        tickets = DailyLottoTicket.objects.filter(daily_lotto=latest_hourly).count()
+        daily_revenue = DailyLotto.TICKET_PRICE * tickets
+        six_prize = DailyLotto.JACKPOT_SHARE_RATE * daily_revenue
+        # getting difference in time delta
+        x = latest_hourly.end_date - timezone.now()
+        ender = latest_hourly.end_date
+        dato = parser.parse(str(ender))
+        current_time = datetime.datetime.now()
+
+        today_lotto = {
+            'bought_tickets': tickets,
+            'end_date': dato.isoformat(),
+            'current_time': current_time.isoformat(),
+            'count_down': convert_timedelta(x),
+            'jackpot': previous_daily + six_prize
         }
 
-        return Response({'response': hourly_lotto}, status=status.HTTP_200_OK)
+        return Response({'response': today_lotto}, status=status.HTTP_200_OK)
 
     def post(self, request):
         latest_hourly = DailyLotto.objects.filter(lotto_type='H')[0]
@@ -346,6 +359,7 @@ class TicketHourlyCreate(APIView):
 class MultipleHourlyTicket(APIView):
     def get(self, request):
         latest_hourly = DailyLotto.objects.filter(lotto_type='H')[0]
+
 
         hourly_lotto = {
             'bought_tickets': DailyLottoTicket.objects.filter(daily_lotto=latest_hourly).count(),
@@ -393,3 +407,97 @@ class MultipleHourlyTicket(APIView):
 class LottoStatView(APIView):
     def get(self, request):
         return Response(GamesHistorySerializer(Game_stat.objects.filter(user=request.user, game=lotto_game), many=True).data)
+
+
+class Prev_and_next(viewsets.ViewSet):
+
+    def past(self, request):
+        m = DailyLotto.objects.all().order_by('-end_date')[1]
+        n = DailyLottoTicket.objects.filter(daily_lotto=m)
+        winners = n.filter(hits__gte=3).order_by('-hits')
+        # place them on a list
+        z = []
+        details = {
+            'draw_date':m.end_date,
+            'jackpot': m.jack_pot,
+            'n1': m.win1,
+            'n2': m.win2,
+            'n3': m.win3,
+            'n4': m.win4,
+            'n5': m.win5,
+            'n6':m.win6,
+            '6prize': n.filter(hits=6).count(),
+            '5prize': n.filter(hits=5).count(),
+            '4prize': n.filter(hits=4).count(),
+            '3prize': n.filter(hits=3).count()
+
+        }
+        for winner in winners:
+            username = winner.player_name.username
+            tk = {'name':username, 'ticket_no':winner.ticket_no, 'hits':winner.hits}
+            z.append(tk.copy())
+
+        return Response({'response': details, 'past_winners':z}, status=status.HTTP_200_OK)
+
+    def prev(self, request):
+        m = DailyLotto.objects.filter(lotto_type='D').order_by('-end_date')
+        newest = m[1]
+        second_newest = next_in_order(newest, m)
+        n = DailyLottoTicket.objects.filter(daily_lotto=second_newest)
+        winners = n.filter(hits__gte=3).order_by('-hits')
+
+        # place them on a list
+        z = []
+        details = {
+            'draw_date': second_newest.end_date,
+            'jackpot': second_newest.jack_pot,
+            'n1': second_newest.win1,
+            'n2': second_newest.win2,
+            'n3': second_newest.win3,
+            'n4': second_newest.win4,
+            'n5': second_newest.win5,
+            'n6': second_newest.win6,
+            '6prize': n.filter(hits=6).count(),
+            '5prize': n.filter(hits=5).count(),
+            '4prize': n.filter(hits=4).count(),
+            '3prize': n.filter(hits=3).count()
+
+        }
+        for winner in winners:
+            username = winner.player_name.username
+            tk = {'name': username, 'ticket_no': winner.ticket_no, 'hits': winner.hits}
+            z.append(tk.copy())
+
+        return Response({'response': details, 'past_winners': z}, status=status.HTTP_200_OK)
+
+    def next(self, request):
+        m = DailyLotto.objects.filter(lotto_type='D').order_by('-end_date')
+        last = m[2]
+        second_oldest = prev_in_order(last, m)
+
+        n = DailyLottoTicket.objects.filter(daily_lotto=second_oldest)
+        winners = n.filter(hits__gte=3).order_by('-hits')
+
+        # place them on a list
+        z = []
+        details = {
+            'draw_date': second_oldest.end_date,
+            'jackpot': second_oldest.jack_pot,
+            'n1': second_oldest.win1,
+            'n2': second_oldest.win2,
+            'n3': second_oldest.win3,
+            'n4': second_oldest.win4,
+            'n5': second_oldest.win5,
+            'n6': second_oldest.win6,
+            '6prize': n.filter(hits=6).count(),
+            '5prize': n.filter(hits=5).count(),
+            '4prize': n.filter(hits=4).count(),
+            '3prize': n.filter(hits=3).count()
+
+        }
+        for winner in winners:
+            username = winner.player_name.username
+            tk = {'name': username, 'ticket_no': winner.ticket_no, 'hits': winner.hits}
+            z.append(tk.copy())
+
+        return Response({'response': details, 'past_winners': z}, status=status.HTTP_200_OK)

@@ -1,10 +1,9 @@
 from __future__ import unicode_literals
 import requests
-from django.conf import settings
 from django.contrib.auth.hashers import check_password
 from django.db.models import Count, F
-from rest_framework import status, generics
-from rest_framework.pagination import LimitOffsetPagination, PageNumberPagination
+from rest_framework import status
+from rest_framework.pagination import PageNumberPagination
 
 from tossapp_api.tossapp_serializers import *
 from rest_framework.views import APIView

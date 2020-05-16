@@ -51,26 +51,25 @@ class UserSerializer(serializers.Serializer):
     def create(self, validated_data):
         username = validated_data['username']
         dob = validated_data['dob']
-        phone_number = validated_data['phone_number']
-        referrer_share_code = validated_data['referrer_share_code']
+        phone_number = proper_dial(validated_data['phone_number'])
 
         # Checking for username
         qs = Tuser.objects.filter(username=username)
         if qs.count() > 0:
-            raise exceptions.ValidationError('This username is already in use.')
+            raise exceptions.ValidationError({'response':'This username is already in use.'})
 
         # verifying phone number
         if not validate_phone_number(phone_number):
-            raise exceptions.ValidationError("Please provide a valid MTN or Airtel number")
+            raise exceptions.ValidationError({'response':"Please provide a valid MTN or Airtel number"})
 
         qn = Tuser.objects.filter(phone_number=phone_number)
         if qn.count() > 0:
-            raise serializers.ValidationError('This Phone number is already in use.')
+            raise serializers.ValidationError({'response':'This Phone number is already in use.'})
 
         my_age = int((datetime.date.today() - dob).days / 365.25)
 
         if my_age < 18:
-            raise serializers.ValidationError('Only those above 18 years can Signup')
+            raise serializers.ValidationError({'response':'Only those above 18 years can Signup'})
 
         # incrementing points on referee
 
@@ -80,7 +79,7 @@ class UserSerializer(serializers.Serializer):
         user.phone_number = proper_dial(phone_number)
         user.set_password(validated_data['password'],)
         user.save()
-        sms.send("Tossapp verification code: "+str(user.verification_code), [proper_dial(phone_number)])
+        # sms.send("Tossapp verification code: "+str(user.verification_code), [proper_dial(phone_number)])
         return validated_data
 
 

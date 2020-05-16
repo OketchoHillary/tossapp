@@ -13,7 +13,9 @@ urlpatterns = [
     path('hourly-multiple-tickets', MultipleHourlyTicket.as_view(),
          name='other_hourly_tickets'),
     path('all-time-winners', AllTimeWinnersAPI.as_view(), name='AllTimeWinnersAPI'),
-    # path('<str:lotto_date>/', PreviousLottoAPI.as_view({'get': 'get_previous_lottos'}), name='PreviousLottoAPI'),
+    path('prev-lotto/', Prev_and_next.as_view({'get': 'prev'}), name='PrevLottoAPI'),
+    path('next-lotto/', Prev_and_next.as_view({'get': 'next'}), name='NextLottoAPI'),
+    path('past-lotto/', Prev_and_next.as_view({'get': 'past'}), name='PastLottoAPI'),
     path('lotto-stats', LottoStatView.as_view(), name='lotto_stat'),
  ]
 

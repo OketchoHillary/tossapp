@@ -1,5 +1,6 @@
 from __future__ import unicode_literals
 
+import datetime
 import random
 
 from django.core.validators import RegexValidator
@@ -29,11 +30,9 @@ def toss_share_code():
     return str(m_code)
 
 
-def pass_res_code():
-    r_code = ""
-    for x in range(8):
-        r_code = r_code + str(random.randint(0, 9))
-    return str(r_code)
+
+def expiry_date():
+    return datetime.timedelta(hours=1, minutes=0, seconds=0)
 
 
 class TuserManager(BaseUserManager):
@@ -81,7 +80,7 @@ class Tuser(AbstractBaseUser):
     )
     username = models.CharField(max_length=15, unique=True, error_messages={'unique':"A user with this username"
                                                                                      " already exists."})
-    phone_number = models.CharField(max_length=13, unique=True, error_messages={'unique':"A user with this phone "
+    phone_number = models.CharField(max_length=15, unique=True, error_messages={'unique':"A user with this phone "
                                                                                          "number already exists."})
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=30)
@@ -168,11 +167,7 @@ class Tuser(AbstractBaseUser):
 
 
 class Reset_password(models.Model):
+    id = models.BigAutoField(primary_key=True, unique=True)
     user = models.ForeignKey(Tuser, on_delete=models.CASCADE)
-    password_reset = models.CharField(max_length=8, blank=True, null=True)
-
-    def save(self, *args, **kwargs):
-        if not self.id:
-            self.password_reset = pass_res_code()
-
-        return super(Reset_password, self).save(*args, **kwargs)
+    reset_code = models.CharField(default='', blank=True, max_length=6)
+    expiry = models.DateTimeField()
