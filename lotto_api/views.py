@@ -439,6 +439,7 @@ class Prev_and_next(viewsets.ViewSet):
 
         return Response({'response': details, 'past_winners':z}, status=status.HTTP_200_OK)
 
+    #previous
     def prev(self, request):
         m = DailyLotto.objects.filter(lotto_type='D').order_by('-end_date')
         newest = m[1]
