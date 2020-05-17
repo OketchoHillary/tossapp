@@ -79,7 +79,7 @@ class UserSerializer(serializers.Serializer):
         user.phone_number = proper_dial(phone_number)
         user.set_password(validated_data['password'],)
         user.save()
-        # sms.send("Tossapp verification code: "+str(user.verification_code), [proper_dial(phone_number)])
+        sms.send("Tossapp verification code: "+str(user.verification_code), [proper_dial(phone_number)])
         return validated_data
 
 

@@ -10,6 +10,9 @@ from rest_framework.views import APIView
 from rest_framework import viewsets
 from rest_framework.response import Response
 
+# info for jpesa
+payload2 = {'command': 'jpesa', 'action': 'info', 'username': 'emmanuel.m', 'password': 'yoonek17',
+                        'IS_GET': 3, 'tid': '7254D08FF0FA62E20E26681485A71568'}
 
 class NotificationView(viewsets.ModelViewSet):
     pagination_class = PageNumberPagination
@@ -75,17 +78,18 @@ class TransactionView(viewsets.ViewSet):
                        'IS_GET': 3, 'number': request.user.phone_number, 'amount': amount}
 
             if 1000 <= amount <= 10000:
-                sent = requests.post(url, data=payload)
-                if sent.status_code == 200:
-                    Transaction.objects.create(user=request.user, transaction_type=0, status=1, payment_method=0,
-                                               amount=amount)
-                    Tuser.objects.filter(id=request.user.id).update(balance=F("balance") + amount)
-                else:
-                    print('bad request')
-            else:
-                raise serializers.ValidationError("Deposits should range between 1000 to 10000")
+                requests.post(url, data=payload)
+                print('enter pin')
+                info = requests.post(url, data=payload2)
+                print(info.text)
+                # Transaction.objects.create(user=request.user, transaction_type=0, status=1, payment_method=0,
+                #                            amount=amount)
+                # Tuser.objects.filter(id=request.user.id).update(balance=F("balance") + amount)
 
-        return Response({'response': 'Successfully deposited'}, status=status.HTTP_202_ACCEPTED)
+            else:
+                raise serializers.ValidationError({'response':"Deposits should range between 1000 to 10000"})
+
+        return Response({'response': 'Successfully deposited'}, status=status.HTTP_200_OK)
 
     def fund_withdraw(self, request):
         withdraw = WithdrawSerializer(data=request.data, user=request.user)
@@ -99,14 +103,13 @@ class TransactionView(viewsets.ViewSet):
             if valid_password:
                 if 1000 <= amount <= 10000:
                     received = requests.post(url, data=payload)
-                    if received.status_code == 200:
-                        Transaction.objects.create(user=request.user, transaction_type=0, status=1, payment_method=0,
-                                                   amount=amount)
-                        Tuser.objects.filter(id=request.user.id).update(balance=F("balance") - amount)
+                    # Transaction.objects.create(user=request.user, transaction_type=0, status=1, payment_method=0,
+                    #                            amount=amount)
+                    # Tuser.objects.filter(id=request.user.id).update(balance=F("balance") - amount)
 
                 else:
-                    raise serializers.ValidationError("Withdrawals should range between 1000 to 10000")
+                    raise serializers.ValidationError({'response':"Withdrawals should range between 2000 to 10000"})
             else:
-                raise serializers.ValidationError("wrong password")
+                raise serializers.ValidationError({'response':"wrong password"})
         return Response({'response': 'Successfully withdrawn'}, status=status.HTTP_202_ACCEPTED)
 

@@ -10,10 +10,9 @@ from tossapp.models import Faq
 
 
 def index(request):
-    context = RequestContext(request)
     page_brief = 'dashboard & statistics'
 
-    return render(request, 'tossapp/index.html', locals(), context)
+    return render(request, 'tossapp/index.html', locals())
 
 
 @csrf_protect

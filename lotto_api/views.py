@@ -177,9 +177,12 @@ class MultipleDailyTicket(APIView):
         return Response({'code': 1, 'response': 'Successfully bought'})
 
 
-class AllTimeWinnersAPI(generics.ListAPIView, mixins.ListModelMixin):
-    queryset = DailyLottoResult.objects.all().order_by('-prize')[:15]
-    serializer_class = AlltimeSerializer
+class AllTimeWinnersAPI(APIView):
+
+    def get(self, request):
+        winners = DailyLottoResult.objects.all().order_by('-prize')[:10]
+        return Response({'winners':AlltimeSerializer(winners, many=True).data}, status=status.HTTP_200_OK)
+
 
 
 class TicketQuaterlyCreate(APIView):
