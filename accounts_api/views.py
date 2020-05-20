@@ -90,11 +90,11 @@ class UsernameUpdateView(viewsets.ViewSet):
         new_username = my_username.validated_data["new_username"]
 
         if old_username != this_user.username:
-            raise serializers.ValidationError('Wrong Username.')
+            raise serializers.ValidationError({'error': 'Wrong Username.'})
         elif Tuser.objects.filter(username=new_username).count() > 0:
-            raise serializers.ValidationError('This username is already in use.')
+            raise serializers.ValidationError({'error': 'This username is already in use.'})
         elif old_username == new_username:
-            raise serializers.ValidationError("Old username and new username can't be the same")
+            raise serializers.ValidationError({'error': "Old username and new username can't be the same"})
         else:
             this_user.username = new_username
             this_user.save()
@@ -118,11 +118,11 @@ class PhoneNumberUpdateView(viewsets.ViewSet):
         new_phone_number = proper_dial(my_number.validated_data["new_phone_number"])
 
         if old_phone_number != this_user.phone_number:
-            raise serializers.ValidationError('Wrong Phone_number.')
+            raise serializers.ValidationError({'error': 'Wrong Phone_number.'})
         elif Tuser.objects.filter(phone_number=new_phone_number).count() > 0:
-            raise serializers.ValidationError('This Phone number is already in use.')
+            raise serializers.ValidationError({'error': 'This Phone number is already in use.'})
         elif old_phone_number == new_phone_number:
-            raise serializers.ValidationError("Old number and new number can't be the same")
+            raise serializers.ValidationError({'error': "Old number and new number can't be the same"})
         else:
             this_user.phone_number = new_phone_number
             this_user.save()
@@ -181,7 +181,7 @@ class ChangePasswordAPI(APIView):
         if not this_user.check_password(old_password):
             raise serializers.ValidationError('Incorrect password.')
         elif new_password1 and new_password2 and new_password1 != new_password2:
-            raise serializers.ValidationError("Passwords don't match")
+            raise serializers.ValidationError({'error': "Passwords don't match"})
         else:
             this_user.set_password(new_password1)
             this_user.save()
@@ -202,22 +202,25 @@ class ForgotPassword(APIView):
     def post(self, request):
         password_rese = ForgotPassSerializer(data=request.data)
         if password_rese.is_valid():
-            mobile = password_rese.validated_data["phone_number"]
+            mobile = proper_dial(password_rese.validated_data["phone_number"])
             try:
-                this_user = Tuser.objects.get(phone_number=proper_dial(mobile))
+                this_user = Tuser.objects.get(phone_number=mobile)
             except Tuser.DoesNotExist:
                 this_user = None
 
-            if this_user is not None:
+            if not this_user is None:
                 if Reset_password.objects.filter(user=this_user).exists():
-                    x = Reset_password.objects.filter(user=this_user).update(reset_code=reset_code(),
-                                                                        expiry=timezone.now() + expiry_date())
+                    tusuer = Reset_password.objects.get(user=this_user)
+                    tusuer.reset_code = reset_code()
+                    tusuer.expiry = timezone.now() + expiry_date()
+                    tusuer.save()
                 else:
-                    x = Reset_password.objects.create(user=this_user, reset_code=reset_code(),
+                    tusuer = Reset_password.objects.create(user=this_user, reset_code=reset_code(),
                                                  expiry=timezone.now() + expiry_date())
+
+                sms.send("Reset password code: " + tusuer.reset_code, [proper_dial(mobile)])
                 request.session['u_id'] = this_user.id
-                sms.send("Reset password code: " + str(x.reset_code), [proper_dial(mobile)])
-                messages.info(request, 'enter code sent to ' + this_user.mobile)
+
             return Response({'code': 1, 'response': password_rese.data}, status=status.HTTP_200_OK)
         return Response({'code': 0, 'response': password_rese.errors}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -262,8 +265,9 @@ class ResendCode(viewsets.ViewSet):
     authentication_classes = ()
     permission_classes = ()
 
-    def resend_code(self, request, username):
-        this_user = Tuser.objects.get(username=username)
+    def resend_code(self, request):
+        user_id = request.session['u_id']
+        this_user = Tuser.objects.get(id=user_id)
         Tuser.objects.filter(username=this_user.username).update(verification_code=generate_verification_code())
-        sms.send("Tossapp Verification code: " + str(this_user.verification_code), [this_user.phone_number])
+        sms.send("Tossapp Verification code: " + this_user.verification_code, [this_user.phone_number])
         return Response({'code': 1}, status=status.HTTP_200_OK)
