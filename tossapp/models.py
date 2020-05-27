@@ -18,7 +18,7 @@ class Contact_us(models.Model):
         return truncatechars(self.your_message, 15)
 
     class Meta:
-        db_table = 'Contact Us'
+        db_table = 'contact_us'
         verbose_name_plural = "Contact Us Messages"
 
 

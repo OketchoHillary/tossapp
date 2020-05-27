@@ -1,6 +1,6 @@
 import random
 import string
-from datetime import *
+from datetime import timedelta
 from django.utils import timezone
 from django.db import models, IntegrityError
 from django.dispatch import receiver

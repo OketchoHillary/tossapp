@@ -22,6 +22,7 @@ class AlltimeSerializer(serializers.ModelSerializer):
         model = DailyLottoResult
         exclude = ['id']
 
+
 class PastSerializer(serializers.ModelSerializer):
 
     class Meta:

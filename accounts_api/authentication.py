@@ -2,7 +2,8 @@ from django.db.models import Q
 
 from rest_framework import authentication
 from rest_framework import exceptions
-from accounts.models import Tuser
+
+from accounts_api.models import Tuser
 
 
 class TossApiAuthentication(authentication.BaseAuthentication):

@@ -100,14 +100,26 @@ CORS_ORIGIN_ALLOW_ALL = True
 # Database
 # https://docs.djangoproject.com/en/1.9/ref/settings/#databases
 
-DATABASES = {
+if not DEBUG:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': 'd8mlbm4kng5o09',
+            'USER': 'ykthgpdcrfdyqx',
+            'PASSWORD': '54e0c722cb6a9ec2998d89235a67cb5072bc3bc29a0516975f9d1fbaa2f8a957',
+            'HOST': 'ec2-54-235-92-244.compute-1.amazonaws.com',  # Or an IP Address that your DB is hosted on
+            'PORT': '5432',
+        }
+    }
+else:
+    DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
+        'ENGINE': 'django.db.backends.mysql',
         'NAME': 'toss_app_db',
-        'USER': 'postgres',
-        'PASSWORD': 'postgres',
+        'USER': 'root',
+        'PASSWORD': '',
         'HOST': '127.0.0.1',   # Or an IP Address that your DB is hosted on
-        'PORT': '5432',
+        'PORT': '3308',
     }
 }
 
@@ -192,5 +204,7 @@ NUMBER_RANGE = 21
 
 prod_db = dj_database_url.config(conn_max_age=500)
 DATABASES['default'].update(prod_db)
+
+#CELERY_BROKER_URL = 'amqp://komlulik:SvPPQ9YAWK8bKJD-ZMle4YHArK0L9DZE@wildboar.rmq.cloudamqp.com/komlulik'
 
 CELERY_BROKER_URL = 'amqp://localhost'

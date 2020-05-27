@@ -1,6 +1,7 @@
 from django.urls import path
 
-from lotto_api.views import *
+from lotto_api.views import TicketDailyCreate, MultipleDailyTicket, TicketQuaterlyCreate, MultipleQuaterlyTicket, \
+    TicketHourlyCreate, MultipleHourlyTicket, AllTimeWinnersAPI, Prev_and_next, LottoStatView
 
 urlpatterns = [
     # ticket buy APIs

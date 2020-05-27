@@ -2,8 +2,8 @@ import random
 
 from django.utils import timezone
 
+from accounts_api.models import Tuser
 from lotto_api.models import DailyLotto, DailyLottoTicket, DailyQuota, CommissionSum, now_plus_2, DailyLottoResult
-from tossapp.models import *
 from django.db.models import F
 from tauth.settings import NUMBER_RANGE
 

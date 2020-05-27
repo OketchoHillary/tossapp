@@ -1,8 +1,9 @@
 from django.urls import path
 from rest_framework.authtoken import views
 
-from accounts_api.views import *
-
+from accounts_api.views import UserCreate, LoginView, VerificationAPI, LogoutView, ProfileView, ProfileUpdateView, \
+    UsernameUpdateView, PhoneNumberUpdateView, ProfilePicViewSet, ChangePasswordAPI, ForgotPassword, ResetCode, \
+    PasswordReset, ResendCode
 
 urlpatterns = [
     # account APIs
@@ -13,9 +14,9 @@ urlpatterns = [
     path('user-profile/', ProfileView.as_view(), name='profileViewApi'),
     path('profile-update/', ProfileUpdateView.as_view(), name='profileUpdateApi'),
     path('username-update/', UsernameUpdateView.as_view({'put': 'username_change'}), name='usernameUpdateApi'),
-    path('username-update/', UsernameUpdateView.as_view({'get': 'get_username'}), name='usernameUpdateApi'),
+    path('get-username/', UsernameUpdateView.as_view({'get': 'get_username'}), name='usernameUpdateApi'),
     path('phone-number-update/', PhoneNumberUpdateView.as_view({'put': 'phone_change'}), name='phoneNoUpdateApi'),
-    path('phone-number-update/', PhoneNumberUpdateView.as_view({'get': 'get_phone_no'}), name='phoneNoUpdateApi'),
+    path('show-number/', PhoneNumberUpdateView.as_view({'get': 'get_phone_no'}), name='phoneNoUpdateApi'),
     path('photo-update/', ProfilePicViewSet.as_view(), name='profilePhotoApi'),
     path('change-password/', ChangePasswordAPI.as_view(), name='pass_change_api'),
     path('forgot-password/', ForgotPassword.as_view(), name='forgot_password'),

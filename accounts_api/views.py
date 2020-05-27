@@ -6,14 +6,21 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import F
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
-from rest_framework import generics, status
-from django.core import serializers
+from rest_framework import generics, status, serializers
+from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import viewsets, mixins
-from accounts_api.account_serializers import *
-from accounts_api.utils import reset_code
+from time import timezone
+
+from accounts_api.account_serializers import UserSerializer, LoginSerializer, UserProfileSerializer, \
+    EditProfileSerializer, ChangeUsernameSerializer, ChangePhoneNumberSerializer, proper_dial, \
+    ProfilePicSerializer, ActivateSerializer, ChangePasswordSerializer, ForgotPassSerializer, EnterResetSerializer, \
+    RestePassword
+from accounts_api.models import Tuser, Reset_password, expiry_date
+from accounts_api.utils import reset_code, generate_verification_code
 from tossapp_api.models import Notification
+from tossapp_api.sms_setting import sms
 
 
 class UserCreate(APIView):
@@ -118,7 +125,7 @@ class PhoneNumberUpdateView(viewsets.ViewSet):
         new_phone_number = proper_dial(my_number.validated_data["new_phone_number"])
 
         if old_phone_number != this_user.phone_number:
-            raise serializers.ValidationError({'error': 'Wrong Phone_number.'})
+            raise serializers.V({'error': 'Wrong Phone_number.'})
         elif Tuser.objects.filter(phone_number=new_phone_number).count() > 0:
             raise serializers.ValidationError({'error': 'This Phone number is already in use.'})
         elif old_phone_number == new_phone_number:
@@ -210,15 +217,15 @@ class ForgotPassword(APIView):
 
             if not this_user is None:
                 if Reset_password.objects.filter(user=this_user).exists():
-                    tusuer = Reset_password.objects.get(user=this_user)
-                    tusuer.reset_code = reset_code()
-                    tusuer.expiry = timezone.now() + expiry_date()
-                    tusuer.save()
+                    tuser = Reset_password.objects.get(user=this_user)
+                    tuser.reset_code = reset_code()
+                    tuser.expiry = timezone.now() + expiry_date()
+                    tuser.save()
                 else:
-                    tusuer = Reset_password.objects.create(user=this_user, reset_code=reset_code(),
+                    tuser = Reset_password.objects.create(user=this_user, reset_code=reset_code(),
                                                  expiry=timezone.now() + expiry_date())
 
-                sms.send("Reset password code: " + tusuer.reset_code, [proper_dial(mobile)])
+                sms.send("Reset password code: " + tuser.reset_code, [proper_dial(mobile)])
                 request.session['u_id'] = this_user.id
 
             return Response({'code': 1, 'response': password_rese.data}, status=status.HTTP_200_OK)

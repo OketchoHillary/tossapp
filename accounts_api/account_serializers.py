@@ -6,7 +6,7 @@ from django_countries import Countries
 from rest_framework import serializers, exceptions
 
 from accounts_api.admin import validate_phone_number
-from accounts_api.models import *
+from accounts_api.models import Tuser
 from accounts_api.utils import generate_verification_code
 from tossapp_api.sms_setting import sms
 

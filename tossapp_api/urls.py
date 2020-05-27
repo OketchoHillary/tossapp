@@ -1,10 +1,11 @@
 
 from django.urls import path
-from tossapp_api.views import *
 
+from tossapp_api.views import NotificationView, GameAPIView, ReferralAPI, GameStatView, TransactionHistoryView, \
+    TransactionView
 
 urlpatterns = [
-    # tossap account APIs
+    # tossapp account APIs
     path('notifications-api', NotificationView.as_view({'get': 'list_not'}), name='notificationApi'),
     path('games-api', GameAPIView.as_view(), name='gameAPIView'),
     path('user-referrals', ReferralAPI.as_view(), name='referralAPI'),

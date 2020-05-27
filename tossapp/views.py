@@ -2,8 +2,6 @@ from django.contrib import messages
 from django.urls import reverse_lazy
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
-from django.template import RequestContext
-from django.views.decorators.csrf import csrf_protect
 from django.views.generic import TemplateView, ListView
 from tossapp_api.forms import ContactForm
 from tossapp.models import Faq
@@ -15,9 +13,7 @@ def index(request):
     return render(request, 'tossapp/index.html', locals())
 
 
-@csrf_protect
 def contact(request, template_name='tossapp/contact_us.html'):
-    context = RequestContext(request)
     page_title = 'Contact Us | Tossapp'
     page_intro = 'Contact Us'
     if request.method == "POST":
@@ -27,7 +23,7 @@ def contact(request, template_name='tossapp/contact_us.html'):
         return HttpResponseRedirect(reverse_lazy('contact'))
     else:
         myqn_form = ContactForm()
-    return render(request, template_name, locals(), context)
+    return render(request, template_name, locals())
 
 
 class faq(ListView):
@@ -49,10 +45,9 @@ def how_it_works(request):
 
 
 def about_us(request):
-    context = RequestContext(request)
     page_title = 'About Us | Tossapp'
     page_intro = 'About Us'
-    return render(request, 'tossapp/abouts_us.html', locals(), context)
+    return render(request, 'tossapp/abouts_us.html', locals())
 
 
 class Latest_events(TemplateView):

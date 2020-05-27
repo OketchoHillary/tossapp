@@ -1,195 +1,194 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="utf-8">
-		<title>{% block title %}{{ page_title }}{% endblock %}</title>
-        {% load static %}
-        {% load humanize %}
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<meta name="description" content="" />
-		<meta name="author" content="" />
-		<!-- css -->
-		<link href="{% static 'tossapp/home/css/bootstrap.min.css' %}" rel="stylesheet" />
-		<link href="{% static 'tossapp/home/css/fancybox/jquery.fancybox.css' %}" rel="stylesheet">
-		<link href="{% static 'tossapp/home/css/flexslider.css' %}" rel="stylesheet" />
-		<link href="{% static 'tossapp/home/css/style.css' %}" rel="stylesheet" />
-		<link href="{% static 'tossapp/home/css/custom.css' %}" rel="stylesheet" />
-        <!-- END PAGE LEVEL STYLES -->
-		<link rel="shortcut icon" type="image/png" href="{%  static 'tossapp/assets/img/download.jpg' %}"/>
-		<!--[if lt IE 9]>
-			<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
-		<![endif]-->
-	</head>
-    {% url 'index' as url1 %}
-    {% url 'about_us' as url2 %}
-    {% url 'contact' as url3 %}
-    {% url 'faq' as url4 %}
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    {% load static %}
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Tossapp is an online gaming platform with the cheapest lottery">
+    <meta name="author" content="Tossapp">
 
-	<body>
-		<div id="wrapper" class="home-page">
-			<div class="topbar">
-				<div class="container">
-					<div class="row">
-						<div class="col-md-12">
-							<p class="pull-left hidden-xs"><i class="fa fa-clock-o"></i><span>Mon - Sunday 8.00 - 18.00.</span></p>
-							<p class="pull-right"><i class="fa fa-phone"></i>Tel No. (+256)70-342-6511</p>
-						</div>
-					</div>
-				</div>
-			</div>
+    <!-- OG Meta Tags to improve the way the post looks when you share the page on LinkedIn, Facebook, Google+ -->
+	<meta property="og:site_name" content="tossapp.com" /> <!-- website name -->
+	<meta property="og:site" content="tossapp.com" /> <!-- website link -->
+	<meta property="og:title" content="Tossapp"/> <!-- title shown in the actual shared post -->
+	<meta property="og:description" content="" /> <!-- description shown in the actual shared post -->
+	<meta property="og:image" content="" /> <!-- image link, make sure it's jpg -->
+	<meta property="og:url" content="" /> <!-- where do you want your post to link to -->
+	<meta property="og:type" content="article" />
 
-			<!-- start header -->
-			<header>
-				<div class="navbar navbar-default navbar-static-top">
-					<div class="container">
+    <!-- Webpage Title -->
+    <title>{{ page_title }}</title>
 
-						<div class="navbar-header">
-							<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-								<span class="icon-bar"></span>
-								<span class="icon-bar"></span>
-								<span class="icon-bar"></span>
-							</button>
-                            {% if user.is_authenticated %}
-							<a class="navbar-brand" href="{% url 'index' %}?next={% url 'dashboard' %}"><img src="{% static 'tossapp/assets/img/logo.png' %}" alt="logo"/></a>
-                                {% else %}
-                                <a class="navbar-brand" href="{% url 'index' %}"><img src="{% static 'tossapp/assets/img/logo.png' %}" alt="logo"/></a>
-                            {% endif %}
-						</div>
+    <!-- Styles -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700&display=swap&subset=latin-ext" rel="stylesheet">
+    <link href="{% static 'tossapp/css/bootstrap.css' %}" rel="stylesheet">
+    <link href="{% static 'tossapp/css/fontawesome-all.css' %}" rel="stylesheet">
+    <link href="{% static 'tossapp/css/swiper.css' %}" rel="stylesheet">
+	<link href="{% static 'tossapp/css/magnific-popup.css' %}" rel="stylesheet">
+	<link href="{% static 'tossapp/css/styles.css' %}" rel="stylesheet">
 
-						<div class="navbar-collapse collapse ">
-							<ul class="nav navbar-nav">
-								{% if user.is_authenticated %}
-								<li><a href="{% url 'index' %}?next={% url 'dashboard' %}">Home</a></li>
-                                    {% else %}
-                                    <li><a href="{% url 'index' %}">Home</a></li>
-                            {% endif %}
-								<li {% if request.path == url2 %} class="active" {% endif %}>
-                                    <a href="{% url 'about_us' %}">About Us</a>
-                                </li>
-								<li {% if request.path == url4 %}class="active" {% endif %}>
-                                    <a href="{% url 'faq' %}">FAQ</a>
-                                </li>
-								<li {% if request.path == url3 %}class="active" {% endif %}>
-                                    <a href="{% url 'contact' %}">Contact</a></li>
-                            {% if user.is_anonymous %}
-								<li><a href="{% url 'login' %}">Login</a></li>
-                            {% endif %}
-                            {% if user.is_anonymous %}
-								<li><a href="{% url 'register: #username' %}">Create Account</a></li>
-                                {% endif %}
-                            {% if user.is_authenticated %}
-								<li><a href="{% url 'logout' %}?next={% url 'index' %}">Logout</a></li>
-                                {% endif %}
-							</ul>
-						</div>
-					</div>
-				</div>
-			</header>
-			<!-- end header -->
+	<!-- Favicon  -->
+    <link rel="icon" href="{% static 'tossapp/images/favicon.png' %}">
+</head>
+<body data-spy="scroll" data-target=".fixed-top">
+
+    <!-- Preloader -->
+	<div class="spinner-wrapper">
+        <div class="spinner">
+            <div class="bounce1"></div>
+            <div class="bounce2"></div>
+            <div class="bounce3"></div>
+        </div>
+    </div>
+    <!-- end of preloader -->
 
 
-			<section id="inner-headline">
-				<div class="container">
-					<div class="row">
-						<div class="col-lg-12">
-							<h2 class="pageTitle">{{ page_intro }}</h2>
-						</div>
-					</div>
-				</div>
-			</section>
-        {% block content %}
-        {% endblock %}
-			<footer>
-				<div class="container">
-					<div class="row">
-						<div class="col-md-3 col-sm-3">
-							<div class="widget">
-								<h5 class="widgetheading">Our Contact</h5>
-								<address>
-									<strong>Tossapp (U) Ltd</strong><br>
-									Kampala, Uganda<br>
-								Mukono, Seeta.</address>
-								<p>
-									<i class="icon-phone"></i> (+256)70-342-6511 - (+256)78-287-0838 <br>
-									<i class="icon-envelope-alt"></i> info@tossapp.com
-								</p>
-							</div>
-						</div>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark navbar-custom fixed-top">
+        <div class="container">
+            <!-- Text Logo - Use this if you don't have a graphic logo -->
+            <!-- <a class="navbar-brand logo-text page-scroll" href="index.html">Sync</a> -->
 
-						<div class="col-md-3 col-sm-3">
-							<div class="widget">
-								<h5 class="widgetheading">Quick Links</h5>
-								<ul class="link-list">
-									<li><a href="{% url 'Latest_events' %}">Latest Events</a></li>
-									<li><a href="{% url 'tac' %}">Terms and conditions</a></li>
-									<li><a href="{% url 'contact' %}">Privacy policy</a></li>
-									<li><a href="{% url 'career' %}">Career</a></li>
-									<li><a href="{% url 'contact' %}">Contact us</a></li>
-								</ul>
-							</div>
-						</div>
+            <!-- Image Logo -->
+            <a class="navbar-brand logo-image" href="index.html"><img src="{% static 'tossapp/images/logo.svg' %}" alt="alternative"></a>
 
-						<div class="col-md-3 col-sm-3">
-							<div class="widget">
-								<h5 class="widgetheading">Daily Lotto Jackpot</h5>
-								<ul class="link-list">
-									<li><a href="{% url 'lotto' %}"><h1>{{ current_lotto|intcomma }}</h1></a></li>
-								</ul>
-							</div>
-						</div>
-						<div class="col-md-3 col-sm-3">
-							<div class="widget">
-								<h5 class="widgetheading">Download the Android App</h5>
-								<p>Download our Android App from the link below, or from the Android Store.</p>
-								<ul class="link-list">
-									<li><a href="#">Download.</a></li>
-								</ul>
-							</div>
-						</div>
-					</div>
-				</div>
+            <!-- Mobile Menu Toggle Button -->
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-awesome fas fa-bars"></span>
+                <span class="navbar-toggler-awesome fas fa-times"></span>
+            </button>
+            <!-- end of mobile menu toggle button -->
+
+            <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link page-scroll" href="#description">DESCRIPTION <span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link page-scroll" href="#features">FEATURES</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link page-scroll" href="#screens">SCREENS</a>
+                    </li>
+
+                    <!-- Dropdown Menu -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle page-scroll" id="navbarDropdown" role="button" aria-haspopup="true" aria-expanded="false">EXTRA</a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="article-details.html"><span class="item-text">ARTICLE DETAILS</span></a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="toc.html"><span class="item-text">TERMS CONDITIONS</span></a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="privacy_p.html"><span class="item-text">PRIVACY POLICY</span></a>
+                        </div>
+                    </li>
+                    <!-- end of dropdown menu -->
+                </ul>
+                <span class="nav-item">
+                    <a class="btn-outline-sm page-scroll" href="#download">DOWNLOAD</a>
+                </span>
+            </div>
+        </div> <!-- end of container -->
+    </nav> <!-- end of navbar -->
+    <!-- end of navigation -->
+    {% block content %}{% endblock %}
+    <!-- Footer -->
+    <div class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="footer-col first">
+                        <h5>About Sync</h5>
+                        <p class="p-small">Sync is a landing page HTML template built with Bootstrap 4 for presenting mobile apps</p>
+                    </div> <!-- end of footer-col -->
+                    <div class="footer-col second">
+                        <h5>Contact Info</h5>
+                        <ul class="list-unstyled li-space-lg p-small">
+                            <li class="media">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <div class="media-body">22 Innovation Street, CA, US</div>
+                            </li>
+                            <li class="media">
+                                <i class="fas fa-envelope"></i>
+                                <div class="media-body"><a href="#your-link">office@syncmobile.com</a></div>
+                            </li>
+                            <li class="media">
+                                <i class="fas fa-phone-alt"></i>
+                                <div class="media-body"><a href="#your-link">+44 376 945 23</a></div>
+                            </li>
+                        </ul>
+                    </div> <!-- end of footer-col -->
+                    <div class="footer-col third">
+                        <h5>Value Links</h5>
+                        <ul class="list-unstyled li-space-lg p-small">
+                            <li><a href="toc.html">Terms & Conditions</a></li>
+                            <li><a href="privacy_p.html">Privacy Policy</a></li>
+                            <li><a href="article-details.html">Article Details</a></li>
+                        </ul>
+                    </div> <!-- end of footer-col -->
+                    <div class="footer-col fourth">
+                        <h5>Other Apps</h5>
+                        <ul class="list-unstyled li-space-lg p-small">
+                            <li><a href="#your-link">Scientific Calculator</a></li>
+                            <li><a href="#your-link">Advanced Timer</a></li>
+                            <li><a href="#your-link">Music Store</a></li>
+                        </ul>
+                    </div> <!-- end of footer-col -->
+                    <div class="footer-col fifth">
+                        <span class="fa-stack">
+                            <a href="#your-link">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-facebook-f fa-stack-1x"></i>
+                            </a>
+                        </span>
+                        <span class="fa-stack">
+                            <a href="#your-link">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-twitter fa-stack-1x"></i>
+                            </a>
+                        </span>
+                        <span class="fa-stack">
+                            <a href="#your-link">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-pinterest-p fa-stack-1x"></i>
+                            </a>
+                        </span>
+                        <span class="fa-stack">
+                            <a href="#your-link">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-instagram fa-stack-1x"></i>
+                            </a>
+                        </span>
+                    </div> <!-- end of footer-col -->
+                </div> <!-- end of col -->
+            </div> <!-- end of row -->
+        </div> <!-- end of container -->
+    </div> <!-- end of footer -->
+    <!-- end of footer -->
 
 
-				<div id="sub-footer" style="background-color: #111111">
-					<div class="container">
-						<div class="row">
-							<div class="col-lg-6">
-								<div class="copyright">
-									<p>
-										<span>&copy; Tossapp {{ year }} All right reserved. Created By </span><a href="{% url 'index' %}" target="_blank">Tossapp</a>
-									</p>
-								</div>
-							</div>
-							<div class="col-lg-6">
-								<ul class="social-network">
-									<li><a href="www.facebook.com/tossapp" data-placement="top" title="Facebook" target="_blank"><i class="fa fa-facebook"></i></a></li>
-									<li><a href="#" data-placement="top" title="Twitter"><i class="fa fa-twitter"></i></a></li>
-									<li><a href="#" data-placement="top" title="Linkedin"><i class="fa fa-linkedin"></i></a></li>
-									<li><a href="#" data-placement="top" title="Pinterest"><i class="fa fa-pinterest"></i></a></li>
-									<li><a href="#" data-placement="top" title="Google plus"><i class="fa fa-google-plus"></i></a></li>
-								</ul>
-								</div>
-								</div>
-								</div>
-								</div>
-								</footer>
-								</div>
-								<a href="#" class="scrollup"><i class="fa fa-angle-up active"></i></a>
-								<!-- javascript
-								================================================== -->
-								<!-- Placed at the end of the document so the pages load faster -->
-								<script src="{% static 'tossapp/home/js/jquery.js' %}"></script>
-		                        <script src="{% static 'tossapp/home/js/jquery.easing.1.3.js' %}"></script>
-		                        <script src="{% static 'tossapp/home/js/bootstrap.min.js' %}"></script>
-	                        <script src="{% static 'tossapp/home/js/jquery.fancybox.pack.js' %}"></script>
-	                        <script src="{% static 'tossapp/home/js/jquery.fancybox-media.js' %}"></script>
-	                        <script src="{% static 'tossapp/home/js/jquery.flexslider.js' %}"></script>
-	                        <script src="{% static 'tossapp/home/js/animate.js' %}"></script>
-	<!-- Vendor Scripts -->
-	                        <script src="{% static 'tossapp/home/js/modernizr.custom.js' %}"></script>
-	                        <script src="{% static 'tossapp/home/js/jquery.isotope.min.js' %}"></script>
-	                        <script src="{% static 'tossapp/home/js/jquery.magnific-popup.min.js' %}"></script>
-	                        <script src="{% static 'tossapp/home/js/animate.js' %}"></script>
-	                        <script src="{% static 'tossapp/home/js/custom.js' %}"></script>
-								</body>
-								</html>
+    <!-- Copyright -->
+    <div class="copyright">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <p class="p-small">Copyright © 2020 <a href="https://inovatik.com">Inovatik</a> - All rights reserved</p>
+                </div> <!-- end of col -->
+            </div> <!-- enf of row -->
+        </div> <!-- end of container -->
+    </div> <!-- end of copyright -->
+    <!-- end of copyright -->
+
+
+    <!-- Scripts -->
+    <script src="{% static 'tossapp/js/jquery.min.js' %}"></script> <!-- jQuery for Bootstrap's JavaScript plugins -->
+    <script src="{% static 'tossapp/js/popper.min.js' %}"></script> <!-- Popper tooltip library for Bootstrap -->
+    <script src="{% static 'tossapp/js/bootstrap.min.js' %}"></script> <!-- Bootstrap framework -->
+    <script src="{% static 'tossapp/js/jquery.easing.min.js' %}"></script> <!-- jQuery Easing for smooth scrolling between anchors -->
+    <script src="{% static 'tossapp/js/swiper.min.js' %}"></script> <!-- Swiper for image and text sliders -->
+    <script src="{% static 'tossapp/js/jquery.magnific-popup.js' %}"></script> <!-- Magnific Popup for lightboxes -->
+    <script src="{% static 'tossapp/js/validator.min.js' %}"></script> <!-- Validator.js - Bootstrap plugin that validates forms -->
+    <script src="{% static 'tossapp/js/scripts.js' %}"></script> <!-- Custom scripts -->
+</body>
+</html>

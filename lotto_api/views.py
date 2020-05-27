@@ -8,14 +8,15 @@ import random
 from django.db.models import F
 from django.utils import timezone
 from next_prev import next_in_order, prev_in_order
-from rest_framework import status, serializers, generics, mixins
+from rest_framework import status, serializers
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import viewsets
+
+from accounts_api.models import Tuser
 from lotto_api.models import DailyLotto, DailyLottoTicket, DailyLottoResult
 from lotto_api.lotto_serializers import TicketDailySerializer, MultipleDailySerializer, AlltimeSerializer
 from tauth.task import create_random_tickets
-from tossapp.models import *
 from tossapp_api.models import Game, Game_stat
 from tossapp_api.tossapp_serializers import GamesHistorySerializer
 
