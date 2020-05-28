@@ -2,15 +2,19 @@ from __future__ import unicode_literals
 import requests
 from django.contrib.auth.hashers import check_password
 from django.db.models import Count, F
-from rest_framework import status
+from rest_framework import status, serializers
 from rest_framework.pagination import PageNumberPagination
 
-from tossapp_api.tossapp_serializers import *
 from rest_framework.views import APIView
 from rest_framework import viewsets
 from rest_framework.response import Response
 
 # info for jpesa
+from accounts_api.models import Tuser
+from tossapp_api.models import Notification, Game, Game_stat, Transaction
+from tossapp_api.tossapp_serializers import NotificationsSerializer, GamesSerializer, PlayerSerializer, \
+    GamesHistorySerializer, TransactionSerializer, DepositSerializer, WithdrawSerializer
+
 payload2 = {'command': 'jpesa', 'action': 'info', 'username': 'emmanuel.m', 'password': 'yoonek17',
                         'IS_GET': 3, 'tid': '7254D08FF0FA62E20E26681485A71568'}
 
@@ -25,7 +29,7 @@ class NotificationView(viewsets.ModelViewSet):
 
 class GameAPIView(APIView):
     def get(self, request):
-        return Response(GamesSerializer(Tuser.objects.all(), many=True).data)
+        return Response(GamesSerializer(Game.objects.all(), many=True).data)
 
 
 class ReferralAPI(APIView):
@@ -49,7 +53,7 @@ class ReferralAPI(APIView):
 class GameStatView(APIView):
 
     def get(self, request):
-        return Response(GamesHistorySerializer(Tuser.objects.filter(user=request.user), many=True).data)
+        return Response(GamesHistorySerializer(Game_stat.objects.filter(user=request.user), many=True).data)
 
 
 class TransactionHistoryView(APIView):
