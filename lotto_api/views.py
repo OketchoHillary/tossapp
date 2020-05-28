@@ -17,14 +17,14 @@ from accounts_api.models import Tuser
 from lotto_api.models import DailyLotto, DailyLottoTicket, DailyLottoResult
 from lotto_api.lotto_serializers import TicketDailySerializer, MultipleDailySerializer, AlltimeSerializer
 from tauth.task import create_random_tickets
-from tossapp_api.models import Game, Game_stat
+# from tossapp_api.models import Game, Game_stat
 from tossapp_api.tossapp_serializers import GamesHistorySerializer
 
 
-try:
-    lotto_game = Game.objects.get(name='Daily Lotto')
-except Game.DoesNotExist:
-    lotto_game = 'Daily Lotto'
+# try:
+#     lotto_game = Tuser.objects.get(username='Daily Lotto')
+# except Tuser.DoesNotExist:
+#     lotto_game = 'Daily Lotto'
 
 fee = DailyLotto.TICKET_PRICE * DailyLotto.HOUSE_COMMISSION_RATE
 
@@ -108,9 +108,9 @@ class TicketDailyCreate(APIView):
                 # calculating users balance
                 new_balance = balance_calculator(request.user.balance, ticket_cost)
                 Tuser.objects.filter(username=self.request.user.username).update(balance=new_balance)
-                Game_stat.objects.create(user=self.request.user, game=lotto_game, bet_amount=ticket_cost,
-                                         status=Game_stat.PENDING, service_fee=fee)
-                Game.objects.filter(name='Daily Lotto').update(times_played=F("times_played") + 1)
+                # Game_stat.objects.create(user=self.request.user, game=lotto_game, bet_amount=ticket_cost,
+                #                          status=Game_stat.PENDING, service_fee=fee)
+                # Game.objects.filter(name='Daily Lotto').update(times_played=F("times_played") + 1)
             else:
                 raise serializers.ValidationError({'response':"Insufficient balance"})
         else:
@@ -164,10 +164,10 @@ class MultipleDailyTicket(APIView):
                     # calculating users balance
                     new_balance = balance_calculator(request.user.balance, ticket_cost)
                     Tuser.objects.filter(username=self.request.user.username).update(balance=new_balance)
-                    Game_stat.objects.create(user=self.request.user, game=lotto_game, bet_amount=ticket_cost,
-                                             status=Game_stat.PENDING,
-                                             service_fee=multiple_ticket_service_fee)
-                    Game.objects.filter(name='Daily Lotto').update(times_played=F("times_played") + 1)
+                    # Game_stat.objects.create(user=self.request.user, game=lotto_game, bet_amount=ticket_cost,
+                    #                          status=Game_stat.PENDING,
+                    #                          service_fee=multiple_ticket_service_fee)
+                    # Game.objects.filter(name='Daily Lotto').update(times_played=F("times_played") + 1)
                 else:
                     raise serializers.ValidationError("Ticket number should be greater than zero")
             else:
@@ -234,9 +234,9 @@ class TicketQuaterlyCreate(APIView):
                 # calculating users balance
                 new_balance = balance_calculator(request.user.balance, ticket_cost)
                 Tuser.objects.filter(username=self.request.user.username).update(balance=new_balance)
-                Game_stat.objects.create(user=self.request.user, game=lotto_game, bet_amount=ticket_cost,
-                                         status=Game_stat.PENDING, service_fee=fee)
-                Game.objects.filter(name='Daily Lotto').update(times_played=F("times_played") + 1)
+                # Game_stat.objects.create(user=self.request.user, game=lotto_game, bet_amount=ticket_cost,
+                #                          status=Game_stat.PENDING, service_fee=fee)
+                # Game.objects.filter(name='Daily Lotto').update(times_played=F("times_played") + 1)
             else:
                 raise serializers.ValidationError("Insufficient balance")
         else:
@@ -289,10 +289,10 @@ class MultipleQuaterlyTicket(APIView):
                     # calculating users balance
                     new_balance = balance_calculator(request.user.balance, ticket_cost)
                     Tuser.objects.filter(username=self.request.user.username).update(balance=new_balance)
-                    Game_stat.objects.create(user=self.request.user, game=lotto_game, bet_amount=ticket_cost,
-                                             status=Game_stat.PENDING,
-                                             service_fee=multiple_ticket_service_fee)
-                    Game.objects.filter(name='Daily Lotto').update(times_played=F("times_played") + 1)
+                    # Game_stat.objects.create(user=self.request.user, game=lotto_game, bet_amount=ticket_cost,
+                    #                          status=Game_stat.PENDING,
+                    #                          service_fee=multiple_ticket_service_fee)
+                    # Game.objects.filter(name='Daily Lotto').update(times_played=F("times_played") + 1)
                 else:
                     raise serializers.ValidationError("Ticket number should be greater than zero")
             else:
@@ -350,9 +350,9 @@ class TicketHourlyCreate(APIView):
                 # calculating users balance
                 new_balance = balance_calculator(request.user.balance, ticket_cost)
                 Tuser.objects.filter(username=self.request.user.username).update(balance=new_balance)
-                Game_stat.objects.create(user=self.request.user, game=lotto_game, bet_amount=ticket_cost,
-                                         status=Game_stat.PENDING, service_fee=fee)
-                Game.objects.filter(name='Daily Lotto').update(times_played=F("times_played") + 1)
+                # Game_stat.objects.create(user=self.request.user, game=lotto_game, bet_amount=ticket_cost,
+                #                          status=Game_stat.PENDING, service_fee=fee)
+                # Game.objects.filter(name='Daily Lotto').update(times_played=F("times_played") + 1)
             else:
                 raise serializers.ValidationError("Insufficient balance")
         else:
@@ -394,10 +394,10 @@ class MultipleHourlyTicket(APIView):
                     # calculating users balance
                     new_balance = balance_calculator(request.user.balance, ticket_cost)
                     Tuser.objects.filter(username=self.request.user.username).update(balance=new_balance)
-                    Game_stat.objects.create(user=self.request.user, game=lotto_game, bet_amount=ticket_cost,
-                                             status=Game_stat.PENDING,
-                                             service_fee=multiple_ticket_service_fee)
-                    Game.objects.filter(name='Daily Lotto').update(times_played=F("times_played") + 1)
+                    # Game_stat.objects.create(user=self.request.user, game=lotto_game, bet_amount=ticket_cost,
+                    #                          status=Game_stat.PENDING,
+                    #                          service_fee=multiple_ticket_service_fee)
+                    # Game.objects.filter(name='Daily Lotto').update(times_played=F("times_played") + 1)
                 else:
                     raise serializers.ValidationError("Ticket number should be greater than zero")
             else:

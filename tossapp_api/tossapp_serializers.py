@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from accounts_api.models import Tuser
-from tossapp_api.models import Notification, Game, Game_stat, Transaction
+from tossapp_api.models import Notification, Transaction
 
 
 class NotificationsSerializer(serializers.ModelSerializer):
@@ -20,14 +20,14 @@ class PlayerSerializer(serializers.ModelSerializer):
 class GamesSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = Game
+        model = Tuser
         exclude = ['id']
 
 
 class GamesHistorySerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = Game_stat
+        model = Tuser
         fields = '__all__'
 
 

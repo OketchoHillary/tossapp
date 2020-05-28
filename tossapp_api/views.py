@@ -25,7 +25,7 @@ class NotificationView(viewsets.ModelViewSet):
 
 class GameAPIView(APIView):
     def get(self, request):
-        return Response(GamesSerializer(Game.objects.all(), many=True).data)
+        return Response(GamesSerializer(Tuser.objects.all(), many=True).data)
 
 
 class ReferralAPI(APIView):
@@ -49,7 +49,7 @@ class ReferralAPI(APIView):
 class GameStatView(APIView):
 
     def get(self, request):
-        return Response(GamesHistorySerializer(Game_stat.objects.filter(user=request.user), many=True).data)
+        return Response(GamesHistorySerializer(Tuser.objects.filter(user=request.user), many=True).data)
 
 
 class TransactionHistoryView(APIView):

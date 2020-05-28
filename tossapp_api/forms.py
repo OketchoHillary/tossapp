@@ -6,7 +6,7 @@ from accounts_api.models import Tuser
 from tossapp.models import Faq, Contact_us
 from django_countries import countries
 from accounts_api.admin import validate_phone_number
-from tossapp_api.models import Game
+# from tossapp_api.models import Game
 
 my_default_errors1 = {
     'required': 'Old password is required',
@@ -174,8 +174,8 @@ class FaqAdminForm(forms.ModelForm):
 
 class GameAdminForm(forms.ModelForm):
     class Meta:
-        model = Game
-        fields = ('name', 'display_photo')
+        model = Tuser
+        fields = ('id', )
 
     def save(self, commit=True):
         instance1 = super(GameAdminForm, self).save(commit=False)

@@ -15,42 +15,42 @@ def content_file_name(instance, filename):
     return '/'.join(['games', filename])
 
 
-class Game(models.Model):
-    name = models.CharField(max_length=30, unique=True)
-    display_photo = models.ImageField(upload_to=content_file_name, blank=True, null=True)
-    slug = models.SlugField(max_length=230, unique=True)
-    times_played = models.BigIntegerField(default=0)
-
-    def __str__(self):
-        return self.name
-
-
-class Game_stat(models.Model):
-    LOSE = 0
-    WIN = 1
-    PENDING = 3
-    STATUS_CHOICES = (
-        (LOSE, 'Lose'),
-        (WIN, 'Win'),
-        (PENDING, 'Pending'),
-    )
-    game = models.ForeignKey(Game, on_delete=models.CASCADE)
-    user = models.ForeignKey(Tuser, on_delete=models.CASCADE)
-    bet_amount = models.IntegerField()
-    status = models.IntegerField(choices=STATUS_CHOICES)
-    win_amount = models.FloatField(blank=True, default=0.0)
-    loss_amount = models.FloatField(blank=True, default=0.0)
-    service_fee = models.FloatField()
-    timestamp = models.DateTimeField(auto_now_add=True, editable=False, null=False, blank=False)
-
-    def __unicode__(self):
-        amount = self.win_amount if self.status == self.WIN else self.loss_amount
-        return "{} {} {}".format(self.game, self.get_status_display(), amount)
-
-    class Meta:
-        ordering = ['-timestamp']
-        verbose_name_plural = 'Game statistics'
-        verbose_name = 'Game statistic'
+# class Game(models.Model):
+#     name = models.CharField(max_length=30, unique=True)
+#     display_photo = models.ImageField(upload_to=content_file_name, blank=True, null=True)
+#     slug = models.SlugField(max_length=230, unique=True)
+#     times_played = models.BigIntegerField(default=0)
+#
+#     def __str__(self):
+#         return self.name
+#
+#
+# class Game_stat(models.Model):
+#     LOSE = 0
+#     WIN = 1
+#     PENDING = 3
+#     STATUS_CHOICES = (
+#         (LOSE, 'Lose'),
+#         (WIN, 'Win'),
+#         (PENDING, 'Pending'),
+#     )
+#     game = models.ForeignKey(Game, on_delete=models.CASCADE)
+#     user = models.ForeignKey(Tuser, on_delete=models.CASCADE)
+#     bet_amount = models.IntegerField()
+#     status = models.IntegerField(choices=STATUS_CHOICES)
+#     win_amount = models.FloatField(blank=True, default=0.0)
+#     loss_amount = models.FloatField(blank=True, default=0.0)
+#     service_fee = models.FloatField()
+#     timestamp = models.DateTimeField(auto_now_add=True, editable=False, null=False, blank=False)
+#
+#     def __unicode__(self):
+#         amount = self.win_amount if self.status == self.WIN else self.loss_amount
+#         return "{} {} {}".format(self.game, self.get_status_display(), amount)
+#
+#     class Meta:
+#         ordering = ['-timestamp']
+#         verbose_name_plural = 'Game statistics'
+#         verbose_name = 'Game statistic'
 
 
 class Transaction(models.Model):
