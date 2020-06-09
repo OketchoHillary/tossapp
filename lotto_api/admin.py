@@ -19,7 +19,7 @@ class DailyLottoResultAdmin(admin.ModelAdmin):
 
 
 class DailyLottoTicketAdmin(admin.ModelAdmin):
-    search_fields = ['purchased_time', 'id']
+    search_fields = ['purchased_time', 'ticket_no']
     list_filter = ['purchased_time', 'daily_lotto__lotto_type']
     list_display = ['id', 'ticket_no', 'purchased_time', 'player_name']
     list_per_page = 50
@@ -32,8 +32,7 @@ class DailyLottoSumAdmin(admin.ModelAdmin):
 class DailyQuotaAdmin(admin.ModelAdmin):
     list_filter = ['daily_lotto__lotto_type', 'daily_lotto__start_date']
     list_display = ['three_number_prize_pool', 'four_number_prize_pool',
-                    'five_number_prize_pool', 'six_number_prize_pool',
-                    'three_number_prize_pool']
+                    'five_number_prize_pool', 'six_number_prize_pool']
 
 
 admin.site.register(DailyLotto, DailyLottoAdmin)

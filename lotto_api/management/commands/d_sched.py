@@ -9,10 +9,10 @@ class Command(BaseCommand):
     help = 'Tossapp lotto'
 
     def handle(self, *args, **options):
-        # schedule.every(10).minutes.do(create_daily_lotto)
-        # schedule.every(11).minutes.do(daily_draw)
+        # schedule.every(4).minutes.do(create_daily_lotto)
+        schedule.every(3).minutes.do(daily_draw)
         schedule.every().day.at("00:01").do(create_daily_lotto)
-        schedule.every().day.at("23:55").do(daily_draw)
+        # schedule.every().day.at("23:55").do(daily_draw)
 
         while True:
             schedule.run_pending()

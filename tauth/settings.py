@@ -103,12 +103,11 @@ CORS_ORIGIN_ALLOW_ALL = True
 if not DEBUG:
     DATABASES = {
         'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': 'd8mlbm4kng5o09',
-            'USER': 'ykthgpdcrfdyqx',
-            'PASSWORD': '54e0c722cb6a9ec2998d89235a67cb5072bc3bc29a0516975f9d1fbaa2f8a957',
-            'HOST': 'ec2-54-235-92-244.compute-1.amazonaws.com',  # Or an IP Address that your DB is hosted on
-            'PORT': '5432',
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': 'lucky6',
+            'USER': 'tossapp',
+            'PASSWORD': 'yoonek17', 'HOST': 'tossapp.cncsuwgwihis.us-east-1.rds.amazonaws.com', # Or an IP Address that your DB is hosted on
+            'PORT': '3306',
         }
     }
 else:

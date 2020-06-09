@@ -81,6 +81,7 @@ def lotto_jackpot():
 
 
 def hourly_draw():
+    my_backup_jackpot = 0
     hourly = DailyLotto.objects.filter(lotto_type='H')[0]
     # lotto commission function
     commission()
@@ -197,7 +198,6 @@ def hourly_draw():
 
         my_backup_jackpot = backup + no3 + no4 + no5
 
-        DailyLotto.objects.filter(lotto_id=hourly.lotto_id).update(backup_jackpot=my_backup_jackpot)
         print(cur_ticket, ":", matches_count, " win")
-
+    DailyLotto.objects.filter(lotto_id=hourly.lotto_id).update(backup_jackpot=my_backup_jackpot)
     print('Done')

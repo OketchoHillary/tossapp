@@ -14,7 +14,6 @@ from lotto_api.quaterly_lotto import create_quaterly_lotto, quaterly_draw
 logger = get_task_logger(__name__)
 
 
-@shared_task
 def create_random_tickets(quantity, lotto_id, user_id):
     for i in range(quantity):
         generated_numbers = random.sample(range(1, 20), 6)

@@ -81,6 +81,7 @@ def lotto_jackpot():
 
 
 def daily_draw():
+    my_backup_jackpot = 0
     daily = DailyLotto.objects.filter(lotto_type='D')[0]
     # lotto commission function
     commission()
@@ -176,13 +177,11 @@ def daily_draw():
             DailyLottoResult.objects.filter(daily_lotto=daily, hits_number_prize=3).update(prize=for3)
             DailyLottoTicket.objects.filter(daily_lotto=daily, hits=3).update(ticket_prize=for3)
             Tuser.objects.filter(username=p2).update(balance=F("balance") + for3)
-
         if matches_count == 4:
             DailyQuota.objects.filter(daily_lotto=daily).update(four_number_prize_pool_commission=for4)
             DailyLottoResult.objects.filter(daily_lotto=daily, hits_number_prize=4).update(prize=for4)
             DailyLottoTicket.objects.filter(daily_lotto=daily, hits=4).update(ticket_prize=for4)
             Tuser.objects.filter(username=p2).update(balance=F("balance") + for4)
-
         if matches_count == 5:
             DailyQuota.objects.filter(daily_lotto=daily).update(five_number_prize_pool_commission=for5)
             DailyLottoResult.objects.filter(daily_lotto=daily, hits_number_prize=5).update(prize=for5)
@@ -197,7 +196,6 @@ def daily_draw():
 
         my_backup_jackpot = backup + no3 + no4 + no5
 
-        DailyLotto.objects.filter(lotto_id=daily.lotto_id).update(backup_jackpot=my_backup_jackpot)
         print(cur_ticket, ":", matches_count, " win")
-
+    DailyLotto.objects.filter(lotto_id=daily.lotto_id).update(backup_jackpot=my_backup_jackpot)
     print('Done')

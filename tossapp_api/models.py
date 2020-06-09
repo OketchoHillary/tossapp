@@ -15,7 +15,7 @@ def content_file_name(instance, filename):
 
 class Game(models.Model):
     name = models.CharField(max_length=30, unique=True)
-    display_photo = models.ImageField(upload_to=content_file_name, blank=True, null=True)
+    display_photo = models.ImageField(upload_to=content_file_name, default='games/Daily_Lotto.jpg', blank=True, null=True)
     slug = models.SlugField(max_length=230, unique=True)
     times_played = models.BigIntegerField(default=0)
 

@@ -119,7 +119,7 @@ class UserChangeForm(forms.ModelForm):
 
     class Meta:
         model = Tuser
-        fields = ('username', 'password', 'phone_number', 'referrer', 'is_active', 'is_admin', 'share_code', 'dob')
+        fields = ('username', 'password', 'phone_number', 'referrer', 'is_active', 'is_admin', 'share_code', 'dob', 'balance')
 
     def clean_password(self):
         # Regardless of what the user provides, return the initial value.
@@ -151,7 +151,7 @@ class UserAdmin(BaseUserAdmin):
     search_fields = ('username', )
     fieldsets = (
         (None, {'fields': ('username','phone_number','referrer', 'password',)}),
-        ('Personal info', {'fields': ('first_name','last_name','sex','country','address','profile_photo','dob')}),
+        ('Personal info', {'fields': ('first_name','last_name','sex','country','address','profile_photo','dob', 'balance')}),
         ('Permissions', {'fields': ('is_admin',)}),
     )
     # add_fieldsets is not a standard ModelAdmin attribute. UserAdmin

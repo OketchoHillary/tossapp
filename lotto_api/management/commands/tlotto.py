@@ -1,9 +1,5 @@
 from django.core.management.base import BaseCommand
-from lotto_api.daily_l import *
-import schedule
-import time
 import africastalking
-from test_lotto import *
 
 
 class Command(BaseCommand):

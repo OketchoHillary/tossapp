@@ -12,13 +12,7 @@ class FaqAdmin(admin.ModelAdmin):
 
 class GameAdmin(admin.ModelAdmin):
     form = GameAdminForm
-    list_display = ['name', 'game_photo', 'times_played']
-
-    def game_photo(self, obj):
-        if obj.id:
-            return '<img src="%s" width="56" height="55">' % obj.display_photo.url
-        return ''
-    game_photo.allow_tags = True
+    list_display = ['name', 'times_played']
 
 
 class Game_statAdmin(admin.ModelAdmin):
