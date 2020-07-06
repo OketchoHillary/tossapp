@@ -23,38 +23,40 @@ def create_random_tickets(quantity, lotto_id, user_id):
     return '{} random tickets created with success!'.format(quantity)
 
 
-@periodic_task(run_every=timedelta(hours=24, minutes=0, seconds=30))
+@periodic_task(run_every=timedelta(hours=24, minutes=0, seconds=10))
 def run_create_daily_lotto():
     create_daily_lotto()
     logger.info("Daily lotto created")
 
-@periodic_task(run_every=timedelta(hours=23, minutes=55, seconds=30))
+
+@periodic_task(run_every=timedelta(hours=23, minutes=55, seconds=10))
 def run_daily_draw():
     daily_draw()
     logger.info("Daily draw created")
 
 
-@periodic_task(run_every=timedelta(hours=6, minutes=0, seconds=30))
+@periodic_task(run_every=timedelta(hours=6, minutes=0, seconds=10))
 def run_create_quarterly_lotto():
     create_quaterly_lotto()
     logger.info("Daily lotto created")
 
-@periodic_task(run_every=timedelta(minutes=355, seconds=30))
+
+@periodic_task(run_every=timedelta(minutes=355, seconds=10))
 def run_quarterly_draw():
     quaterly_draw()
     logger.info("Quarterly draw created")
 
 
-@periodic_task(run_every=timedelta(hours=1, minutes=0, seconds=30))
+@periodic_task(run_every=timedelta(hours=1, minutes=0, seconds=10))
 def run_create_hourly_lotto():
     create_hourly_lotto()
     logger.info("Hourly lotto created")
 
-@periodic_task(run_every=timedelta(minutes=55, seconds=30))
+
+@periodic_task(run_every=timedelta(minutes=55, seconds=10))
 def run_hourly_raw():
     hourly_draw()
     logger.info("Hourly draw created")
-
 
 
 # @app.task

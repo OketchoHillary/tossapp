@@ -1,10 +1,7 @@
-import random
-
 from django.core.management import BaseCommand
 
 from accounts_api.models import Tuser
-from lotto_api.models import DailyLottoTicket, DailyLotto
-from tauth.settings import NUMBER_RANGE
+from lotto_api.models import DailyLotto
 from tauth.task import create_random_tickets
 
 
