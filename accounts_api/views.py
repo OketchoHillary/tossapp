@@ -52,7 +52,7 @@ class LoginView(APIView):
 class LogoutView(APIView):
     def post(self, request):
         request.user.auth_token.delete()
-        return Response(status=204)
+        return Response({'message': "Successfully logged out"}, status=204)
 
 
 class ProfileView(APIView):
