@@ -133,11 +133,11 @@ class Notification(models.Model):
 #     timestamp = models.DateTimeField(auto_now_add=True, editable=False, null=False, blank=False)
 
 
-class System_info(models.Model):
-    domain = models.URLField()
-
-    def __unicode__(self):
-        return self.domain
-
-    class Meta:
-        db_table = 'system_info'
+# class System_info(models.Model):
+#     domain = models.URLField()
+#
+#     def __unicode__(self):
+#         return self.domain
+#
+#     class Meta:
+#         db_table = 'system_info'
