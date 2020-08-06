@@ -1,4 +1,4 @@
-import random
+
 import string
 from datetime import timedelta
 from django.utils import timezone
@@ -6,6 +6,7 @@ from django.db import models, IntegrityError
 from django.dispatch import receiver
 from django.db.models.signals import post_save
 from accounts_api.models import Tuser
+from lotto_api.custom import choices
 from tauth.settings import NUMBER_RANGE
 
 
@@ -23,9 +24,8 @@ def now_plus_2():
 def now_plus_3():
     return timedelta(minutes=55)
 
-
 def create_unique_id():
-    return ''.join(random.choices(string.digits, k=8))
+    return ''.join(choices(string.digits, k=8))
 
 
 class DailyLotto(models.Model):
@@ -116,7 +116,7 @@ class DailyLottoTicket(models.Model):
         return '{}, {}, {}, {}, {}, {}'.format(self.n1,self.n2,self.n3,self.n4,self.n5,self.n6)
 
     def save(self, *args, **kwargs):
-        m = ''.join(random.choices(string.digits, k=8))
+        m = ''.join(choices(string.digits, k=8))
         self.ticket_no = m
         try:
             DailyLottoTicket.objects.filter(ticket_no=m).exists()
