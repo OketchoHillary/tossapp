@@ -29,7 +29,7 @@ SECRET_KEY = 'c4(e91q)de5(klm^q=!e)o&ao!bs5yzgsgs0zpmbp-r@-+11(2'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['tossapp-accounts_api.herokuapp.com', '*']
+ALLOWED_HOSTS = ['lucky6.yoonektechnologies.com', '*']
 
 
 # Application definition

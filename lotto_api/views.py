@@ -26,6 +26,14 @@ try:
 except Game.DoesNotExist:
     lotto_game = 'Daily Lotto'
 
+
+try:
+    lotto_game_id = Game.objects.get(name='Daily Lotto')
+    game_id = lotto_game_id.id
+except Game.DoesNotExist:
+    lotto_game_id = None
+    game_id = 1000
+
 fee = DailyLotto.TICKET_PRICE * DailyLotto.HOUSE_COMMISSION_RATE
 
 
@@ -410,7 +418,7 @@ class MultipleHourlyTicket(APIView):
 
 class LottoStatView(APIView):
     def get(self, request):
-        return Response(GamesHistorySerializer(Game_stat.objects.filter(user=request.user, game=lotto_game), many=True).data)
+        return Response(GamesHistorySerializer(Game_stat.objects.filter(user=request.user, game=game_id), many=True).data)
 
 
 class Prev_and_next(viewsets.ViewSet):
