@@ -21,7 +21,7 @@ django-braces==1.14.0
 django-cors-headers==3.2.1
 django-countries==6.1.2
 django-next-prev==1.0.1
-djangorestframework==3.11.0
+djangorestframework==3.11.2
 filelock==3.0.12
 gevent==20.5.0
 greenlet==0.4.15
